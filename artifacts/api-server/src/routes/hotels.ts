@@ -72,7 +72,7 @@ function parseH24Hotel(raw: Record<string, unknown>, commissionPercent: number, 
     description: String(raw.description ?? ""),
     originalPrice,
     price,
-    currency: String(raw.devise ?? raw.currency ?? "EUR"),
+    currency: String(raw.devise ?? raw.currency ?? "DZD"),
     rating: rating ?? undefined,
     reviewCount: typeof raw.nb_avis === "number" ? raw.nb_avis : undefined,
     amenities,
@@ -128,7 +128,12 @@ router.get("/hotels/search", async (req, res): Promise<void> => {
         ? data.data as Record<string, unknown>[]
         : [];
 
-      hotels = rawHotels.map((h) => parseH24Hotel(h, commissionPercent, destination));
+      if (rawHotels.length > 0) {
+        hotels = rawHotels.map((h) => parseH24Hotel(h, commissionPercent, destination));
+      } else {
+        req.log.info({ data: JSON.stringify(data).slice(0, 300) }, "H24Voyages returned empty results, using mock data");
+        hotels = generateMockHotels(destination, commissionPercent, Number(limit));
+      }
     } else {
       req.log.warn({ status: response.status }, "H24Voyages API returned non-200");
       hotels = generateMockHotels(destination, commissionPercent, Number(limit));
@@ -163,16 +168,16 @@ router.get("/hotels/search", async (req, res): Promise<void> => {
 function generateMockHotels(destination: string, commissionPercent: number, count: number) {
   const dest = destination || "Paris";
   const hotelTemplates = [
-    { name: `Grand Palais ${dest}`, stars: 5, basePrice: 320, rating: 4.8, reviews: 1240 },
-    { name: `Hotel Le ${dest} Central`, stars: 4, basePrice: 180, rating: 4.5, reviews: 876 },
-    { name: `Boutique ${dest} Suites`, stars: 4, basePrice: 210, rating: 4.6, reviews: 543 },
-    { name: `${dest} Garden Resort`, stars: 5, basePrice: 450, rating: 4.9, reviews: 2100 },
-    { name: `Premier Inn ${dest}`, stars: 3, basePrice: 95, rating: 4.2, reviews: 3200 },
-    { name: `${dest} Palace Hotel`, stars: 5, basePrice: 580, rating: 4.7, reviews: 890 },
-    { name: `The ${dest} Collection`, stars: 4, basePrice: 240, rating: 4.4, reviews: 650 },
-    { name: `${dest} Riviera Spa`, stars: 4, basePrice: 195, rating: 4.6, reviews: 420 },
-    { name: `Holiday ${dest} Bay`, stars: 3, basePrice: 120, rating: 4.1, reviews: 1800 },
-    { name: `${dest} Luxury Retreat`, stars: 5, basePrice: 390, rating: 4.8, reviews: 980 },
+    { name: `Grand Palais ${dest}`, stars: 5, basePrice: 48000, rating: 4.8, reviews: 1240 },
+    { name: `Hotel Le ${dest} Central`, stars: 4, basePrice: 27000, rating: 4.5, reviews: 876 },
+    { name: `Boutique ${dest} Suites`, stars: 4, basePrice: 32000, rating: 4.6, reviews: 543 },
+    { name: `${dest} Garden Resort`, stars: 5, basePrice: 68000, rating: 4.9, reviews: 2100 },
+    { name: `Premier Inn ${dest}`, stars: 3, basePrice: 14000, rating: 4.2, reviews: 3200 },
+    { name: `${dest} Palace Hotel`, stars: 5, basePrice: 85000, rating: 4.7, reviews: 890 },
+    { name: `The ${dest} Collection`, stars: 4, basePrice: 36000, rating: 4.4, reviews: 650 },
+    { name: `${dest} Riviera Spa`, stars: 4, basePrice: 30000, rating: 4.6, reviews: 420 },
+    { name: `Holiday ${dest} Bay`, stars: 3, basePrice: 18000, rating: 4.1, reviews: 1800 },
+    { name: `${dest} Luxury Retreat`, stars: 5, basePrice: 58000, rating: 4.8, reviews: 980 },
   ];
 
   const images = [

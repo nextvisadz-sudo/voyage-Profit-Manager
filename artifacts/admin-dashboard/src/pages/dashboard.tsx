@@ -86,15 +86,15 @@ export default function DashboardPage() {
             <div className="space-y-4">
               <div className="flex justify-between items-center py-2 border-b">
                 <span className="text-muted-foreground">Original Price</span>
-                <span className="font-mono">€200.00</span>
+                <span className="font-mono">30 000 DA</span>
               </div>
               <div className="flex justify-between items-center py-2 border-b">
                 <span className="text-muted-foreground">Commission ({commission?.percent ?? 0}%)</span>
-                <span className="font-mono text-accent">+ €{((commission?.percent ?? 0) / 100 * 200).toFixed(2)}</span>
+                <span className="font-mono text-accent">+ {((commission?.percent ?? 0) / 100 * 30000).toLocaleString("fr-DZ")} DA</span>
               </div>
               <div className="flex justify-between items-center py-2 font-bold text-lg">
                 <span>Final Price</span>
-                <span className="text-primary" data-testid="text-preview-final">€{(200 * (1 + (commission?.percent ?? 0) / 100)).toFixed(2)}</span>
+                <span className="text-primary" data-testid="text-preview-final">{Math.round(30000 * (1 + (commission?.percent ?? 0) / 100)).toLocaleString("fr-DZ")} DA</span>
               </div>
             </div>
           </CardContent>

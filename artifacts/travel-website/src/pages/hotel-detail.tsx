@@ -114,9 +114,9 @@ export default function HotelDetail() {
                 <div>
                   <p className="text-sm text-slate-500 uppercase tracking-wider mb-1 font-semibold">{hotel.roomType || "Standard Room"}</p>
                   <p className="text-3xl font-serif text-primary" data-testid="text-detail-price">
-                    ${hotel.price.toLocaleString()}
+                    {hotel.price.toLocaleString("fr-DZ")} <span className="text-lg font-sans font-semibold">DA</span>
                   </p>
-                  <p className="text-sm text-slate-500 mt-1">per night, taxes included</p>
+                  <p className="text-sm text-slate-500 mt-1">par nuit, taxes incluses</p>
                 </div>
                 <div className="bg-primary/10 text-primary px-3 py-2 rounded-lg text-center">
                   <div className="flex items-center justify-center gap-1 font-bold text-lg mb-0.5">

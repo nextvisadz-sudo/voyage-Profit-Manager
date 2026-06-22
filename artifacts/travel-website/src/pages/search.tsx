@@ -1,26 +1,26 @@
-import { useLocation } from "wouter";
-import { useEffect, useState } from "react";
+import { useLocation, useSearch } from "wouter";
+import { useMemo } from "react";
 import { useSearchHotels, getSearchHotelsQueryKey } from "@workspace/api-client-react";
 import { SearchForm } from "../components/search-form";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Star, MapPin, Filter, SlidersHorizontal, ChevronRight, Check } from "lucide-react";
+import { Star, MapPin, Filter, SlidersHorizontal, ChevronRight, Check, Search as SearchIcon } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 
 export default function Search() {
-  const [location, setLocation] = useLocation();
-  const [queryParams, setQueryParams] = useState<any>({});
-  
-  useEffect(() => {
-    const params = new URLSearchParams(window.location.search);
-    const destination = params.get("destination") || undefined;
-    const checkin = params.get("checkin") || undefined;
-    const checkout = params.get("checkout") || undefined;
-    const adults = params.get("adults") ? parseInt(params.get("adults")!) : undefined;
-    const rooms = params.get("rooms") ? parseInt(params.get("rooms")!) : undefined;
-    
-    setQueryParams({ destination, checkin, checkout, adults, rooms });
-  }, [window.location.search]);
+  const [, setLocation] = useLocation();
+  const searchString = useSearch();
+
+  const queryParams = useMemo(() => {
+    const params = new URLSearchParams(searchString);
+    return {
+      destination: params.get("destination") || undefined,
+      checkin: params.get("checkin") || undefined,
+      checkout: params.get("checkout") || undefined,
+      adults: params.get("adults") ? parseInt(params.get("adults")!) : undefined,
+      rooms: params.get("rooms") ? parseInt(params.get("rooms")!) : undefined,
+    };
+  }, [searchString]);
 
   const { data: searchResults, isLoading, isError } = useSearchHotels(queryParams, {
     query: {
@@ -203,7 +203,7 @@ export default function Search() {
                         <div>
                           <p className="text-xs text-slate-500 mb-1 uppercase tracking-wider">{hotel.roomType || "Standard Room"}</p>
                           <p className="text-2xl font-serif text-primary" data-testid={`text-price-${hotel.id}`}>
-                            ${hotel.price.toLocaleString()} <span className="text-sm text-slate-500 font-sans font-normal">/ {hotel.nights || 1} night</span>
+                            {hotel.price.toLocaleString("fr-DZ")} <span className="text-base font-sans font-semibold">DA</span> <span className="text-sm text-slate-500 font-sans font-normal">/ {hotel.nights || 1} nuit</span>
                           </p>
                         </div>
                         <Button 
@@ -220,10 +220,10 @@ export default function Search() {
               </div>
             ) : (
               <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-12 text-center">
-                <Search className="w-12 h-12 text-slate-300 mx-auto mb-4" />
+                <SearchIcon className="w-12 h-12 text-slate-300 mx-auto mb-4" />
                 <h2 className="text-xl font-serif text-slate-800 mb-2">No results found</h2>
                 <p className="text-slate-500 mb-6">We couldn't find any hotels matching your criteria for {queryParams.destination}.</p>
-                <Button variant="outline" onClick={() => setQueryParams({})}>Clear Search</Button>
+                <Button variant="outline" onClick={() => setLocation("/search")}>Clear Search</Button>
               </div>
             )}
           </div>

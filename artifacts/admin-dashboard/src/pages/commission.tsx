@@ -57,10 +57,10 @@ export default function CommissionPage() {
 
   const currentPercent = form.watch("percent");
   
-  const sampleOriginal = 200;
+  const sampleOriginal = 30000;
   const sampleFinal = useMemo(() => {
     const p = isNaN(currentPercent) ? 0 : currentPercent;
-    return sampleOriginal * (1 + p / 100);
+    return Math.round(sampleOriginal * (1 + p / 100));
   }, [currentPercent]);
 
   return (
@@ -101,11 +101,11 @@ export default function CommissionPage() {
                 <p className="text-sm font-medium">Live Preview</p>
                 <div className="flex items-center justify-between text-sm">
                   <span className="text-muted-foreground">Original Price:</span>
-                  <span className="font-mono">€{sampleOriginal.toFixed(2)}</span>
+                  <span className="font-mono">{sampleOriginal.toLocaleString("fr-DZ")} DA</span>
                 </div>
                 <div className="flex items-center justify-between text-sm font-semibold">
                   <span>Customer Pays:</span>
-                  <span className="font-mono text-primary" data-testid="text-preview-customer-pays">€{sampleFinal.toFixed(2)}</span>
+                  <span className="font-mono text-primary" data-testid="text-preview-customer-pays">{sampleFinal.toLocaleString("fr-DZ")} DA</span>
                 </div>
               </div>
 
