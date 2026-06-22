@@ -10,6 +10,10 @@ servers:
 tags:
   - name: health
     description: Health operations
+  - name: hotels
+    description: Hotel search operations
+  - name: commission
+    description: Commission configuration
 paths:
   /healthz:
     get:
@@ -24,6 +28,122 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/HealthStatus"
+
+  /hotels/search:
+    get:
+      operationId: searchHotels
+      tags: [hotels]
+      summary: Search hotels
+      description: Search hotels via H24Voyages API and apply commission markup to prices
+      parameters:
+        - name: destination
+          in: query
+          required: false
+          schema:
+            type: string
+          description: Destination name or city
+        - name: checkin
+          in: query
+          required: false
+          schema:
+            type: string
+          description: Check-in date (YYYY-MM-DD)
+        - name: checkout
+          in: query
+          required: false
+          schema:
+            type: string
+          description: Check-out date (YYYY-MM-DD)
+        - name: adults
+          in: query
+          required: false
+          schema:
+            type: integer
+          description: Number of adults
+        - name: rooms
+          in: query
+          required: false
+          schema:
+            type: integer
+          description: Number of rooms
+        - name: page
+          in: query
+          required: false
+          schema:
+            type: integer
+          description: Page number
+        - name: limit
+          in: query
+          required: false
+          schema:
+            type: integer
+          description: Results per page
+      responses:
+        "200":
+          description: Hotel search results with commission applied
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/HotelSearchResponse"
+        "500":
+          description: Server error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+  /commission:
+    get:
+      operationId: getCommission
+      tags: [commission]
+      summary: Get commission configuration
+      description: Get the current profit commission percentage
+      responses:
+        "200":
+          description: Current commission setting
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CommissionConfig"
+    put:
+      operationId: updateCommission
+      tags: [commission]
+      summary: Update commission configuration
+      description: Update the profit commission percentage applied to hotel prices
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CommissionUpdate"
+      responses:
+        "200":
+          description: Updated commission setting
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CommissionConfig"
+        "400":
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+  /commission/stats:
+    get:
+      operationId: getCommissionStats
+      tags: [commission]
+      summary: Get commission statistics
+      description: Get stats about how many searches have had commission applied
+      responses:
+        "200":
+          description: Commission statistics
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CommissionStats"
+
 components:
   schemas:
     HealthStatus:
@@ -34,3 +154,124 @@ components:
       required:
         - status
 
+    Hotel:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        destination:
+          type: string
+        stars:
+          type: number
+        image:
+          type: string
+        description:
+          type: string
+        originalPrice:
+          type: number
+          description: Original price from provider
+        price:
+          type: number
+          description: Price with commission markup applied
+        currency:
+          type: string
+        rating:
+          type: number
+        reviewCount:
+          type: integer
+        amenities:
+          type: array
+          items:
+            type: string
+        roomType:
+          type: string
+        mealPlan:
+          type: string
+        nights:
+          type: integer
+      required:
+        - id
+        - name
+        - destination
+        - price
+        - currency
+
+    HotelSearchResponse:
+      type: object
+      properties:
+        hotels:
+          type: array
+          items:
+            $ref: "#/components/schemas/Hotel"
+        total:
+          type: integer
+        page:
+          type: integer
+        limit:
+          type: integer
+        commissionPercent:
+          type: number
+        destination:
+          type: string
+        checkin:
+          type: string
+        checkout:
+          type: string
+      required:
+        - hotels
+        - total
+        - commissionPercent
+
+    CommissionConfig:
+      type: object
+      properties:
+        percent:
+          type: number
+          description: Commission percentage (e.g. 10 for 10%)
+        updatedAt:
+          type: string
+          format: date-time
+      required:
+        - percent
+        - updatedAt
+
+    CommissionUpdate:
+      type: object
+      properties:
+        percent:
+          type: number
+          minimum: 0
+          maximum: 100
+          description: Commission percentage (0-100)
+      required:
+        - percent
+
+    CommissionStats:
+      type: object
+      properties:
+        totalSearches:
+          type: integer
+        totalHotelsServed:
+          type: integer
+        currentPercent:
+          type: number
+        lastSearchAt:
+          type: string
+          format: date-time
+          nullable: true
+      required:
+        - totalSearches
+        - totalHotelsServed
+        - currentPercent
+
+    ErrorResponse:
+      type: object
+      properties:
+        error:
+          type: string
+        message:
+          type: string
+      required:
+        - error

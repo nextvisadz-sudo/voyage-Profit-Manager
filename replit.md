@@ -1,6 +1,6 @@
-# [Project name]
+# Next Visa Travel
 
-_Replace the heading above with the project's name, and this line with one sentence describing what this app does for users._
+A travel agency web platform with a customer-facing hotel search site and a separate admin dashboard for managing commission rates.
 
 ## Run & Operate
 
@@ -22,15 +22,25 @@ _Replace the heading above with the project's name, and this line with one sente
 
 ## Where things live
 
-_Populate as you build — short repo map plus pointers to the source-of-truth file for DB schema, API contracts, theme files, etc._
+- `lib/api-spec/openapi.yaml` — OpenAPI spec (source of truth for all API contracts)
+- `lib/db/src/schema/commission.ts` — DB schema: `commission_config`, `search_stats` tables
+- `artifacts/api-server/src/routes/hotels.ts` — Hotel search proxy (fetches from H24Voyages, applies commission)
+- `artifacts/api-server/src/routes/commission.ts` — Commission CRUD and stats endpoints
+- `artifacts/travel-website/` — Customer-facing travel site (React+Vite, served at `/`)
+- `artifacts/admin-dashboard/` — Admin dashboard (React+Vite, served at `/dashboard/`)
+- Logo: `attached_assets/next_visa_logo_nobg.png` — background removed; copied to `artifacts/travel-website/public/logo.png`
 
 ## Architecture decisions
 
-_Populate as you build — non-obvious choices a reader couldn't infer from the code (3-5 bullets)._
+- H24Voyages API is proxied server-side; commission markup is applied before sending prices to the frontend. Clients never see original prices.
+- If the H24Voyages API is unavailable, the backend falls back to mock hotel data so the website always renders results.
+- Commission config and search stats are persisted in PostgreSQL via Drizzle ORM.
+- Both frontend apps share a single `@workspace/api-client-react` package generated from the OpenAPI spec.
 
 ## Product
 
-_Describe the high-level user-facing capabilities of this app once they exist._
+- **Travel Website** (`/`): Search hotels by destination/dates/guests, browse results with commission-adjusted prices, view hotel details.
+- **Admin Dashboard** (`/dashboard/`): View search stats (total searches, hotels served), configure the profit commission % (0-100), preview how the commission affects pricing.
 
 ## User preferences
 
@@ -38,7 +48,9 @@ _Populate as you build — explicit user instructions worth remembering across s
 
 ## Gotchas
 
-_Populate as you build — sharp edges, "always run X before Y" rules._
+- After changing `lib/api-spec/openapi.yaml`, always run `pnpm --filter @workspace/api-spec run codegen` before using the updated types.
+- The commission is applied server-side in `hotels.ts` — do not apply it again on the frontend.
+- H24Voyages API response shape is unknown; the parser in `hotels.ts` tries multiple field names and falls back to mocks if the response is non-200.
 
 ## Pointers
 
