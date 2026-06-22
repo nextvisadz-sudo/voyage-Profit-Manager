@@ -12,5 +12,6 @@ export * from './commissionUpdate';
 export * from './errorResponse';
 export * from './healthStatus';
 export * from './hotel';
+export * from './hotelRoom';
 export * from './hotelSearchResponse';
 export * from './searchHotelsParams';

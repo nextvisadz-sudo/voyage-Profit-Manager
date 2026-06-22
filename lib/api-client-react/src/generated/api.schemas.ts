@@ -9,6 +9,15 @@ export interface HealthStatus {
   status: string;
 }
 
+export interface HotelRoom {
+  /** Board type name (e.g. "Logement simple", "Petit Déjeuner", "Demi pension") */
+  boardName: string;
+  /** Raw DZD amount from provider */
+  originalAmount: number;
+  /** DZD amount with commission applied */
+  amount: number;
+}
+
 export interface Hotel {
   id: string;
   name: string;
@@ -16,9 +25,9 @@ export interface Hotel {
   stars?: number;
   image?: string;
   description?: string;
-  /** Original price from provider */
+  /** Raw DZD price from provider (no conversion) */
   originalPrice?: number;
-  /** Price with commission markup applied */
+  /** DZD price with commission markup applied */
   price: number;
   currency: string;
   rating?: number;
@@ -27,6 +36,8 @@ export interface Hotel {
   roomType?: string;
   mealPlan?: string;
   nights?: number;
+  /** Available room options with board types and commission-applied prices */
+  rooms?: HotelRoom[];
 }
 
 export interface HotelSearchResponse {

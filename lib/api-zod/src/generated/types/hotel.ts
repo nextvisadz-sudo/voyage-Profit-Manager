@@ -5,6 +5,7 @@
  * API specification
  * OpenAPI spec version: 0.1.0
  */
+import type { HotelRoom } from './hotelRoom';
 
 export interface Hotel {
   id: string;
@@ -13,9 +14,9 @@ export interface Hotel {
   stars?: number;
   image?: string;
   description?: string;
-  /** Original price from provider */
+  /** Raw DZD price from provider (no conversion) */
   originalPrice?: number;
-  /** Price with commission markup applied */
+  /** DZD price with commission markup applied */
   price: number;
   currency: string;
   rating?: number;
@@ -24,4 +25,6 @@ export interface Hotel {
   roomType?: string;
   mealPlan?: string;
   nights?: number;
+  /** Available room options with board types and commission-applied prices */
+  rooms?: HotelRoom[];
 }

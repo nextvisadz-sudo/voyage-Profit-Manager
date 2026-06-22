@@ -39,15 +39,20 @@ export const SearchHotelsResponse = zod.object({
   "stars": zod.number().optional(),
   "image": zod.string().optional(),
   "description": zod.string().optional(),
-  "originalPrice": zod.number().optional().describe('Original price from provider'),
-  "price": zod.number().describe('Price with commission markup applied'),
+  "originalPrice": zod.number().optional().describe('Raw DZD price from provider (no conversion)'),
+  "price": zod.number().describe('DZD price with commission markup applied'),
   "currency": zod.string(),
   "rating": zod.number().optional(),
   "reviewCount": zod.number().optional(),
   "amenities": zod.array(zod.string()).optional(),
   "roomType": zod.string().optional(),
   "mealPlan": zod.string().optional(),
-  "nights": zod.number().optional()
+  "nights": zod.number().optional(),
+  "rooms": zod.array(zod.object({
+  "boardName": zod.string().describe('Board type name (e.g. \"Logement simple\", \"Petit Déjeuner\", \"Demi pension\")'),
+  "originalAmount": zod.number().describe('Raw DZD amount from provider'),
+  "amount": zod.number().describe('DZD amount with commission applied')
+})).optional().describe('Available room options with board types and commission-applied prices')
 })),
   "total": zod.number(),
   "page": zod.number().optional(),
