@@ -73,6 +73,14 @@ export interface CommissionStats {
   lastSearchAt?: string | null;
 }
 
+export interface Destination {
+  id: number;
+  city: string;
+  country: string;
+  /** Display label e.g. "Tunis, Tunisie" */
+  label: string;
+}
+
 export interface ErrorResponse {
   error: string;
   message?: string;
@@ -80,7 +88,11 @@ export interface ErrorResponse {
 
 export type SearchHotelsParams = {
 /**
- * Destination name or city
+ * Destination ID from /destinations endpoint
+ */
+destinationId?: number;
+/**
+ * Destination name (fallback if destinationId not provided)
  */
 destination?: string;
 /**

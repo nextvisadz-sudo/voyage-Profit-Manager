@@ -18,11 +18,25 @@ export const HealthCheckResponse = zod.object({
 
 
 /**
+ * Returns all searchable destinations with their IDs for use in hotel search
+ * @summary List available destinations
+ */
+export const GetDestinationsResponseItem = zod.object({
+  "id": zod.number(),
+  "city": zod.string(),
+  "country": zod.string(),
+  "label": zod.string().describe('Display label e.g. \"Tunis, Tunisie\"')
+})
+export const GetDestinationsResponse = zod.array(GetDestinationsResponseItem)
+
+
+/**
  * Search hotels via H24Voyages API and apply commission markup to prices
  * @summary Search hotels
  */
 export const SearchHotelsQueryParams = zod.object({
-  "destination": zod.coerce.string().optional().describe('Destination name or city'),
+  "destinationId": zod.coerce.number().optional().describe('Destination ID from \/destinations endpoint'),
+  "destination": zod.coerce.string().optional().describe('Destination name (fallback if destinationId not provided)'),
   "checkin": zod.coerce.string().optional().describe('Check-in date (YYYY-MM-DD)'),
   "checkout": zod.coerce.string().optional().describe('Check-out date (YYYY-MM-DD)'),
   "adults": zod.coerce.number().optional().describe('Number of adults'),

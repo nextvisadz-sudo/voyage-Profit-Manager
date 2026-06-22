@@ -8,7 +8,11 @@
 
 export type SearchHotelsParams = {
 /**
- * Destination name or city
+ * Destination ID from /destinations endpoint
+ */
+destinationId?: number;
+/**
+ * Destination name (fallback if destinationId not provided)
  */
 destination?: string;
 /**

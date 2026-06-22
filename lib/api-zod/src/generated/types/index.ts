@@ -9,6 +9,7 @@
 export * from './commissionConfig';
 export * from './commissionStats';
 export * from './commissionUpdate';
+export * from './destination';
 export * from './errorResponse';
 export * from './healthStatus';
 export * from './hotel';

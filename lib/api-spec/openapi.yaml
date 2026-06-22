@@ -29,6 +29,22 @@ paths:
               schema:
                 $ref: "#/components/schemas/HealthStatus"
 
+  /destinations:
+    get:
+      operationId: getDestinations
+      tags: [hotels]
+      summary: List available destinations
+      description: Returns all searchable destinations with their IDs for use in hotel search
+      responses:
+        "200":
+          description: List of destinations
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Destination"
+
   /hotels/search:
     get:
       operationId: searchHotels
@@ -36,12 +52,18 @@ paths:
       summary: Search hotels
       description: Search hotels via H24Voyages API and apply commission markup to prices
       parameters:
+        - name: destinationId
+          in: query
+          required: false
+          schema:
+            type: integer
+          description: Destination ID from /destinations endpoint
         - name: destination
           in: query
           required: false
           schema:
             type: string
-          description: Destination name or city
+          description: Destination name (fallback if destinationId not provided)
         - name: checkin
           in: query
           required: false
@@ -287,6 +309,24 @@ components:
         - totalSearches
         - totalHotelsServed
         - currentPercent
+
+    Destination:
+      type: object
+      properties:
+        id:
+          type: integer
+        city:
+          type: string
+        country:
+          type: string
+        label:
+          type: string
+          description: Display label e.g. "Tunis, Tunisie"
+      required:
+        - id
+        - city
+        - country
+        - label
 
     ErrorResponse:
       type: object
