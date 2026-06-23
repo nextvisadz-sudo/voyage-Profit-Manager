@@ -1,11 +1,39 @@
 import { useLocation, useSearch } from "wouter";
-import { useMemo } from "react";
+import { useMemo, useState, useEffect } from "react";
 import { useSearchHotels, getSearchHotelsQueryKey } from "@workspace/api-client-react";
 import { SearchForm } from "../components/search-form";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Slider } from "@/components/ui/slider";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Star, MapPin, Filter, SlidersHorizontal, Check, Search as SearchIcon, Utensils } from "lucide-react";
+import { Star, MapPin, Filter, SlidersHorizontal, Search as SearchIcon, Utensils, X } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
+
+const BOARD_OPTIONS = [
+  "Demi pension",
+  "Logement simple",
+  "Pension complète",
+  "Petit Déjeuner",
+  "Soft All Inclusive",
+];
+
+function Checkbox({ checked, onChange }: { checked: boolean; onChange: () => void }) {
+  return (
+    <button
+      type="button"
+      onClick={onChange}
+      className={`w-5 h-5 rounded border-2 flex items-center justify-center shrink-0 transition-colors ${
+        checked ? "bg-primary border-primary" : "border-slate-300 hover:border-primary"
+      }`}
+    >
+      {checked && (
+        <svg className="w-3 h-3 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
+          <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+        </svg>
+      )}
+    </button>
+  );
+}
 
 export default function Search() {
   const [, setLocation] = useLocation();
@@ -19,7 +47,9 @@ export default function Search() {
     const checkout = params.get("checkout") || undefined;
     const adults = params.get("adults") ? parseInt(params.get("adults")!) : undefined;
     const rooms = params.get("rooms") ? parseInt(params.get("rooms")!) : undefined;
-    return { destinationId, destination, checkin, checkout, adults, rooms };
+    const children = params.get("children") ? parseInt(params.get("children")!) : undefined;
+    const infants = params.get("infants") ? parseInt(params.get("infants")!) : undefined;
+    return { destinationId, destination, checkin, checkout, adults, rooms, children, infants };
   }, [searchString]);
 
   const hasSearched = !!queryParams.destinationId || !!queryParams.destination;
@@ -31,6 +61,97 @@ export default function Search() {
     },
   });
 
+  // ── Sidebar filter state ─────────────────────────────────────────────────
+  const [nameFilter, setNameFilter] = useState("");
+  const [selectedBoards, setSelectedBoards] = useState<Set<string>>(new Set());
+  const [priceRange, setPriceRange] = useState<[number, number]>([0, 0]);
+  const [priceInitialized, setPriceInitialized] = useState(false);
+
+  // Initialise price range from data once
+  useEffect(() => {
+    if (searchResults?.hotels && searchResults.hotels.length > 0 && !priceInitialized) {
+      const prices = searchResults.hotels.map((h) => h.price);
+      setPriceRange([Math.min(...prices), Math.max(...prices)]);
+      setPriceInitialized(true);
+    }
+  }, [searchResults, priceInitialized]);
+
+  // Reset filters when destination changes
+  useEffect(() => {
+    setNameFilter("");
+    setSelectedBoards(new Set());
+    setPriceInitialized(false);
+  }, [queryParams.destinationId]);
+
+  const priceMin = useMemo(() => {
+    if (!searchResults?.hotels?.length) return 0;
+    return Math.min(...searchResults.hotels.map((h) => h.price));
+  }, [searchResults]);
+  const priceMax = useMemo(() => {
+    if (!searchResults?.hotels?.length) return 0;
+    return Math.max(...searchResults.hotels.map((h) => h.price));
+  }, [searchResults]);
+
+  // Compute board counts from results
+  const boardCounts = useMemo(() => {
+    const counts: Record<string, number> = {};
+    for (const opt of BOARD_OPTIONS) counts[opt] = 0;
+    searchResults?.hotels?.forEach((hotel) => {
+      hotel.rooms?.forEach((room) => {
+        const board = room.boardName;
+        const match = BOARD_OPTIONS.find(
+          (b) => b.toLowerCase() === board.toLowerCase() || board.toLowerCase().includes(b.toLowerCase())
+        );
+        if (match) counts[match] = (counts[match] ?? 0) + 1;
+      });
+    });
+    return counts;
+  }, [searchResults]);
+
+  function toggleBoard(board: string) {
+    setSelectedBoards((prev) => {
+      const next = new Set(prev);
+      if (next.has(board)) next.delete(board);
+      else next.add(board);
+      return next;
+    });
+  }
+
+  const hasActiveFilters =
+    nameFilter.trim() !== "" ||
+    selectedBoards.size > 0 ||
+    (priceInitialized && (priceRange[0] > priceMin || priceRange[1] < priceMax));
+
+  function clearFilters() {
+    setNameFilter("");
+    setSelectedBoards(new Set());
+    if (searchResults?.hotels?.length) {
+      const prices = searchResults.hotels.map((h) => h.price);
+      setPriceRange([Math.min(...prices), Math.max(...prices)]);
+    }
+  }
+
+  // ── Filter hotels ────────────────────────────────────────────────────────
+  const filteredHotels = useMemo(() => {
+    const hotels = searchResults?.hotels ?? [];
+    return hotels.filter((hotel) => {
+      if (nameFilter.trim() && !hotel.name.toLowerCase().includes(nameFilter.toLowerCase())) return false;
+      if (priceInitialized && (hotel.price < priceRange[0] || hotel.price > priceRange[1])) return false;
+      if (selectedBoards.size > 0) {
+        const hotelBoards = new Set(
+          (hotel.rooms ?? []).map((r) =>
+            BOARD_OPTIONS.find(
+              (b) => b.toLowerCase() === r.boardName.toLowerCase() || r.boardName.toLowerCase().includes(b.toLowerCase())
+            )
+          ).filter(Boolean)
+        );
+        const hasMatch = [...selectedBoards].some((b) => hotelBoards.has(b));
+        if (!hasMatch) return false;
+      }
+      return true;
+    });
+  }, [searchResults, nameFilter, priceRange, priceInitialized, selectedBoards]);
+
   const handleSearch = (params: {
     destinationId: number;
     destination: string;
@@ -38,6 +159,8 @@ export default function Search() {
     checkout: string;
     adults: number;
     rooms: number;
+    children: number;
+    infants: number;
   }) => {
     const sp = new URLSearchParams();
     sp.set("destinationId", String(params.destinationId));
@@ -46,6 +169,8 @@ export default function Search() {
     if (params.checkout) sp.set("checkout", params.checkout);
     if (params.adults) sp.set("adults", String(params.adults));
     if (params.rooms) sp.set("rooms", String(params.rooms));
+    if (params.children) sp.set("children", String(params.children));
+    if (params.infants) sp.set("infants", String(params.infants));
     setLocation(`/search?${sp.toString()}`);
   };
 
@@ -57,7 +182,7 @@ export default function Search() {
       <div className="bg-primary pt-8 pb-32">
         <div className="container mx-auto px-4">
           <h1 className="text-2xl md:text-3xl font-serif text-white mb-6">Trouvez votre séjour idéal</h1>
-          <div className="shadow-lg rounded-xl overflow-hidden">
+          <div className="shadow-lg rounded-xl overflow-visible">
             <SearchForm
               initialValues={{
                 destinationId: currentDestId,
@@ -65,6 +190,8 @@ export default function Search() {
                 checkout: queryParams.checkout ? new Date(queryParams.checkout) : undefined,
                 adults: queryParams.adults?.toString(),
                 rooms: queryParams.rooms?.toString(),
+                children: queryParams.children?.toString(),
+                infants: queryParams.infants?.toString(),
               }}
               onSubmit={handleSearch}
             />
@@ -75,53 +202,149 @@ export default function Search() {
       {/* Results */}
       <div className="container mx-auto px-4 -mt-20">
         <div className="flex flex-col lg:flex-row gap-8">
-          {/* Filters sidebar */}
-          <aside className="w-full lg:w-1/4 shrink-0">
+
+          {/* ── Filters sidebar ── */}
+          <aside className="w-full lg:w-72 shrink-0">
             <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-6 sticky top-24">
-              <div className="flex items-center justify-between mb-6">
-                <h3 className="font-serif font-medium text-lg flex items-center gap-2">
+              <div className="flex items-center justify-between mb-5">
+                <h3 className="font-serif font-semibold text-base flex items-center gap-2 text-slate-800">
                   <Filter className="w-4 h-4 text-primary" />
-                  Filtres
+                  Filtrer par:
                 </h3>
-                <Button variant="ghost" size="sm" className="text-xs text-muted-foreground">Effacer</Button>
+                {hasActiveFilters && (
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={clearFilters}
+                    className="text-xs text-primary hover:text-primary/80 h-auto py-1 px-2 gap-1"
+                  >
+                    <X className="w-3 h-3" />
+                    Réinitialiser
+                  </Button>
+                )}
               </div>
-              <div className="space-y-8">
+
+              <div className="space-y-7">
+                {/* ── Nom d'hôtel ── */}
                 <div>
-                  <h4 className="font-medium text-sm mb-3">Catégorie</h4>
-                  <div className="space-y-2">
-                    {[5, 4, 3].map((stars) => (
-                      <label key={stars} className="flex items-center gap-3 cursor-pointer group">
-                        <div className="w-5 h-5 border rounded border-slate-300 flex items-center justify-center group-hover:border-primary">
-                          <Check className="w-3 h-3 text-transparent group-hover:text-primary" />
-                        </div>
-                        <div className="flex items-center">
-                          {Array.from({ length: stars }).map((_, i) => (
-                            <Star key={i} className="w-4 h-4 fill-accent text-accent" />
-                          ))}
-                        </div>
-                      </label>
+                  <div className="flex items-center justify-between mb-2">
+                    <h4 className="font-semibold text-sm text-slate-700">Nom d'hôtel</h4>
+                    {nameFilter && (
+                      <button
+                        onClick={() => setNameFilter("")}
+                        className="text-xs text-slate-400 hover:text-slate-600"
+                      >
+                        Effacer
+                      </button>
+                    )}
+                  </div>
+                  <div className="relative">
+                    <Input
+                      placeholder="Mot clé"
+                      value={nameFilter}
+                      onChange={(e) => setNameFilter(e.target.value)}
+                      className="pr-10 border-slate-200 focus:border-primary text-sm"
+                      data-testid="input-name-filter"
+                    />
+                    <div className="absolute right-3 top-1/2 -translate-y-1/2 w-6 h-6 rounded bg-primary flex items-center justify-center">
+                      <SearchIcon className="w-3 h-3 text-white" />
+                    </div>
+                  </div>
+                </div>
+
+                {/* ── Budget slider ── */}
+                {priceInitialized && priceMin < priceMax && (
+                  <div>
+                    <div className="flex items-center justify-between mb-3">
+                      <h4 className="font-semibold text-sm text-slate-700">Budget</h4>
+                      {(priceRange[0] > priceMin || priceRange[1] < priceMax) && (
+                        <button
+                          onClick={() => setPriceRange([priceMin, priceMax])}
+                          className="text-xs text-slate-400 hover:text-slate-600"
+                        >
+                          Effacer
+                        </button>
+                      )}
+                    </div>
+                    <Slider
+                      min={priceMin}
+                      max={priceMax}
+                      step={Math.max(1, Math.round((priceMax - priceMin) / 100))}
+                      value={priceRange}
+                      onValueChange={(v) => setPriceRange(v as [number, number])}
+                      className="mb-3"
+                      data-testid="slider-budget"
+                    />
+                    <div className="flex justify-between text-xs font-semibold text-slate-600">
+                      <span className="bg-slate-50 border border-slate-200 rounded px-2 py-1">
+                        {priceRange[0].toLocaleString("fr-DZ")} DZD
+                      </span>
+                      <span className="bg-slate-50 border border-slate-200 rounded px-2 py-1">
+                        {priceRange[1].toLocaleString("fr-DZ")} DZD
+                      </span>
+                    </div>
+                  </div>
+                )}
+
+                {/* ── Catégorie (étoiles) ── */}
+                <div>
+                  <div className="flex items-center justify-between mb-3">
+                    <h4 className="font-semibold text-sm text-slate-700">Catégorie</h4>
+                  </div>
+                  <div className="flex gap-2">
+                    {[3, 4, 5].map((stars) => (
+                      <div
+                        key={stars}
+                        className="flex items-center gap-1 px-2.5 py-1.5 rounded-lg border border-slate-200 bg-slate-50 text-sm font-medium text-slate-600"
+                      >
+                        <span className="text-yellow-400">{stars}</span>
+                        <Star className="w-3.5 h-3.5 fill-yellow-400 text-yellow-400" />
+                      </div>
                     ))}
                   </div>
                 </div>
+
+                {/* ── Types de pension ── */}
                 <div>
-                  <h4 className="font-medium text-sm mb-3">Pension</h4>
-                  <div className="space-y-2">
-                    {["Logement simple", "Petit Déjeuner", "Demi pension", "Pension complète", "All Inclusive"].map((board) => (
-                      <label key={board} className="flex items-center gap-3 cursor-pointer group">
-                        <div className="w-5 h-5 border rounded border-slate-300 flex items-center justify-center group-hover:border-primary">
-                          <Check className="w-3 h-3 text-transparent group-hover:text-primary" />
-                        </div>
-                        <span className="text-sm text-slate-600">{board}</span>
-                      </label>
-                    ))}
+                  <div className="flex items-center justify-between mb-3">
+                    <h4 className="font-semibold text-sm text-slate-700">Types de pension</h4>
+                    {selectedBoards.size > 0 && (
+                      <button
+                        onClick={() => setSelectedBoards(new Set())}
+                        className="text-xs text-slate-400 hover:text-slate-600"
+                      >
+                        Effacer
+                      </button>
+                    )}
+                  </div>
+                  <div className="space-y-2.5">
+                    {BOARD_OPTIONS.map((board) => {
+                      const count = boardCounts[board] ?? 0;
+                      const checked = selectedBoards.has(board);
+                      return (
+                        <label
+                          key={board}
+                          className="flex items-center gap-3 cursor-pointer group"
+                          data-testid={`filter-board-${board.replace(/\s+/g, "-").toLowerCase()}`}
+                        >
+                          <Checkbox checked={checked} onChange={() => toggleBoard(board)} />
+                          <span className={`text-sm flex-1 ${checked ? "text-primary font-medium" : "text-slate-600"}`}>
+                            {board}
+                          </span>
+                          {count > 0 && (
+                            <span className="text-xs text-slate-400 font-medium">{count}</span>
+                          )}
+                        </label>
+                      );
+                    })}
                   </div>
                 </div>
               </div>
             </div>
           </aside>
 
-          {/* Results list */}
-          <div className="w-full lg:w-3/4">
+          {/* ── Results list ── */}
+          <div className="w-full min-w-0">
             {!hasSearched ? (
               <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-12 text-center">
                 <MapPin className="w-12 h-12 text-slate-300 mx-auto mb-4" />
@@ -152,17 +375,37 @@ export default function Search() {
               </div>
             ) : searchResults?.hotels && searchResults.hotels.length > 0 ? (
               <div className="space-y-6">
-                <div className="flex justify-between items-center bg-white p-4 rounded-xl shadow-sm border border-slate-200">
-                  <p className="text-slate-600 font-medium" data-testid="text-results-count">
-                    <span className="text-primary font-bold">{searchResults.total}</span> hôtels trouvés à {searchResults.destination}
-                  </p>
+                {/* Results header */}
+                <div className="flex flex-wrap justify-between items-center bg-white p-4 rounded-xl shadow-sm border border-slate-200 gap-3">
+                  <div>
+                    <p className="text-slate-600 font-medium" data-testid="text-results-count">
+                      <span className="text-primary font-bold">{filteredHotels.length}</span>
+                      {filteredHotels.length !== searchResults.total && (
+                        <span className="text-slate-400 text-sm"> / {searchResults.total}</span>
+                      )}{" "}
+                      hôtels{filteredHotels.length > 1 ? "" : ""} à {searchResults.destination}
+                    </p>
+                    {hasActiveFilters && (
+                      <p className="text-xs text-primary mt-0.5">Filtres actifs</p>
+                    )}
+                  </div>
                   <Button variant="outline" size="sm" className="hidden sm:flex">
                     <SlidersHorizontal className="w-4 h-4 mr-2" />
                     Trier : Recommandés
                   </Button>
                 </div>
 
-                {searchResults.hotels.map((hotel) => (
+                {/* No filtered results message */}
+                {filteredHotels.length === 0 && (
+                  <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-10 text-center">
+                    <Filter className="w-10 h-10 text-slate-300 mx-auto mb-3" />
+                    <h2 className="text-lg font-serif text-slate-800 mb-2">Aucun résultat pour ces filtres</h2>
+                    <p className="text-slate-500 text-sm mb-4">Essayez d'élargir vos critères de recherche.</p>
+                    <Button variant="outline" size="sm" onClick={clearFilters}>Réinitialiser les filtres</Button>
+                  </div>
+                )}
+
+                {filteredHotels.map((hotel) => (
                   <div
                     key={hotel.id}
                     className="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden hover:shadow-md transition-shadow"
@@ -183,7 +426,7 @@ export default function Search() {
                         {hotel.rating != null && (
                           <div className="absolute top-2 right-2 bg-white/90 backdrop-blur px-2 py-1 rounded text-xs font-bold text-slate-800 flex items-center gap-1">
                             <Star className="w-3 h-3 fill-accent text-accent" />
-                            {typeof hotel.rating === "number" ? hotel.rating.toFixed(1) : hotel.rating}
+                            {typeof hotel.rating === "number" ? (hotel.rating * 20).toFixed(0) : hotel.rating}/20
                           </div>
                         )}
                       </div>
@@ -223,9 +466,9 @@ export default function Search() {
                           </div>
                           <Button
                             onClick={() => {
-                            const sp = new URLSearchParams(searchString);
-                            setLocation(`/hotel/${hotel.id}?${sp.toString()}`);
-                          }}
+                              const sp = new URLSearchParams(searchString);
+                              setLocation(`/hotel/${hotel.id}?${sp.toString()}`);
+                            }}
                             className="px-5"
                             data-testid={`btn-view-${hotel.id}`}
                           >
