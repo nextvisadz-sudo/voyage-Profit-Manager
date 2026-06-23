@@ -138,8 +138,9 @@ function parseH24Hotel(raw: RawHotel, commissionPercent: number): Record<string,
   }
   const dedupedRooms = Array.from(seen.values());
 
-  // Use first photo from the real photos array
-  const image = (Array.isArray(raw.photos) && raw.photos[0]) ? raw.photos[0] : "";
+  // Preserve all photos; first one is the primary image
+  const allPhotos: string[] = Array.isArray(raw.photos) ? raw.photos.filter(Boolean) : [];
+  const image = allPhotos[0] ?? "";
 
   // Amenities from themes when facilities is empty
   const amenities: string[] = [];
@@ -153,9 +154,11 @@ function parseH24Hotel(raw: RawHotel, commissionPercent: number): Record<string,
     id: String(raw.hotelId ?? Math.random().toString(36).slice(2)),
     name: raw.name ?? "Hôtel",
     destination: raw.city ?? "",
+    address: raw.address ?? "",
     stars: raw.rating ?? 0,
     image,
-    description: raw.marketingText ?? (raw.address ? `${raw.name} — ${raw.address}` : ""),
+    photos: allPhotos,
+    description: raw.marketingText ?? "",
     originalPrice,
     price,
     currency: raw.currency ?? "DZD",

@@ -202,10 +202,18 @@ components:
           type: string
         destination:
           type: string
+        address:
+          type: string
+          description: Full address string from provider
         stars:
           type: number
         image:
           type: string
+        photos:
+          type: array
+          items:
+            type: string
+          description: All photo URLs from provider
         description:
           type: string
         originalPrice:

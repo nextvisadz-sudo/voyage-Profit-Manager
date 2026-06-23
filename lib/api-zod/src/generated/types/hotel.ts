@@ -11,8 +11,12 @@ export interface Hotel {
   id: string;
   name: string;
   destination: string;
+  /** Full address string from provider */
+  address?: string;
   stars?: number;
   image?: string;
+  /** All photo URLs from provider */
+  photos?: string[];
   description?: string;
   /** Raw DZD price from provider (no conversion) */
   originalPrice?: number;

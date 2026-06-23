@@ -222,7 +222,10 @@ export default function Search() {
                             </p>
                           </div>
                           <Button
-                            onClick={() => setLocation(`/hotel/${hotel.id}`)}
+                            onClick={() => {
+                            const sp = new URLSearchParams(searchString);
+                            setLocation(`/hotel/${hotel.id}?${sp.toString()}`);
+                          }}
                             className="px-5"
                             data-testid={`btn-view-${hotel.id}`}
                           >

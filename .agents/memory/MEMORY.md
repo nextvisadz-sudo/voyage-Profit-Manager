@@ -1,0 +1,1 @@
+- [H24Voyages API](h24voyages-api.md) — real params (destinationId, arrDate DD/MM/YYYY, adults1…), destination IDs, response shape, DZD prices, type coercion gotchas
