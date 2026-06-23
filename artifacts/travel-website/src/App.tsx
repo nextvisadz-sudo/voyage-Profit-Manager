@@ -7,6 +7,7 @@ import NotFound from "@/pages/not-found";
 import Home from "./pages/home";
 import Search from "./pages/search";
 import HotelDetail from "./pages/hotel-detail";
+import Reservation from "./pages/reservation";
 import { Navbar } from "./components/layout/navbar";
 import { Footer } from "./components/layout/footer";
 
@@ -21,18 +22,25 @@ const queryClient = new QueryClient({
 
 function Router() {
   return (
-    <div className="flex min-h-screen flex-col">
-      <Navbar />
-      <main className="flex-1">
-        <Switch>
-          <Route path="/" component={Home} />
-          <Route path="/search" component={Search} />
-          <Route path="/hotel/:id" component={HotelDetail} />
-          <Route component={NotFound} />
-        </Switch>
-      </main>
-      <Footer />
-    </div>
+    <Switch>
+      <Route path="/reservation/:id">
+        {(params) => <Reservation />}
+      </Route>
+      <Route>
+        <div className="flex min-h-screen flex-col">
+          <Navbar />
+          <main className="flex-1">
+            <Switch>
+              <Route path="/" component={Home} />
+              <Route path="/search" component={Search} />
+              <Route path="/hotel/:id" component={HotelDetail} />
+              <Route component={NotFound} />
+            </Switch>
+          </main>
+          <Footer />
+        </div>
+      </Route>
+    </Switch>
   );
 }
 

@@ -7,7 +7,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Badge } from "@/components/ui/badge";
 import {
   MapPin, Star, ArrowLeft, ChevronLeft, ChevronRight,
-  Utensils, Calendar, Users, Award, ExternalLink,
+  Utensils, Calendar, Users, Award, ExternalLink, FileText,
 } from "lucide-react";
 
 const FALLBACK = "https://images.unsplash.com/photo-1566073771259-6a8506099945?w=1200";
@@ -434,6 +434,16 @@ export default function HotelDetail() {
 
               <Button size="lg" className="w-full h-12 bg-accent hover:bg-accent/90 text-accent-foreground font-semibold text-base" data-testid="btn-book-now">
                 Réserver maintenant
+              </Button>
+              <Button
+                size="lg"
+                variant="outline"
+                className="w-full h-11 mt-2 border-primary text-primary hover:bg-primary/5 font-semibold gap-2"
+                onClick={() => setLocation(`/reservation/${id}?${searchString}`)}
+                data-testid="btn-download-voucher"
+              >
+                <FileText className="w-4 h-4" />
+                Télécharger le bon PDF
               </Button>
               <p className="text-center text-xs text-slate-400 mt-3">Aucun frais supplémentaire</p>
 
