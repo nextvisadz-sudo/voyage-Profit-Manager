@@ -5,6 +5,23 @@ import { DESTINATIONS } from "./destinations";
 
 const router: IRouter = Router();
 
+// ---------------------------------------------------------------------------
+// Simple in-memory response cache for H24Voyages API (5-min TTL)
+// ---------------------------------------------------------------------------
+interface CacheEntry { data: unknown; expiresAt: number }
+const responseCache = new Map<string, CacheEntry>();
+const CACHE_TTL_MS = 5 * 60 * 1000; // 5 minutes
+
+function getCached(key: string): unknown | null {
+  const entry = responseCache.get(key);
+  if (!entry) return null;
+  if (Date.now() > entry.expiresAt) { responseCache.delete(key); return null; }
+  return entry.data;
+}
+function setCache(key: string, data: unknown): void {
+  responseCache.set(key, { data, expiresAt: Date.now() + CACHE_TTL_MS });
+}
+
 async function getCommissionPercent(): Promise<number> {
   const rows = await db.select().from(commissionConfigTable).limit(1);
   return rows[0]?.percent ?? 10;
@@ -142,8 +159,8 @@ function parseH24Hotel(raw: RawHotel, commissionPercent: number): Record<string,
     originalPrice,
     price,
     currency: raw.currency ?? "DZD",
-    rating: raw.review?.rating != null ? raw.review.rating / 20 : undefined, // convert 0-20 → 0-5 if needed
-    reviewCount: raw.review?.count ?? undefined,
+    rating: raw.review?.rating != null ? Number(raw.review.rating) / 20 : undefined,
+    reviewCount: raw.review?.count != null ? Number(raw.review.count) : undefined,
     amenities,
     roomType: dedupedRooms[0]?.boardName ?? "Chambre Standard",
     mealPlan: dedupedRooms[0]?.boardName ?? "",
@@ -200,35 +217,44 @@ router.get("/hotels/search", async (req, res): Promise<void> => {
     if (checkout) paxParams.set("depDate", toH24Date(checkout));
 
     const url = `https://www.h24voyages.com/fr/hotels/api/Search/?${paxParams.toString()}`;
-    req.log.info({ url }, "Fetching hotels from H24Voyages");
+    const cacheKey = url;
 
-    const response = await fetch(url, {
-      headers: {
-        "Accept": "application/json, text/plain, */*",
-        "Accept-Language": "fr-FR,fr;q=0.9",
-        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36",
-        "Referer": "https://www.h24voyages.com/fr/hotels/recherche",
-      },
-      signal: AbortSignal.timeout(12000),
-    });
-
-    if (!response.ok) {
-      req.log.warn({ status: response.status }, "H24Voyages non-200, using mock data");
-      hotels = generateMockHotels(resolvedCity, commissionPercent);
+    const cachedRaw = getCached(cacheKey) as { hotels?: RawHotel[] } | null;
+    if (cachedRaw?.hotels && cachedRaw.hotels.length > 0) {
+      req.log.info({ count: cachedRaw.hotels.length }, "H24Voyages hotels served from cache");
+      hotels = cachedRaw.hotels.map((h) => parseH24Hotel(h, commissionPercent));
     } else {
-      const data = await response.json() as {
-        status?: string;
-        hotels?: RawHotel[];
-        total?: number;
-        nights?: number;
-      };
+      req.log.info({ url }, "Fetching hotels from H24Voyages");
 
-      if (data.status === "error" || !Array.isArray(data.hotels) || data.hotels.length === 0) {
-        req.log.warn({ status: data.status }, "H24Voyages returned no hotels, using mock data");
+      const response = await fetch(url, {
+        headers: {
+          "Accept": "application/json, text/plain, */*",
+          "Accept-Language": "fr-FR,fr;q=0.9",
+          "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36",
+          "Referer": "https://www.h24voyages.com/fr/hotels/recherche",
+        },
+        signal: AbortSignal.timeout(12000),
+      });
+
+      if (!response.ok) {
+        req.log.warn({ status: response.status }, "H24Voyages non-200, using mock data");
         hotels = generateMockHotels(resolvedCity, commissionPercent);
       } else {
-        req.log.info({ count: data.hotels.length, nights: data.nights }, "H24Voyages hotels fetched");
-        hotels = data.hotels.map((h) => parseH24Hotel(h, commissionPercent));
+        const data = await response.json() as {
+          status?: string;
+          hotels?: RawHotel[];
+          total?: number;
+          nights?: number;
+        };
+
+        if (data.status === "error" || !Array.isArray(data.hotels) || data.hotels.length === 0) {
+          req.log.warn({ status: data.status }, "H24Voyages returned no hotels, using mock data");
+          hotels = generateMockHotels(resolvedCity, commissionPercent);
+        } else {
+          req.log.info({ count: data.hotels.length, nights: data.nights }, "H24Voyages hotels fetched");
+          setCache(cacheKey, data);
+          hotels = data.hotels.map((h) => parseH24Hotel(h, commissionPercent));
+        }
       }
     }
   } catch (err) {
