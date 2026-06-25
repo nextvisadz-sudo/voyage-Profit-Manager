@@ -19,8 +19,8 @@ COPY lib/api-spec/package.json ./lib/api-spec/
 COPY lib/api-zod/package.json ./lib/api-zod/
 COPY lib/db/package.json ./lib/db/
 
-# Configure pnpm to download linux-x64 binaries for Rollup/esbuild
-RUN pnpm config set supportedArchitectures --json '{"os": ["linux"], "cpu": ["x64"]}'
+# Configure pnpm to download linux-x64-musl binaries for Rollup/esbuild on Alpine
+RUN pnpm config set supportedArchitectures --json '{"os": ["linux"], "cpu": ["x64"], "libc": ["musl"]}'
 
 # Install dependencies (frozen-lockfile checks that lockfile is correct)
 RUN pnpm install --frozen-lockfile
@@ -28,8 +28,8 @@ RUN pnpm install --frozen-lockfile
 # Copy all source files
 COPY . .
 
-# Build both client packages and backend server bundles
-RUN pnpm run build
+# Build only the production-relevant workspaces (api-server, travel-website, and dependencies)
+RUN pnpm --filter @workspace/api-server --filter @workspace/travel-website run build
 
 # Stage 2: Final lightweight image
 FROM node:20-alpine AS runner
