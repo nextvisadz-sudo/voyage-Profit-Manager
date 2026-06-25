@@ -42,7 +42,8 @@ const clientDistPath = path.resolve(__dirname, "../../travel-website/dist/public
 app.use(express.static(clientDistPath));
 
 // Fallback all non-API GET requests to travel-website's index.html (SPA routing)
-app.get("*", (req, res) => {
+// NOTE: Express v5 (path-to-regexp v8+) requires named wildcards — bare "*" throws a TypeError.
+app.get("/{*path}", (req, res) => {
   res.sendFile(path.resolve(clientDistPath, "index.html"));
 });
 
