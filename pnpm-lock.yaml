@@ -708,6 +708,9 @@ importers:
       '@replit/vite-plugin-runtime-error-modal':
         specifier: 'catalog:'
         version: 0.0.6
+      '@rollup/rollup-linux-x64-musl':
+        specifier: ^4.62.2
+        version: 4.62.2
       '@tailwindcss/typography':
         specifier: ^0.5.15
         version: 0.5.20(tailwindcss@4.3.0)
@@ -1808,6 +1811,11 @@ packages:
     cpu: [x64]
     os: [linux]
     libc: [glibc]
+
+  '@rollup/rollup-linux-x64-musl@4.62.2':
+    resolution: {integrity: sha512-uNN83XxQrRAh/w0/pmAfibcwyb6YWt4gP+dpnQKPVJshAloQ785ii8CT8ZCIxkGg9opVsvAlGhFitSm6D1Jjpg==}
+    cpu: [x64]
+    os: [linux]
 
   '@rollup/rollup-win32-x64-msvc@4.60.3':
     resolution: {integrity: sha512-hPt/bgL5cE+Qp+/TPHBqptcAgPzgj46mPcg/16zNUmbQk0j+mOEQV/+Lqu8QRtDV3Ek95Q6FeFITpuhl6OTsAA==}
@@ -4606,6 +4614,8 @@ snapshots:
 
   '@rollup/rollup-linux-x64-gnu@4.60.3':
     optional: true
+
+  '@rollup/rollup-linux-x64-musl@4.62.2': {}
 
   '@rollup/rollup-win32-x64-msvc@4.60.3':
     optional: true
