@@ -1,5 +1,5 @@
 # Stage 1: Build the application
-FROM node:20-alpine AS builder
+FROM node:20-slim AS builder
 
 # Install pnpm globally
 RUN npm install -g pnpm
@@ -19,8 +19,8 @@ COPY lib/api-spec/package.json ./lib/api-spec/
 COPY lib/api-zod/package.json ./lib/api-zod/
 COPY lib/db/package.json ./lib/db/
 
-# Configure pnpm to download linux-x64-musl binaries for Rollup/esbuild on Alpine
-RUN pnpm config set supportedArchitectures --json '{"os": ["linux"], "cpu": ["x64"], "libc": ["musl"]}'
+# Configure pnpm to download linux-x64 binaries for Rollup/esbuild on Debian/slim
+RUN pnpm config set supportedArchitectures --json '{"os": ["linux"], "cpu": ["x64"]}'
 
 # Install dependencies (frozen-lockfile checks that lockfile is correct)
 RUN pnpm install --frozen-lockfile
@@ -32,7 +32,7 @@ COPY . .
 RUN pnpm --filter @workspace/api-server --filter @workspace/travel-website run build
 
 # Stage 2: Final lightweight image
-FROM node:20-alpine AS runner
+FROM node:20-slim AS runner
 
 WORKDIR /app
 
