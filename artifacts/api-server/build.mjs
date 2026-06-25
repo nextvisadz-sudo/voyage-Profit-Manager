@@ -35,6 +35,15 @@ async function buildAll() {
       "@napi-rs/canvas",
       "@napi-rs/canvas-*",
       "@napi-rs/*",
+      // PDF generation — pdfkit uses fontkit which depends on @swc/helpers for CJS
+      // interop. Bundling these causes 'Cannot find module @swc/helpers/cjs/...' at runtime.
+      "pdfkit",
+      "fontkit",
+      "@swc/helpers",
+      "@swc/helpers/*",
+      // PDF parsing — pdf-parse uses pdfjs-dist which has complex dynamic requires
+      "pdf-parse",
+      "pdfjs-dist",
       "sharp",
       "better-sqlite3",
       "sqlite3",
