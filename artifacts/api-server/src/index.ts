@@ -1,3 +1,8 @@
+// IMPORTANT: This MUST be the very first import.
+// It stubs browser-native globals (DOMMatrix, ImageData, Path2D) that
+// pdfjs-dist (used by pdf-parse v2) requires at module initialization time.
+import "./lib/dom-polyfill";
+
 import app from "./app";
 import { logger } from "./lib/logger";
 
