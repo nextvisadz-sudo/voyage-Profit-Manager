@@ -28,7 +28,13 @@ async function buildAll() {
     // - uses native modules and loads them dynamically (e.g. sharp)
     // - use path traversal to read files (e.g. @google-cloud/secret-manager loads sibling .proto files)
     external: [
+      // Native binary files — esbuild cannot bundle these
       "*.node",
+      // @napi-rs/canvas and ALL its platform-specific prebuilt packages
+      // e.g. @napi-rs/canvas-linux-x64-gnu, @napi-rs/canvas-linux-arm64-gnu, etc.
+      "@napi-rs/canvas",
+      "@napi-rs/canvas-*",
+      "@napi-rs/*",
       "sharp",
       "better-sqlite3",
       "sqlite3",
