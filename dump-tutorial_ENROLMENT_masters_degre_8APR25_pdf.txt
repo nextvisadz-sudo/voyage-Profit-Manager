@@ -1,0 +1,163 @@
+1
+International enrolment in master’s
+degree programmes
+Applications for academic year 2025/2026
+
+-- 1 of 17 --
+
+2
+HOW TO APPLY
+Please read carefully the following guidelines for the application procedure for your enrolment at the
+University of Palermo.
+This is a Step-by-step guide that will help you to apply to the University of Palermo.
+Your UniPa account is necessary for the acceptance procedure, even if you have already been
+nominated by your university: the enrolment is mandatory to complete your administrative procedure
+and to be able to follow courses and undertake exams once in Palermo.
+We invite you to read it carefully and prepare all the required data and documents. If you have any
+questions, you can write to internationalstudents@unipa.it with your questions, but before please read
+all the points in these guidelines and you will probably find your answer.
+THE IRO STAFF
+
+-- 2 of 17 --
+
+3
+STEP 1 – UNIPA STUDENT PORTAL LOGIN AND NEW APPLICATION
+Go on the following website to login and start your application procedure:
+https://immaweb.unipa.it/immaweb/private/pratiche/listCreatePratiche.seam
+Now login using the Username and Password that you generated during the registration procedure.
+After the login, you will see your student portal page. Now, click on “Application” and select “MY
+Application Form” as explained below.
+
+-- 3 of 17 --
+
+4
+1.2 After you open the new application form page, you would need to click on the small blue “+” ON
+Calls and Applications, then select “Enrolment Bachelor's Degree/Master's Degree Application” as
+shown below.
+
+-- 4 of 17 --
+
+5
+New Enrolment Record 2025/2026:
+
+-- 5 of 17 --
+
+6
+1.7 Now you’ll have to choose whether you’ll apply for the Next ERSU competition or not. For now,
+you’re going to select the first option. It doesn’t necessarily mean you won’t apply, but you’ll be able
+to do it later (the application form is going to be available by June).
+New Enrolment Record 2025/2026:
+
+-- 6 of 17 --
+
+7
+1.8 The next step consists in making a self-declaration of your personal income & asset information.
+Since you won’t probably already have your ISEE PARIFICATO, select the second option. You’ll be
+able to insert the protocol number later.
+
+-- 7 of 17 --
+
+8
+1.9 Now you must insert your marital status and your job situation.
+Choose the ones that represent your current situation and go ahead with the application.
+1.10 After, you’ll have to complete what’s required on the next page.
+As you may see in the screenshots that follows, your household components and their profession are
+required. Once you are sure everything you inserted is correct, you can proceed you’re your
+application.
+
+-- 8 of 17 --
+
+9
+New Enrolment Record 2025/2026:
+
+-- 9 of 17 --
+
+10
+1.11 It’s time for your self-declaration of Qualifications.
+Search the word “Estero” and select “Diploma Estero”. Do the same thing when you must choose an
+Institute and select “Istituto Estero”.
+Then, you must insert all the information required. Be aware to enter all the data needed and to convert
+your final score/grade using the formula shown down below.
+
+-- 10 of 17 --
+
+11
+Conversion of grades awarded abroad
+Grades from other countries can be converted into the equivalent in the Italian system of assessment.
+If your mark is numerical, you can use the following formula:
+V - Vmin
+Grade = ------------------------ * (Imax -Imin) + Imin
+Vmax - Vmin
+Results with decimals should be rounded to the nearest integer.
+If your mark is qualitative (judgements, letters and the like)
+conversion of the mark is assessed case by case.
+Here's an EXAMPLE of converting a Bachelor's degree grade using
+the Italian system using the provided formula:
+Let's say we have a numerical Bachelor's degree grade of 90 from a
+foreign institution, where the minimum passing grade (Vmin) is 70 and the maximum
+grade (Vmax) is 95.
+Using the formula:
+Grade = ((90 - 70) / (95 - 70)) * (110 - 66) + 66
+= (20 / 25) * 44 + 66
+= (4/5) * 44 + 66
+= 35.2 + 66
+= 101.2
+Rounded to the nearest integer, the converted grade would then be 101 in the Italian system for a Bachelor's degree.
+where V is the mark to convert
+Vmin = minimum mark for a pass in the foreign institution
+Vmax = maximum mark in the foreign institution
+Imin = minimum mark for a pass in an Italian institution (60/100 for upper
+secondary school, 66/110 for academic degree)
+Imax = maximum mark in an Italian school (100/100 for upper secondary
+school, 110/110 for academic degree)
+V = 90
+Vmin = 70
+Vmax = 95
+Imin = 66 (minimum passing grade in an Italian
+institution for a Bachelor's degree)
+Imax = 110 (maximum grade in an Italian institution for
+a Bachelor's degree)
+
+-- 11 of 17 --
+
+12
+1.12 Now you must insert any previous academic qualification. Flag option that says, “that I have
+earned a degree / diploma in” and search the word “estero” to insert the option shown below. Then
+do the same thing to insert the University you graduated from.
+Complete all the following demands and be aware to convert your grade as you did before.
+Go ahead.
+
+-- 12 of 17 --
+
+13
+1.13 On the following page, you may choose a reason to be exonerated from the payment of the
+tuition fees. As shown below, you’ll find lots of options to choose from.
+
+-- 13 of 17 --
+
+14
+New Enrolment Record 2025/2026:
+
+-- 14 of 17 --
+
+15
+1.14 Select the option shown below on the following page. You must insert your ISEE Parificato once
+you have it.
+1.15 Now you'll be shown all the information you entered. As you may see, you’ll enter the 14th “classe
+isee”. This means that you are exonerated from the payment of the entire tuition fee – at least until you
+insert your ISEE PARIFICATO.
+As shown below, you must pay a tuition fee of € 156,00 that consists of a “regional tuition fee” and a
+“stamp duty”. This fee won’t be charged of any late-fee penalty if paid by 27/12/2025.
+
+-- 15 of 17 --
+
+16
+
+-- 16 of 17 --
+
+17
+1.16 Go ahead on the following page and insert your ID document as required. Once you complete
+this step, you just need to pay your tuition fees and wait.
+
+-- 17 of 17 --
+

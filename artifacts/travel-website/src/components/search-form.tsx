@@ -337,7 +337,7 @@ export function SearchForm({ initialValues, onSubmit }: SearchFormProps) {
                         </Button>
                       </FormControl>
                     </PopoverTrigger>
-                    <PopoverContent className="w-auto p-0" align="start">
+                    <PopoverContent className="w-auto p-0 rounded-xl shadow-2xl border border-slate-200/80 backdrop-blur" align="start">
                       <Calendar mode="single" selected={field.value} onSelect={field.onChange} initialFocus />
                     </PopoverContent>
                   </Popover>
@@ -366,7 +366,7 @@ export function SearchForm({ initialValues, onSubmit }: SearchFormProps) {
                         </Button>
                       </FormControl>
                     </PopoverTrigger>
-                    <PopoverContent className="w-auto p-0" align="start">
+                    <PopoverContent className="w-auto p-0 rounded-xl shadow-2xl border border-slate-200/80 backdrop-blur" align="start">
                       <Calendar mode="single" selected={field.value} onSelect={field.onChange} initialFocus />
                     </PopoverContent>
                   </Popover>

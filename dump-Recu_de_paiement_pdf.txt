@@ -1,0 +1,15 @@
+Reçu de paiement éléctronique
+L'entreprise: H24 voyages
+Télépone: +213 560 99 93 94
+Email: dg@h24voyages.com
+Détails de paiement
+Méthode de paiement CIB / Edahabia
+Numéro de commande 65989
+ID de transaction U0jeaQedD9fR7EBFHFPL
+Numéro d'autorisation 140810
+Date et heure 2026-05-06 16:49:50
+Montant total 91880 DA
+Si vous rencontrez un problème avec le paiement, Contactez la SATIM
+
+-- 1 of 1 --
+

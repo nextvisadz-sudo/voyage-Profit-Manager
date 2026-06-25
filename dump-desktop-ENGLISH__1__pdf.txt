@@ -1,0 +1,36 @@
+has successfully completed the EF SET Certicate and has earned level:
+Understanding the results
+EF SET 	0-20 	21-30 	31-40 	41-50 	51-60 	61-70 	71-100
+CEFR A0
+Novice
+A1
+Beginner
+A2
+Elementary
+B1
+Intermediate
+B2
+Upper
+Intermediate
+C1
+Advanced
+C2
+Procient
+The achieved level is 70/100 on the EF SET score scale and C1 Advanced according to the Common
+European Framework of Reference (CEFR). The EF SET score is calculated as an average of the skill
+section scores.
+Reading
+C2 Procient
+Listening
+C1 Advanced
+C1 Advanced
+Reading 	Listening
+English Certicate
+61
+66/100
+71
+Awarded on: 28 May 2026
+Ismail Benhenia
+
+-- 1 of 1 --
+

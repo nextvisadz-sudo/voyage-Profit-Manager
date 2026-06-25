@@ -1,0 +1,30 @@
+Reference:
+Status: CONFIRMED
+Order id:
+Order number:
+Response: 	Votre paiement a été accepté
+Approval code:
+Payment mode:
+Date:
+Client:
+Phone:
+Email:
+En cas de problème de paiement, veuillez
+contacter le numéro vert de la SATIM 3020
+myriam bala 	Adulte 	7122400064677
+V7
+Setif �QSF�
+2026�01�07T15�00�00
+Terminal :
+Lyon �LYS�
+2026�01�07T16�50�00
+Terminal : 2
+N° vol : 2049
+Avion : 320 1h 50m ECONOMY
+class : P 2 PC
+Montant :
+Trouvez les vols les moins chers et économisez sur votre voyage | Volz 	https://volz.app/voucher?orderNumber=VOLZ00e179ff06b1&orderId...
+1 sur 1 	06/01/2026, 4:50 PM
+
+-- 1 of 1 --
+

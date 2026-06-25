@@ -1,0 +1,40 @@
+Votre réservation est confirmée .
+Votre
+Référence
+Réservation
+: A1FZ0Y
+Emis par B2S -
+B2SEUR
+Billets
+Setif 	Oran
+jeudi 30 avr. 2026
+Vol opéré par TASSILI AIRLINES SF2225
+(0 Stop)
+QSF 19:25
+Setif
+T1 T1
+ORN 20:50
+Oran
+T1
+Economy Classe
+Statut: Confirmed REMB AUTORISE
+MODIF AUTORISE
+MR MONCEF MOHAMED CHERIF GHASSIRI
+ADULT
+Ticket N° 5152102337184
+Bagage 20 Kg
+Informations de paiement
+Montant 	5400.50 DA
+Paiement par 	EDAHABIA
+Référence 	8554534771
+Date/Heure 	25 avr. 2026 15:39:11
+ADULT x 1 	5400.50 DA
+Fare 	FARE 	4050 DA
+Redevance Passager Domestique 	DZ 	400 DA
+Algérie : Timbre Fiscal 	TF 	30 DA
+Redevance Nat protection des droits des passagers 	V5DZ 	75 DA
+Taxe sur la valeur ajoutée 	YB 	845.50 DA
+Total 	5400,5 DA
+
+-- 1 of 1 --
+

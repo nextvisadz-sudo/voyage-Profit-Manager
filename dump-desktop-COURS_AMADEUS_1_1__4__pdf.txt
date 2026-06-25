@@ -1,0 +1,1768 @@
+ELFARABI
+FORMATION
+COURS
+AMADEUS
+www.facebook.com/pages/Elfarabi-Formation
+2012-2013
+
+-- 1 of 66 --
+
+ELFARABI FORMATION COURS AMADEUS 2012
+2
+SOMMAIRE:
+Leçon 1 : Présentation du système de réservation AMADEUS
+Leçon 2 : Constitution d’un dossier passager(PNR)
+Leçon 3 : Codage, Décodage
+Leçon 4 : Les types de vols
+Leçon 5 : Flight information
+Leçon 6 : Fréquences des vols
+Leçon 7 : Temps minimum de correspondance
+Leçon 8: Déplacement dans l’écran d’AMADEUS
+Leçon 9 : Clôture d’un PNR
+Leçon 10 : Réaffichage d’un PNR
+Leçon 11 : Annulation d’un élément de PNR
+Leçon 12: Duplication d’un PNR / Split ou séparation de dossier
+Leçon 13 : Rubriques complémentaires
+Leçon 14 : Cartes fréquent flyer
+Leçon 15 : Attribution du siège
+Leçon 16 : Vente d’un passager « UM »
+Leçon 17 : Files d’appel
+Leçon 18 : Historique d’un PNR
+Leçon 19 : La servuction
+Leçon 20 : Le surbooking (vol régulier)
+Leçon 21 : Liste d’attente
+Leçon 22 : Tarification automatique
+
+-- 2 of 66 --
+
+ELFARABI FORMATION COURS AMADEUS 2012
+3
+Leçon 23 : Consultation tarifaire
+Leçon 24 : La note tarifaire
+Leçon 26 : Pénalité
+Leçon 27 : Les trois éléments complémentaires pour l’émission du billet
+Leçon 28 : Billet électronique
+Leçon 29 : Revalidation
+Leçon 30 : Annulation d’un billet
+Leçon 31 : Les frais de service
+Leçon 32 : Etablir un voyage organisé
+Leçon 33 : Document échange
+Leçon 34 : Les zones IATA : (traffic conference: TC)
+Leçon 35 : Les indicateurs géographiques (Global Indicateur GI)
+Leçon 36 : Remboursement totale sans pénalité
+Leçon 37 : Remboursement totale avec pénalité
+Leçon 38 : Calcul d’un voyage
+
+-- 3 of 66 --
+
+ELFARABI FORMATION COURS AMADEUS 2012
+4
+Leçon 1 : Présentation du système de
+réservation AMADEUS
+ Amadeus :
+AMADEUS Air offre un accès permanent à plus 480 compagnies aériennes dans le
+monde.
+Les différents acteurs qui interviennent lors d’une réservation :
+ La compagnie aérienne.
+ Amadeus.
+ L’agent de voyage.
+ Le client.
+ Signature du poste du travail :
+1. J’ouvre la page Amadeus.
+2. Je clique sur « Lancer » « Amadeus selling plat form »
+3. Je tape le mot de passe (Personnel de l’agent)
+4. « OK » pour valider.
+5. J’active la page « commande »
+6. En cas d’une déconnexion je tape le format :
+a. En mode production ou (Product mode) :
+J I signature du poste/S U- mot de passe
+Exp: J I 2010 AM/S U - mohamed ENTRER
+b. En mode training :
+J J signature du poste /SU- mot de passe
+Exp: J J 2010 AM/S U- mohamed
+ Les pages AIS (Amadeus information system)
+EXP1 :
+-Pour afficher les informations relatives à une compagnie aérienne :
+Tapez le format : GG AIR TU page tunisair.
+EXP 2 :
+-Pour afficher les informations relatives a un aéroport en particulier : Tapez le format : GG
+APT CDG. (CDG : apt Charle De Gaule)
+EXP 3 :
+
+-- 4 of 66 --
+
+ELFARABI FORMATION COURS AMADEUS 2012
+5
+-Pour afficher les informations relatives aux alliances entre les compagnies aériennes : Tapez
+le format : GG ALLIANCE
+Exp: SKYTEAM GG SKYTEAM AF, AZ, UX……..
+Exp: STAR ALLIANCE GG STAR ALLIANCE: LH, MS,
+Exp: ONE WORLD GG ONE WORLD: BA, RJ…..
+ Les pages «HELP » :
+Les pages «HELP » constituent une aide sur toute les transactions ou les formats du system
+Amadeus elles expliquent comment les utiliser et les illustres par des exemples.
+EXP : HESN
+EXP: HDO
+Listes des compagnies aériennes, représentant en Tunisie :
+TU : Tunisair QR : Qatar Airways
+UG : Tunisair express EK : Emirates
+BJ : Nouvelair LN : Libyan Airlines
+5R : Khartago Airlines AT : Royal air Maroc
+TK : Turkish Airlines AH : Air Algerie
+RJ : Royal Jordanian UX : Air Europa
+RB : Syrian Airlines AF : Air France
+SV : Saudian Airlines AZ : Alitalia
+LH : Lufthansa BA : British Airways
+
+-- 5 of 66 --
+
+ELFARABI FORMATION COURS AMADEUS 2012
+6
+Leçon 2 : CONSTITUTION D’UN DOSSIER
+PASSAGER (PNR)
+(Passenger Name Record)
+Introduction :
+Un PNR constitue les informations relatives à la réservation d’un passager.
+-Les 5 éléments obligatoire pour la création d’un PNR :
+1) Elément Nom :
+NM1AOUINI/MOHAMED
+2) Elément Itinéraire : Affichage des vols
+SN2JUNTUNCAI
+Vente des places
+SS1Y1
+3) Elément De Contact :
+AP 22 524 102
+4) Elément Billetterie
+TKOK
+5) Elément Reçu de
+RFLM
+Le mot de la fin : Fermer le
+Fin de transaction : ET
+REMARQUE : ON PEUT RESERVER QUE 9 PLACES DANS UN PNR INDIVIDUEL.
+EXP:
+> NM1 AOUINI/MOHAMED
+> SN20JANTUN PAR
+> SS1Y1
+> SN27JANPARTUN
+> SS1Y1
+>AP 22 524 102
+>TKOK
+>ET
+
+-- 6 of 66 --
+
+ELFARABI FORMATION COURS AMADEUS 2012
+7
+RP/TUNTS317E/TUNTS317E AM/SU 10DEC11/0150Z 2NJZAW
+1AOUINI/MOHAMED
+2 TU 716 Y 20JAN 5 TUNORY HK1 M 0835 1055 *1A/E*
+3 TU 725 Y 27JAN 5 ORYTUN HK1 S 0900 1125 *1A/E*
+4 AP TUN (216)71256732 - INSTITUT EL FARABI - A
+5 AP 216 22524102 MOHAMED
+6 TK OK06DEC/TUNTS317E
+Elément du Nom :
+Elément du Nom pour deux ou plusieurs passagers de même nom de famille:
+>NM2 LTAIEF/MAKREM/ANIS
+2 ou Plusieurs passagers de nom de famille différents :
+>NM1 LTAIEF/MAKREM 1AOUINI/MAROUEN
+Elément du Nom pour un Bébé:
+INFANT CODE : INF 0 - 2ans-90% de prix hors taxes de billet no seat NS
+Adulte avec un Bébé du même Nom de famille :
+>NM1 LTAIEF/MAKREM (INF/ElISSA/22MAY11)
+Adulte avec un Bébé du Nom de famille différent :
+>NM1 LTAIEF/MAKREM (INF HAMROUNI/ASMA/22MAY11)
+Elément du Nom pour un enfant :
+>CHILD CODE CHD 2 12ans -25% ou -33% de prix de billet hors taxes.
+>NM1 AOUINI/ANIS(CHD) (IDDOB2DEC2008)
+Elément de Nom pour un jeune :
+>Youth code YTH âge entre 12 - 24ans
+>NM1AOUINI/SAMI (Y T H) (IDDOB22DEC2000)
+Elément du contact :
+Il est obligatoire de saisir au minimum un contact téléphonique dans un dossier passager :
+- Soit commun à plusieurs passagers.
+- Soit attribué par passager.
+EXP :
+>AP 216 22524102 OU AP216 22 524 102/P1 (P1 : passager n° 1)
+Elément de Billetterie :
+Tapez le format TKOK.
+
+-- 7 of 66 --
+
+ELFARABI FORMATION COURS AMADEUS 2012
+8
+Elément du Reçu :
+>RF (received from): RFLM
+Elément itinéraire:
+Pour afficher la liste des vols (Horaire et disponibilité) tapez le format : SN (Schedule Neutral)
+:
+SN5JANTUNPAR
+SN SCHEDULE NEUTRAL date ville de départ ville de destination
+JAN
+FEB
+MAR
+APR
+MAY
+JUN
+JUL
+AUG
+SEP
+OCT
+NOV
+DEC
+Sell Segment SS1Y2 N°de ligne dans SN
+Nombre de passager Classe de réservation
+
+-- 8 of 66 --
+
+ELFARABI FORMATION COURS AMADEUS 2012
+9
+Leçon 3 : CODAGE, DECODAGE
+I. Codage d’un code vil le ou d’un aéroport :
+1. Pour afficher le code ville ou d’un aéroport taper le format
+2. « DAN » Determine airport Name.
+>DAN PARIS PAR CDG ORY
+>DAN MADRID MAD
+II. Décodage d’un code ville ou d’un aéroport :
+« DAC » Determine airport code :
+> DACCMN CASABLANCA airport MOHAMEDV
+Codage pays:
+“DC” détermine country.
+>DC IT ITALY
+>DCMA MOROCCO
+REMARQUE :
+Si le système affiche une réponse négative situation introuvable nom identiques affiches on
+cherche sur internent (on tape : code ville IATA VARSOVIE)
+Décodage d’une compagnie aérienne :
+- Pour décoder le code d’une compagnie aérienne on tape le format « DNA » determine
+Name
+Airline
+EXP : > DNA TU
+> TU / TAR 199 TUNISAIR
+Code compagnie code code numérique de compagnie nom de la compagnie
+IATA
+Tunis air
+
+-- 9 of 66 --
+
+ELFARABI FORMATION COURS AMADEUS 2012
+10
+Pour déterminer le type d’appareil taper le format « DNE »
+DNE320 AIRBUS
+DNE744 BOEING
+DNE determine Name equipment
+REMARQUE : TRN TRAIN
+EXERCICE :
+Destination Toulouse : DAN Toulouse TLS
+>SN 20 MAR TUN TLS
+>SS1Y1
+>SN 30 Mar TLSTUN
+>SS1Y1
+>NM1AOUINI/MOHAMED
+>AP1 216 22524102
+>TKOK
+>RF LM
+>ET
+>DNS determine name state
+DNSUSNV US: USA NV: NEVADA LAS: Las Vegas
+
+-- 10 of 66 --
+
+ELFARABI FORMATION COURS AMADEUS 2012
+11
+Leçon 4: LES TYPES DES VOLS
+Application :
+>SN3 JANTUN DXB
+- Il y a 2 vols un direct et l’autre avec escale.
+Les types :
+a) Vol Non stop : Avec le même numéro de vol et le même type d’équipement.
+b) Vol Direct : vol avec escale avec le même N° du vol et le même type d’équipement.
+c) Vol Par correspondance : vol avec escale et un numéro du vol et un équipement différent.
+Exercice :
+>SN 5 JAN TUN DJE 4 vols directs
+Code SHARE (partager):
+-Application:
+EXP1:
+>SN 6 Mar PAR MIL
+- AF : AZ Partage de code location/réservation de (capacité) sièges. Chaque compagnie loue des
+places pour une autre compagnie aérienne et commerciale le vol sous son propre code à
+2 lettres
+- AP * AZ Partage de code location d’avion avec équipage, une compagnie loue un appareil et un
+équipage auprès d’une autre compagnie aérienne et commercialise le vol sous son propre
+Code à 2 lettres.
+
+-- 11 of 66 --
+
+ELFARABI FORMATION COURS AMADEUS 2012
+12
+Leçon 5 : FLIGHT INFORMATION
+Application :
+SN7FEBTUNDXB SS1Y2
+Le vol numéro 2est un vol direct pour connaitre la ville d’escale taper le format :
+DO2
+EFT: Estimated flight time
+GRND: ground
+EQP : Equipment
+Exercice:
+SN5FEBLONSYD (LON : London) (SYD : Sydney) SS1Y1
+1. La durée de vol entre London et Bangkok (BKK) est 9 :05 (vrai)
+2. Le jour de départ de London est le dimanche (faux)
+3. Le jour d’arrivé à Sydney est le mardi (faux)
+4. Le transporteur entre London et Sydney est QF (faux)
+5. La durée d’escale à BKK est 1 :25 (vrai)
+
+-- 12 of 66 --
+
+ELFARABI FORMATION COURS AMADEUS 2012
+13
+Leçon 6 : FREQUENCE DES VOLS
+ Introduction :
+L’affichage de la fréquence des vols TN (Time Table Neutral) permet d’obtenir
+les horaires des vols opérant sur une période d’une semaine tapez le Format :
+>TN 25 JAN PAR LAX
+Explication de l’affichage TN
+- 1234567 Lundi, Mardi, Mercredi, Jeudi, Vendredi, Samedi, Dimanche
+- D Tous les jours (Daily)
+- X5 Tous les jours sauf le Vendredi
+
+-- 13 of 66 --
+
+ELFARABI FORMATION COURS AMADEUS 2012
+14
+Leçon 7 : TEMPS MINIMUM DE
+CORRESPONDANCE
+- Pour connaître le temps minimum de correspondance nécessaire entre :
+Deux vols d’une même compagnie aérienne :
+>EXP : TUN EK DXB EK SHA même compagnie.
+Deux vols de compagnies aériennes différentes :
+>EXP : TUN TU FRA LH DUS 2 compagnies différentes.
+Deux terminaux d’un même aéroport :
+>EXP : TUN AF CDG2F PAR CDG1 LH FRA
+Deux aéroports d’une même ville :
+>EXP: TUN BA LGW LON LHR BA MAN
+- Pour connaître le temps minimum de correspondance à Paris (Apt CDG2F) taper :
+> DM2 determine minimum.
+Explication de l’affichage : Information sur les arrivés et les départs :
+D/D Arrivé domestique/Départ domestique : DJE UG TUN UG TBJ D/D
+D/I Arrivé domestique/ Départ international : DJE UG TUN QR DOH D/I
+I/D Arrivé international/Départ domestique : PAR AF YMQ AC YTO I/D
+I/I Arrivé international/Départ international : TUN AT CAS AT LBV I/I
+Temps minimum de correspondance :
+45 45 minutes
+120 1h20
+Exercice : Destination JOHANSBURG (JNB) : Départ 20 JAN Retour le 30 JAN
+>SN 20 JAN TUN JNB/AAF
+>SS 1Y1
+>SN 30 JAN JNB TUN/AAF
+>NM1 Le Floche/Vivien
+>AP 06078012
+>TKOK
+>RF KS
+>ET
+
+-- 14 of 66 --
+
+ELFARABI FORMATION COURS AMADEUS 2012
+15
+Exercice : Destination NAIROBO (NBO) : Départ 1FEB Retour le 10FEB
+>SN 1 FEB TUN NBO/ABA
+>SS 1Y3
+>SN 10 FEB NBO TUN/ABA
+>SS 1Y3
+>NM1 AOUINI/MOHAMED
+>AP 06078012
+>TKOK
+>RF KS
+>ET
+
+-- 15 of 66 --
+
+ELFARABI FORMATION COURS AMADEUS 2012
+16
+Leçon 8: DEPLACEMENT DANS L’ECRAN
+D’AMADEUS
+1. Pour afficher la page suivante taper le Format : « MD » (Move down)
+2. Pour afficher la page précédente taper le format : « MU » (Move up)
+3. Pour afficher le jour suivant taper le Format : « MN » (Move next)
+4. Pour afficher le jour précédent taper le format : « MY » (Move yesterday)
+
+-- 16 of 66 --
+
+ELFARABI FORMATION COURS AMADEUS 2012
+17
+Leçon 9 : CLOTURE D’UN PNR
+ Pour fermer un dossier le classer et obtenir son numéro de références taper ET :
+(end transaction)
+ Pour fermer un PNR et le réafficher simultanément taper ER (End and Retrieve)
+• IG : si vous ignorer les transactions d’un PNR en création, le dossier n’est pas validé
+et n’existe donc pas (IGNORED)
+ Ignorer un PNR qui existe déjà tapez le format IG
+Réponse du système « IGNORED +NUMERO DE DOSSIER »
+• IR : Le système ignore les dernières modifications sur les dossiers réafficher « Ignore
+and retrieve »
+NB : Cette fonction n’est pas active à la création d’un PNR
+Application : Départ 20 MAY, Retour 25 destination « BEY »
+>SN20 MAY TUN BEY
+>SS1Y1
+>SN25 MAY BEY TUN
+>SS1Y1
+>NM1 AOUINI/MOHAMED
+>AP 06170081910
+>TKOK
+>RF LM
+>ET
+ Fermeture d’un PNR, le classer et obtenir son numéro de référence :
+Exercice : Combien du vol pour TUN BEY ?
+7(Dimanche)
+Il y a 4 vols
+45(Jeudi, Vendredi)
+1(Lundi)
+ Pour fermer et réafficher simultanément taper le Format : « ER » (End and Retrieve)
+ IGNORER UN PNR :
+a) Si vous ignorez les transactions d’un « PNR » en création, le dossier n’est pas
+
+-- 17 of 66 --
+
+ELFARABI FORMATION COURS AMADEUS 2012
+18
+valide et n’existe donc pas, taper le Format « IG » Réponse du système : IGNORED
+b) Ignorez un « PNR » qui existe déjà tapez le Format IG « IGNORED –X6PSXI »
+
+-- 18 of 66 --
+
+ELFARABI FORMATION COURS AMADEUS 2012
+19
+Leçon 10 : REAFFICHAGE D’UN PNR
+a) Réaffichage d’un PNR par le nom de Famille :
+On tape le Format :
+>RT/NOM ENTER
+b) Réaffichage d’un PNR dans le nom de Famille est similaire :
+On tape le Format :
+>RT/NOM ENTER 2 afficher le PNR N°2 RT2
+c) Réaffichage D’un PNR par le n° de PNR
+RTYVRTXO
+RT+N° de Dossier
+
+-- 19 of 66 --
+
+ELFARABI FORMATION COURS AMADEUS 2012
+20
+Leçon 11 : ANNULATION D’UN ELEMENT
+DE
+« PNR»
+Application :
+Départ 20 MAY/Retour 30 MAY destination tripoli :
+>SN 20 MAY TUN TIP
+>SS1Y1
+>SN 30 MAY TIP TUN
+>SS1Y1 Pour annuler la date de départ
+>NM1 AOUINI/MOHAMED segment n2 Taper le format XE2
+>AP 0688887
+>TKOK
+>RF LM
+>ER
+ANNULATION D ’UN « PNR »
+ Pour annuler tout le parcours on tape le Format « XI » « EXCEPT ITINARY »
+>XI ENTER et pour confirmer l’annulation je signe et je ferme.
+RF LM Signature
+>ET Fermeture
+
+-- 20 of 66 --
+
+ELFARABI FORMATION COURS AMADEUS 2012
+21
+Leçon 12 : DUPLICATION D’UN « PNR »/
+SPLIT OU SEPARATION DE DOSSIER
+A. DUPLICATION D’UN « PNR »
+ Pour dupliquer un « PNR » et reproduire les mêmes segments de vols on tape le
+Format « RRI »
+Réponse du système Un nouveau « PNR » est créé automatiquement, il reprend les mêmes segments
+de vol.
+B. SPLIT OU SEPARATION DE DOSSIER
+Introduction :
+Le split, ou séparation de dossier permet de diviser manuellement un dossier passager
+initialement homogène.
+Cette transaction est à effectuer si les passagers du dossier n’empruntent plus le même
+itinéraire,
+Les mêmes vols…
+Fonctionnement :
+La fonction split va générer alors deux dossiers :
+Le dossier d’origine (appelé parent)
+Le dossier Associé
+Application : Départ 20Feb TUN DJE Retour le 28 FEB
+>SN 20 FEB TUN DJE
+>SS2Y1
+>SN 28 FEB DJE TUN
+>SS2Y1
+>NM2 AOUINI/ MAKREM/MOHAMED
+>AP 22501817/P1
+>AP 22501817/P2
+>TKOK
+>RF ML
+>ER
+
+-- 21 of 66 --
+
+ELFARABI FORMATION COURS AMADEUS 2012
+22
+ Le passager N°1 décide de changer la date de retour :
+Les étapes à suivre :
+1. Séparation de passager n°1 : tapez le Format SP1
+2. Modification de la date de retour SB+la date a modifier+numéro de segment a modifier.
+3. Signature et clôture du dossier associé tapez le format :
+>RFAM
+>EF : End of Function
+NB : EF utiliser juste pour le split.
+Pour terminer le travail, signature et clôture de dossier parent tapez
+>RFAM
+>ET : End Transaction
+La réponse de système FIN DE TRANSACTION - 2CCZQI SP-2CDXU4
+
+-- 22 of 66 --
+
+ELFARABI FORMATION COURS AMADEUS 2012
+23
+Leçon 13 : REBRIQUES
+COMPLEMENTAIRES
+ Introduction :
+Les rubriques complémentaires servent à signaler certaines informations concernant le
+passager
+ Remarque générale.
+ Remarque confidentielle.
+ Message d’information.
+ Demande de services spéciaux.
+1. Remarque générale :
+• Permet de noter des informations supplémentaires concernant le passager ou ses
+réservations.
+• Peut être lu par tout site autorisé à visualiser le dossier
+• Ne génère pas de message à la compagnie aérienne.
+EXP : >RM ok pour l’émission de billet ou bon de commande ok.
+2. Remarque confidentielle :
+La remarque confidentielle ne peut être lue que par le site créateur de la remarque (l’agence
+de voyages)
+EXP :>RC STE LG
+Les sites non autorisés à lire la remarque verront : RC RESTRICTED
+3. Message d’information :
+Permet de transmettre à la compagnie aérienne une information concernant le passager.
+EXP1 : Pour indiquer que le passager est un client important tapez le format :
+> OS AA VIP PRESEDENT OF IBM
+Code Nom type de client société
+Compagnie
+EXP2: Pour communiquer le N° de billet émis à une compagnie, ne travaillant pas elle-même
+sur Amadeus :
+>OS AA TKNO 001 1234567890
+YY: ANY IATA (toutes les compagnies aériennes)
+4. Demande de service spécial :
+La rubrique SR (SPECIAL SERVICE) permet de transmettre à une compagnie une demande de
+service spéciale pour un ou plusieurs passagers.
+
+-- 23 of 66 --
+
+ELFARABI FORMATION COURS AMADEUS 2012
+24
+a) Demande sans ajout de texte :
+>SR VGML repas végétarien
+>SR DBML repas diabétique
+>SR MOML repas musulman
+>SR SFML repas poisson
+>SR KSML repas kasher
+>SR BBML repas bébé
+b) Demande avec texte libre exigé :
+Pour certains types de services il est nécessaire de fournir des informations
+complémentaires.
+EXP:
+> SRPETC - DOG 4KG
+Animal domestique Type de l’animal
+SRAVIH-DOG25KG: animal en soute
+SR MAAS -Travelling with young children: Assistance à l’aéroport
+SRWCHR-male de pieds : Chaise roulante
+
+-- 24 of 66 --
+
+ELFARABI FORMATION COURS AMADEUS 2012
+25
+Leçon 14 : CARTES FREQUENT FLYER
+ Introduction :
+Les cartes frequent flyer sont des cartes de fidélités accordées par les compagnies aériennes,
+elles permettent un cumul de points aboutissant à différents avantages accordés par les
+compagnies aériennes.
+EXP : Tolérance en excès de bagages, billet gratuit, priorité en liste d’attente.
+Pour insérer le numéro de la carte dans un PNR tapez le format :
+>FFN EK - N° de la carte FFNEK-1346578900443
+Le format le code compagnie
+- Pour vérifier les accords entre les compagnies aériennes, on tape le format :
+>VFFD XX
+EXP:
+>VFFDAZ
+>VFFDMS
+
+-- 25 of 66 --
+
+ELFARABI FORMATION COURS AMADEUS 2012
+26
+Leçon 15: ATTRIBUTION DU SIEGE
+Introduction:
+La réservation du siège permet d’attribuer un Numéro du siège sur un ou plusieurs segments
+de vol.
+Pour que l’attribution de sièges soit possible il faut que :
+Le segment de vol soit confirmé.
+La compagnie autorise l’attribution de siège sur le vol concerné.
+Format de base : SM (seat map)
+Application : Départ le 20 JAN Destination London Retour le 30 JAN pour deux passagers
+(Adulte, enfant 10ans)
+>SN 20JAN TUN LON
+>SS2Y1
+>SN 30 JAN LON TUN
+>NM2 AOUINI/MOHAMED/FEDI (CHD)
+>AP 0688008
+>TKOK
+>RF LM
+>ER
+ Pour afficher le plan cabine de segment N°2 tapez le format :
+>SM2 (SEAT MAP) double click sur les sièges uniquement en couleur vert.>RF>ET
+
+-- 26 of 66 --
+
+ELFARABI FORMATION COURS AMADEUS 2012
+27
+Leçon 16 : VENTE D’UN PASSAGER « UM »
+Un enfant dont l’âge est entre 4 ou 5ans selon les compagnies aériennes et 12ans,
+voyageant seul est appelé un UM (Unaccompagnied Minor).
+Les règles pour la vente d’un UM sont les suivantes :
+• Code de transaction spécifique.
+• Sur un vol confirmé uniquement (pas de liste d’attente)
+• Une vente UM ne peut être faite dans un dossier comportant d’autres types de
+passager.
+• Les contacts des personnes accompagnant et réceptionnant l’enfant doivent être
+mentionnés.
+Application :
+>SN 3FEB TUN TLS
+>SS1Y1
+>SN3 JAN TLS TUN
+>SS1Y1
+>NM1 YESMINE/LTAIEF (CHD)
+>AP 22501817
+>RF ML
+>ER
+
+-- 27 of 66 --
+
+ELFARABI FORMATION COURS AMADEUS 2012
+28
+Tapez le code spécifique :
+>SRUMNR - AGE 9 ans ou UM9 ou 9YEARS
+Code
+Insérez les contacts.
+> OS TU DEP NOM/PRENOM ADRESSE TEL NPSPT
+Code compagnie départ
+OS TU ARR NOM/PRENOM ADRESSE TEL NPSPT
+- Pour terminer la procédure d’un UM on tape le format :
+GG AIR TU Enter GP MIN
+MS68 (hôtesse supplémentaire)
+1. Pour les enfants moins de 5ans (Réservation) avant une semaine.
+>SR OTHS - NN HOT SUPP
+Hôtesse
+- + 60TND timbres de voyage.
+2. Annulation avant 48h.
+3. Exception UM de/ vers l’Allemagne et l’Italie.
+ Il doit payez une surcharge de 40EUR par sen de voyage.
+
+-- 28 of 66 --
+
+ELFARABI FORMATION COURS AMADEUS 2012
+29
+Leçon 17 : FILES D’APPEL
+Elles permettent de recevoir des messages ou des réponses sur des PNR
+envoyer par les compagnies aériennes.
+ Pour affichez la liste des files d'appel tapez la format QT
+ Pour supprimer un message et passé au suivant tapez QN
+ Pour ignorer la file d'appel tapez QI ignore
+
+-- 29 of 66 --
+
+ELFARABI FORMATION COURS AMADEUS 2012
+30
+Leçon 18 : HISTORIQUE D’UN PNR
+ Tous les PNR stockés dans le système central AMADEUS sont associés a un
+historique.
+ Tous les transactions effectuées sur un PNR sont présentes telles que modifications,
+annulations, séparation de dossier…
+Tapez le format RH (Retrieve History)
+Les principaux codes à deux lettres :
+• AS ajout d’un segment (Add Segment)
+• CS changé un segment (Change Segment)
+• XS supprimé un segment (Cancel Segment)
+
+-- 30 of 66 --
+
+ELFARABI FORMATION COURS AMADEUS 2012
+31
+Leçon 19 : LA SERVUCTION
+La servuction c'est un néologisme contractant les mots service et production.
+Le système de servuction pose un certain nombre d'éléments qui intègre les spécificités des
+« Produits » touristiques:
+Le client : est un élément primordial le service n'existe que lorsque le client le
+consomme.
+Le client est le bénéficiaire du service.
+Le support physique : la production du service est double il y a les instruments
+nécessaires au service (pour une agence de voyage, c’est la salle d'attente et
+l'environnement matériel ou se passe le service (le quartier, la décoration,
+l'agencement, etc.…)
+Personnel de contact : dans une agence de voyages se sont les conseillers - vendeurs
+Le service : est l’objectif d’un système et le résultat (réserver une place d'avion,
+établir un voyages organiser)
+Le système d'organisation interne : est la partie non visible par le client c'est
+l'organisation de l’entreprise, ses différentes fonctions, la gestion, les ressources
+humaines, le management.
+
+-- 31 of 66 --
+
+ELFARABI FORMATION COURS AMADEUS 2012
+32
+Leçon 20 : LE SURBOOKING (VOLS
+REGULIER) RESPONSABLE :
+LA COMPAGNIE
+C’est la vente de plus de places qu'il n'y en a de disponibles dans un avion, ce qui fait que
+certains passagers ne peuvent embarquer.
+Si on n’a pas dépassé leur limite d'enregistrement et on a un billet d'avion marquée
+OK c.à.d. place confirmé.
+Notre comportement vis à vis la compagnie été correcte.
+On a était refusée par un transporteur européen ou par un transporteur non
+européen au départ d'un pays de l'union européenne on peut exige :
+ Transfert sur un autre vol
+ Un hébergement
+ Une indemnité :
+ 250€ pour un vol de moins de 1500km
+ 400€ entre 1500 et 3500km
+ 600€ plus que 3500km (payé en espace)
+
+-- 32 of 66 --
+
+ELFARABI FORMATION COURS AMADEUS 2012
+33
+Leçon 21 : LISTE D’ATTENTE
+Solution :
+Pour réserver une place un liste d'attente
+EXP :
+ YS ou YC ou YL ou YR
+ SS1Y1 /FR for request ou ss1y1/PE pending
+
+-- 33 of 66 --
+
+ELFARABI FORMATION COURS AMADEUS 2012
+34
+Leçon 22 : TARIFICATION
+AUTOMATIQUE
+Les classes de tarification :
+F= first class
+C =classe affaire
+Y= classe économique
+Les classes des réservations :
+F= first class {F, A}
+C =classe affaire {D, Z, I, J}
+Y= classe économique{le reste des alphabets} Y S M B T H K Q W X N O P V ….
+ Application :
+Départ le 21 FEB et le retour le 28 FEB Tunis (TUN) vers Bordeaux (BOD)
+>SN 21FEB TUN BOD
+>SS1Y1
+>SN28FEB BODTUN
+>SS1Y1
+>NM1 Ltaief/ Makrem
+>AP 22501817
+>TKOK
+>RF LM
+>ER
+ Pour afficher le tarif en classe Y tapez le format FXP
+FXP elle affiche le tarif selon les classes choisies avec la création d'un TST
+FXP image de tarif TST
+AL : Airline
+FLGT: Flight
+BK: Booking class
+Fare Basis: Base Tarifaire
+NVB: No Valid Before
+NVA: No Valid After
+BG: Baggage
+ Pour afficher le tarif le moins cher disponible tapez le format FXB
+Elle permet d’afficher le tarif le moins cher disponible avec une nouvelle réservation
+automatique et la création d'un TST
+ Pour afficher le tarif le moins cher possible tapez FXL (LOW)
+1er cas:
+
+-- 34 of 66 --
+
+ELFARABI FORMATION COURS AMADEUS 2012
+35
+On cas d'une réponse positif le système affiche le message suivant: lowest price is available
+2eme cas:
+On cas d'une réponse négatif le system affiche le message suivant : lowest price is sold
+out/try wait list.
+3eme cas:
+Si le système affiche le même tarif que FXB le message suivant apparait : NO REBOOKING
+REQUIRED FOR LOWST FARE
+ Tarification avec option :
+>SN2 MAR TUN YTO/ALH
+>SS1Y1
+>SN18MAR YTO TUN/ALH
+>SS1Y1
+>AP2222222
+>TKOK
+>RF ML
+>ER
+FXB/S2X/S4X
+TUN FRA YTO FRA TUN
+2 3 4 5
+X X
+ESCALE = -24h (X: symbol d’escale)
+STOPOVER = =24h
+Dans certains cas le format FXP :
+Affiche plusieurs tarifs applicable pour le même classe de réservation pour sélectionné le
+bon classe :
+*1 er cas tapez FXT01 avec création d’un TST
+*2 éme cas tapez FQQ01 sans création d’un TST
+
+-- 35 of 66 --
+
+ELFARABI FORMATION COURS AMADEUS 2012
+36
+Leçon 23 : CONSULTATION TARIFAIRE
+ INTRODUCTION :
+- Pour obtenir la liste des tarifs existant entre deux villes en aller simple ou aller - retour par
+défaut en hors taxes, taper le format :
+>FQD (Fare quote Display)
+EXP:
+>FQD TUN MRS/ATU/D 2 FEB
+Date de départ
+1. EXPLICATION DE L ’AFFICHAGE:
+- LN Numéro de la ligne.
+- Fare Basis La base tarifaire(le nom du tarif)
+- OW One Way (aller simple)
+- TND Tunisian Dinar
+- RT Round Trip (aller retour)
+- B Booking class (classe de réservation)
+2. LES TYPES DU TARIFS:
+ First class: (1ere class)
+>FOW First Class aller simple (one way)
+>FRT First Class aller retour (Round trip)
+ Business Class: (Classe affaire)
+>COW Classe affaire, aller simple
+>CRT Classe affaire, aller retour
+ Economic class : (classe économique)
+a. Le plein tarif économique :
+>YRT classe économique, plein tarif, (Full Fare) aller retour
+>YOW classe économique, plein tarif (Full Fare) aller simple
+b. Tarif Excursion :
+Symbole: EE tarif modifiable exp:
+
+-- 36 of 66 --
+
+ELFARABI FORMATION COURS AMADEUS 2012
+37
+>MLEE 1M
+c. Tariff PEX:
+>symbole: PEX, AP, PRO, SX, PR, APEX …Tarif non modifiable
+>WL PX 21
+Symbole
+EXERCICE:
+FQD TUN CAS/ATU/D1MAR
+ DCN Class affaire couple
+ DCP Class affaire couple
+ BLOXOW1 Class PEX, non modifiable, one way
+ MEE 2M Class excursion économique tarif modifiable
+ KZSOW Classe économique, one way
+ KDLOW Classe économique, one way
+ KZSRT Class économique, allé retour jeune étudiant
+ KLPX 21 Class économique PEX, non modifiable
+ WEE6MDC Class économique excursion tarif modifiable
+ QLPX 15D Class économique PEX, non modifiable
+ LSXOW1 Class PEX, one way non modifiable
+ LPR1P1 Class économique PEX non modifiable
+ PPR 15 Class PEX non modifiable
+ TPR 15D1 Class PEX non modifiable
+(Promotionnel)
+3. LES TYPES DU PASSAGER :
+Tarif couple en classe affaire : CN CP
+Tarif couple en classe économique : SH, ST (tarif mari et femme)
+Tarif travailleur DL (Discount Laborer)
+Tarif jeune (12 à 24) ZZ Tarif jeune étudiant (24 à 27 à 31 ans) ZS
+Tarif étudiant SD
+Tarif 3ème Age CD (+ 60 ans)
+ APPLICATION:
+>SN 3 APR TUN MRS
+
+-- 37 of 66 --
+
+ELFARABI FORMATION COURS AMADEUS 2012
+38
+>SN 1K1 (class économique)
+>SN 20 APR MRS TUN
+>SS 1 K1
+>NM 1 LTAIEF/MAKREM
+>AP 22501817
+>TKOK
+>RF LM
+>ER
+ Pour insérer le type du PSSAGER, on tape :
+>FD (Fare Discount) exemple FDZZ
+EXERCICE:
+FQD TUN NCE/ATU/DIAUG
+YOW Class économique plein tarif one way
+YR7 Class économique plein tarif allé retour
+YR7 Class économique plein tarif allé retour
+MOW2 Class économique one way
+MEE6M Class économique Excursion tarif modifiable
+DEE6M Class affaire réduit
+MHEE1M Class économique Excursion tarif modifiable
+MEE3M Class économique Excursion tarif modifiable
+BHEE1M Class économique Excursion tarif modifiable
+KHEEM Class économique Excursion tarif modifiable
+
+-- 38 of 66 --
+
+ELFARABI FORMATION COURS AMADEUS 2012
+39
+Leçon 24 : LA NOTE TARIFAIRE
+ Pour lire la note tarifaire, on tape le format :
+> FQD TUN PAR/ATU/D1 APR
+ Pour afficher les règles d’application (rules) de tarif N°20
+FQN 20 *LIST
+** RULES DISPLAY ** TAX MAY APPLY
+SURCHG MAY APPLY-CK RULE
+20NOV11**20NOV11/TU TUNPAR/NSP; EH/TPM 922/MPM 1106
+LN FARE BASIS OW TND RT B PEN DATES/DAYS AP MIN MAX R
+20 WLAP21 330 W + S08NOV 13DEC +14 + + 21 R
+FCL: WLAP21 TRF: 21 RULE: APTN BK: W
+PTC: ADT-ADULT FTC: XAP-ADVANCE PURCHASE EXCURSION
+OPTION LIST
+RU.RULE APPLICATION MN.MIN STAY
+MX.MAX STAY SE.SEASONS
+SR.SALES RESTRICT AP.ADVANCE RES/TKT
+FL.FLT APPLICATION CD.CHILD DISCOUNTS
+TC.TOUR CONDUCTOR AD.AGTS DISCOUNTS
+OD.OTHER DISCOUNTS SO.STOPOVERS
+TE.TKT ENDORSEMENT PE.PENALTIES
+CO.COMBINABILITY VC.VOLUNTARY CHANGES
+****** SELECT CATEGORIES ******
+PAGE 1/ 1
+*TRN*
+>FQN 20 * PE, AP, MN, MX (les éléments sélectionnés)
+ PE : Penalities
+ AP : Advance purchase (date limite d’émission billet)  
+ MN : Minimum de séjour
+ MX : Maximum de séjour
+
+-- 39 of 66 --
+
+ELFARABI FORMATION COURS AMADEUS 2012
+40
+Leçon 26 : PENALITE
+Exemple (1) :
+>FQD TUN PAR /ATU/D1 APR
+>FQN 18 * PE
+Pénalité
+Cancellations (Annulation)
+ Any time : a tout moment
+ Charge 50 TND : Frais 50 TND
+ For cancel : annuler le billet le jour même de son émission.
+ Refund : remboursement (après minuit de jour d’émission de billet)
+ No- Show : absent a l’enregistrement (check-in)
+ Child /Infant discounts apply = on applique la réduction enfant /bébé
+Changes (changement du date) exp: First change free of cost an additional at USD 50 =
+Premier changement est gratuit, le suivant et avec 50 USD.
+Before departure (avant le départ) :
+After departure (après le départ) : le client est dans la ville de destination (changer ou
+remboursé le coupon de retour)
+ WAIVED FOR DEATH OF PASSENGER OR FAMILY MEMBER
+- Remboursement de billet en cas de décès de passager ou quelqu’un de sa famille
+ FULL REFUND PERMITTED BEFORE DEPARTURE IN CASE OF REJECTION OF VISA
+- Remboursement totale de billet, en cas de refus de visa.
+ REFUND OF UNUSED FEES AND TAXES PERMITTED
+- Remboursement des frais de service et taxes sont permis
+ Pour connaître la liste des compagnies aériennes de moins chers au plus chers on
+tape le Format :
+>FQD TUN BKK /D1 JUN/S S: SHOPPER DISPLAY
+
+-- 40 of 66 --
+
+ELFARABI FORMATION COURS AMADEUS 2012
+41
+
+Leçon 27 : LES TROIS
+ELEMENTSCOMPLEMENTAIRES POUR
+L’EMISSION DU BILLET
+ APPLICATION :
+>SN 6 JUN TUN SXB (Strasbourg)
+>SS 1Y1
+>SN 20 JUN SXB TUN
+>SS 1Y1
+>NM1 AOUINI/MOHAMED
+>AP 22524102
+>TKOK
+>RF LM
+>ER
+>FXB
+>FQD TUN SXB /ATU/D6 JUN
+>FQN 16 * PE
+1. POUR EMETTRE LE BILLET D’AVION IL FAUT INSERER :
+>SR FOID FORM OF IDENTIFICATION
+>SR FOID - PP (N° Passport)
+Ou
+>SR FOID - NI (National Identity…) exp : SRFOID-PPZ76476547
+2. FORM OF PAYMENT: FP
+>FP CASH (En espéce)
+3. TRANSACTION TIKET PRINT :
+Transaction d’émission du billet.
+>TTP imprime le billet d’avion
+
+-- 41 of 66 --
+
+ELFARABI FORMATION COURS AMADEUS 2012
+42
+ Après l’émission du billet (TTP)
+o Réponse du système :
+>FA PAX 057-46 000 140819/ETAF/TND 230.000/04 DEC 03/TUNTS317E/ 87451220/S2-3
+o Explication de l’affichage e :
+- La rubrique « FA »
+- La condition de l’affichage de l’image billet est contient :
+Le numéro de billet émis.
+Un champ relatif à l’émission – ticket
+Le montant du billet en ttc.
+La date d’émission.
+Le numéro d’office ID de l’agence émettrice.
+Le numéro IATA.
+Les numéros du segment du vol émis.
+
+-- 42 of 66 --
+
+ELFARABI FORMATION COURS AMADEUS 2012
+43
+Leçon 28 : BILLET ELECTRONIQUE
+ Electronic ticket :
+Permet de remplacer l’émission papier des coupons de vol par une image virtuelle du billet
+dans la base des donné de la compagnie aérienne.
+ Affichage d’un billet électronique :
+L’image du billet électronique peut être visualisé à tout moment pendant une période de 13
+mois à compté de la date d’émission.
+APPLICATION :
+>SN 20 MAR TUN DXB
+>SS 1Y1
+>SN 30 MAR DXB TUN
+>SS 1Y1
+>NM 1 AOUINI/MOHAMED
+>AP 22501817
+>TKOK
+>RF LM
+>ER
+>FXB
+>FQD TUN DXB /D 20 MAR/S
+>FQN 12 * PE
+>SR FOID -PP 04881617
+>FP CASH
+>TTP
+ Il faut réafficher le PNR.
+>RT/AOUINI
+ Et une rubrique FA soit présentée dans le PNR alors le format suivant affiche l’image
+du billet :
+>TWD
+
+-- 43 of 66 --
+
+ELFARABI FORMATION COURS AMADEUS 2012
+44
+ Si le PNR comporte plusieurs pax il faut préciser le n° de ligne de FA.
+>TWD /L 7
+Ligne n°7
+ Si le PNR ne s’affiche plus on utilise le n° de billet.
+EXP :
+ TWD /TKT 199-1234567890
+La liste des Statuts des coupons du vol :
+- (O, A) Le Psg n’a pas encore voyagé.
+*A Contrôle automatique par les compagnies 72h avant.
+*Le départ airport control
+*O Billet utilisable (Open for use)
+*F Flown billet utilisé
+*V billet annulé (void)
+*R billet remboursé (Refunded)
+*E billet a été échanger (Exchange)
+
+-- 44 of 66 --
+
+ELFARABI FORMATION COURS AMADEUS 2012
+45
+Leçon 29 : REVALIDATION
+ APPLICATION :
+>SN 5 JUN TUN CAI
+>SS 1C1
+>SN 10 JUN CAI TUN
+>SS 1C1
+>NM 1 AOUINI/MOHAMED
+>AP 22524102
+>TKOK
+>RF LM
+>ER
+>FXP
+>RFAM ER
+SRFOID-PPREE5677
+FPCASH
+TTP
+ Après l’émission du billet le client décide de changer la date de départ:
+Les étapes à suivre :
+1. Réafficher le PNR…RT
+2. Lire la note du tarif (FQD, FQN) CHANGE PERMITTED
+3. Afficher l’image de billet (TWD) afin de vérifier les statuts (O, A)
+4. Changer la date de départ (SB25JUL2)
+5. RF AM
+6. ER
+7. Il reste de valider le billet
+ Pour le départ :
+>TTP / ET RV / L6 / S2 / E1
+Revalid n lignes FA n°segment n° coupon
+ Pour le retour :
+>TTP / ET RV / L6 / S3 / E2
+Revalid n ligne FA n°segment n° coupon
+Définition Revalidation:
+
+-- 45 of 66 --
+
+ELFARABI FORMATION COURS AMADEUS 2012
+46
+Je revalide un billet électronique lorsque je n’ai pas un supplément tarifaire à encaissé
+change permitted pas de pénalité.
+Possibilité de revalidation
+Vous pouvez revalider un billet pour un changement :
+• De date sans changement de tarif.
+• De vol sur la même compagnie
+Impossibilité de revalidation :
+• changement de classe
+• Changement d’Itinéraire
+• Changement de compagnie
+EXERCICE :
+Départ le 03 MAY Retour le 12 MAY à DOHA :
+>SN 3 MAY TUN DOH >ER
+>SS 1C1 >FXP
+>SN 12 MAY DOH TUN >FQD TUN DOH /D 3 MAI/ATU
+>SS 1C1 >FQN 10 *PE
+>NM 1AOUINI/ MOHAMED >SR FOID –PPZH15524
+>AP 22524102 >FP CASH
+>TKOK >TTP
+>RF AM >RT /AOUINI
+>FQD TUN DOH /D3 MAY /ATU
+>TWD
+>SB 19 MAY 3
+>RF AM
+>TTP / ET RV /L 8/S3/E2
+
+-- 46 of 66 --
+
+ELFARABI FORMATION COURS AMADEUS 2012
+47
+Leçon 30 : ANNULATION D’UN BILLET
+ APPLICATION :
+Départ le 10 MAR, Retour 30 MAR Stras Bourg.
+>SN 10 MAR TUN SXB
+>SS 1Y1
+>SN 30 MAR SXB TUN
+>SS 1Y1
+>NM 1 AOUINI/MOHAMED
+>AP 22524102
+>TKOK
+>RF LM
+>ER
+>FXP
+>FQD TUN SXB /ATU/D 10 MAR
+>FQN 19 * PE
+>SR FOID- PPZ48257
+>FP CASH
+>TTP
+ Le client décide d’annuler son billet le jour même de son émission :
+Les étapes à suivre :
+1. Réafficher le PNR (RT)
+2. Lire la PE (FQN)
+3. Réafficher le statut des coupons TWD
+Si PE cancellation permitted
+ Alors on tape TWX
+Réponse du système :
+1. Mise à jour : STATUT COUPON
+O V
+2. Mise à jour : la rubrique « FA »
+
+-- 47 of 66 --
+
+ELFARABI FORMATION COURS AMADEUS 2012
+48
+ETAF EVAF
+VOID (annulé)
+3. Mise à jour : l’état de la caisse
+TKTT CANX
+
+-- 48 of 66 --
+
+ELFARABI FORMATION COURS AMADEUS 2012
+49
+Leçon 31 : LES FRAIS DU SERVICE
+ SERVICE FEE MANAGER :
+Définition :
+- Les frais de services sont des frais liés à la distribution des billets, Ils s’appliquent à tous les
+voyageurs, sauf les bébés (2ans).
+- Ces frais de service sont différents selon la Destination et la classe de réservation.
+ prix hors taxe + les taxes = TTC + SFM= PRIX DE VENTE
+EXERCICE :
+Destination LYON (LYS) 20 MAR Retour 30 MAR class M
+>SN 20 MAR TUN LYS
+>SS 1M1
+>SN 30 MAR LYS TUN
+>SS 1M1
+>NM 1 AOUINI/MOHAMED
+>AP 22524102
+>TKOK
+>RF LM
+>ER
+>FXP
+>FQD TUN LYS /D 20 MAR /ATU
+>FQN 13 * PE
+>SR FOID -PP Z3573587
+>FP CASH
+>TTP
+ Le client décide d’annuler le billet :
+>RT / AOUINI
+>FQD TUN LYS /D 20 MAR /ATU
+>FQN 12 * PE
+>TWD / L 9
+
+-- 49 of 66 --
+
+ELFARABI FORMATION COURS AMADEUS 2012
+50
+>TWX à condition qu’il n y a pas de PENALITE
+EXERCICE : Revalidation :
+Destination KUALA LUMPUR
+>SN 20 APR TUN KUL /AQR
+>SS 1Y1
+>SN 30 APR KUL TUN /AQR
+>SS 1Y1
+>NM 1 AOUINI/MOHAMED
+>AP 22524102
+>TKOK
+>RF LM
+>ER
+>FXB /S 2 x/S 4 x
+>FQD TUN KUL /AQR /D 20 APR
+>FQN 19 * PE
+>SR FOID –PPZ13574
+>FP CASH
+>TTP
+ Le client a décidé de changer la date de départ :
+>RT / AOUINI
+>FQD TUN KUL / D 20 APR /AQR MD
+>FQN 19 * PE (first change is free)
+>TWD
+>SB 27 APR
+>RF LM
+>ER
+>TTP /ETRV/ L 6/S 2 -3/E1 - 2
+FQC Permet d’afficher le taux de change
+FQC50USD/ TND
+
+-- 50 of 66 --
+
+ELFARABI FORMATION COURS AMADEUS 2012
+51
+Leçon 32 : ETABLIR UN VOYAGE
+ORGANISE
+ Les étapes à suivre :
+1) Etude de marché : les concurrents, les conditions de voyages, les affiches, les hôtels, les
+villes a visités……
+2) Vérifier horaires et disponibilités.
+3) Envoyer une demande tarif groupe à la compagnie soit par fax, soit par e-mail :
+ Date de départ.
+ Date de retour.
+ Nombre de passager.
+ Destination.
+Veuillez par la présente nos communiquez votre meilleur offre de prix
+ Réponse de la compagnie :
+• Numéro de PNR qui a été créer par la compagnie.
+• Prix tarif groupe HT 240.000 (tarif publié 269.000)
+• Date limite d’émission des billets
+• Le tour code.
+- Avant le jour d`émission des billets on commence d`envoyer les noms des passagers.
+- Le jour d`émission des billets on utilise la tarification manuelle :
+1. Réafficher le PNR : numéro du dossier.
+2. On fait la création d`un TST vierge :(TRANSITIONAL STORED TICKET)
+O Je tape TTC qui sera complété par les éléments tarifaires nécessaires a l`émission du billet
+en tapant le format TTI ou (TTK).
+3. Insertion des éléments :
+a) Base tarifaire : TTI/B GRP ou GROUPE
+b) Validité : TTI/V 17MAR 24MAR
+c) Franchise baggage: TTI/A 30K (Allowed):
+d) Element tarifaire:
+TTI/F240.000/X98.000YQ/X2.000TN/X17.000RL/X3.500RK/X21.500TR.
+e) Element composante tarifaire: TTI/C BUILD. f) Indicator de vente: TTI/S SITI
+g) Le tour code : FTNR code envoyé par la compagnie.exp : FTNRDC547
+Afficher le PNR: TQT, si on a plusieurs TST on précise TQT/T2.
+Créer le TST vierge : TTC.
+Remplir le TST : TTI/TTK.
+Supprimer un TST : TTE.
+Afficher un historique d`un TST : TTH.
+
+-- 51 of 66 --
+
+ELFARABI FORMATION COURS AMADEUS 2012
+52
+Séparé plusieurs TST : TTS
+EXERCICE :
+>TTC
+>TTI/WLAP7TN
+>TTI/V 10 APR 21 APR
+>TTI/ A 20 K
+>TTI/ F230.000/X98.000YQ/X2.000TN/X17.000RL/X3.500RK/X21.500TR
+>TTI/C BUILD
+>TTI/S SITI
+EXERCICE:
+>TTC
+>TTI/BM1EE1M
+>TTI7V 6 MAY 10 MAY
+>TTI/A20K
+>TTI/F244.000/X98.000YQ/X2.000TN/X17.000RL/X3.500RK/X21.500TR
+>TTI/C BUILD
+>TTI/S SITI
+
+-- 52 of 66 --
+
+ELFARABI FORMATION COURS AMADEUS 2012
+53
+Leçon 33 : DOCUMENT ECHANGE
+ J’utilise le document en échange lorsque j’ai un supplément tarifaire à encaisser :
+• Le cas d’une pénalité.
+• Le cas d’un sur classement.
+• Le cas d’un rerouting (changement l’itinéraire : changement du parcours).
+• Le cas des taxes a ajoutés.
+ APPLICATION:
+>SN 10 APR TUN MRS
+>SS 1M1
+>SN 17APR MRS TUN
+>SS 1M1
+>NM1 AOUINI/MOHAMED
+>AP 22524102
+>TKOK
+>RF LM
+>ER
+>FXP
+>FQN 10 * PE
+>SR FOID - PPZ1234589
+>FP CASH
+>TTP
+ Le client décide de changer la ville de retour, PAR - TUN au lieu de MRS - TUN ,
+ les étapes à suivre :
+1. Réafficher le PNR.
+2. Afficher l’image de billet TWD afin de vérifier les statuts des coupons.
+3. Lire la note tarifaire : FQD et FQN14*PE, CO... Pas de pénalité car tarif excursion CO
+COMBINABILITY Open Jaw)
+4. Vérifier horaires et disponibilités : SN17APR PAR TUN.
+5. Book new flight: SS1M3
+6. Afficher l’ancien TST: TQT et imprimer.
+7. Cancel unwanted flight: XE4.
+8. RF LM et ET
+9. Calculer la différence entre le nouveau parcours et l’ancien parcours :
+Méthode N° 1 :
+FQPTUN/ATU/CM/D10APRMRS - - PAR/ATU/CM/D17APRTUN
+Classe M
+Le système affiche une liste de tarif en TTC je sélectionner le bon tarif FQQ2 et je l’imprime.
+
+-- 53 of 66 --
+
+ELFARABI FORMATION COURS AMADEUS 2012
+54
+Méthode N°2 :
+ Création d’un PNR juste pour le tarif
+>SN 15 APR TUNMRS
+>SS1M1
+>SN22APRCDGTUN
+>SS1M1
+>NM1AOUINI/MOHAMED
+>FXP
+>Imprimer l’image de tarif
+>Ignorer le PNR : IG
+10. Calculer la différence entre l’ancien tarif et le nouveau tarif :
+New fare Old fare Difference
+HT: 433.000
+Taxes
+2.000TN
+17.500RL
+3.500RK
+46.500Qx
+8.000IZ
+15.000FR
+25.000FR
+TTC: 646.500
+HT: 327.000
+Taxes
+2.000TN
+17.500RL
+3.500RK
+16.500QX
+8.000IZ
+15.000FR
+17.500FR
+TTC: 646.500
+HT: 106.000
+Taxes: O (old)
+X2.000TN
+O17.500RL
+O3.500RK
+X30.000QX
+O8.000IZ
+O15.00FR
+X7.500FR
+TTC: 145.000
+11. Insérer les éléments dans un TST vierge :
+ TTC pour créer un TST vierge Paris Tunis.
+Remplir le TST :
+• TTI /BMEE1M.
+• TTI/VXX 10 MAY(NVB NVA)
+• TTI/A20K
+• TTI/CBUILD
+• TTI/SSITI
+• TTI/R433.000/X2.000TN/X30.000QX/X7.500FR/O96.000YQ/O17.500RL/O3.500RK/O8
+.000IZ/O15.000FR/T145.000.
+12. Insérer les informations de billet d’origine : FO*L8 (n de ligne de FA ou FHE)
+RQ : l’élément FHE remplace automatiquement FA.
+13. Original and new form of payment: FPO/CASH/+CASH/TND145.000
+14. imprimer le billet. TTP
+
+-- 54 of 66 --
+
+ELFARABI FORMATION COURS AMADEUS 2012
+55
+Document en échange le cas d’une pénalité : (voir vidéo)
+>SN 7 JUN TUN MRS
+>SS1W1
+>SN 14 JUN MRS TUN
+>SS1W1
+>NM1 AOUINI/MOHAMED
+>AP 22524102
+>TKOK
+>RFLM
+>ER
+>FXB
+>FQD TUN MRS/D7 JUN
+>FQN 10 * PE
+>SR FOID - PP123456789
+>FP CASH
+>TTP
+ Après l’émission de billet le client décide de changer la date de départ 31 MAY :
+>RT /AOUINI
+>TWD
+>FQDTUNMRS/D7JUN/ATU
+>FQN14*PE
+ Reponses de système: Changes: any time: charge 50.000 TND for
+reissue/revalidation.
+• Change permitted in the limit of ticket validity.
+>SB31MAY2
+>XE 3
+Mise à jour de TST :
+-J’affiche TST page graphique j’insère le montant 50.000 dans la case tarif de base, cocher
+tous les taxes sauf le taxe 2.000TN dans le tableau des taxes, mettre à jour le TST.
+Ou
+- Mettre à jour le TST : TTU/S2-3
+TTK/EXCH
+TQT (afficher le TST par son numéro)
+TTI/CBUILD
+>FO *L 6
+>FPO/CASH/+CASH/TND 52.000
+>TTP
+Document échange d’un sur classement:
+SUR classement: extension de validité.
+>SN 20MAY TUN ORY
+
+-- 55 of 66 --
+
+ELFARABI FORMATION COURS AMADEUS 2012
+56
+>SS 1K1
+>SN 30 JUN ORY TUN
+>SS1K1
+>NM1 AOUINI/MOHAMED
+>AP22501817
+>TKOK
+>RF LM
+>ER
+>FXP
+>FP CASH
+>SR FOID - PP13456
+>TTP
+ Le client décide de changer la date de retour le 15 juillet :
+On remarque que le client dépasse la validité de billet d’origine qui est 1 mois cela
+nécessite un sur classement les étapes à suivre :
+>RT/AOUINI
+>TWD
+>FQD TUN ORY/ATU/D 20 MAY
+KLEE1M : tarif excursion valable 1 mois : modifiable, on le remplacera par :
+KLEE3M : tarif excursion valable 3 mois.
+>SB 15 JUL 3
+ Calculer la différence entre nouveau tarif et l’ancien tarif :
+Méthode N°1 :
+>Création d’un PNR juste pour le tarif :
+>TUN PAR : classe K 10 juin
+>PAR TUN : classe M 15 juillet
+>FXP : imprimer le tarif
+Méthode N°2 :
+FQPTUN/CM/ATU/D20MAYORY/D30JUN/CK/ATUTUN
+Old fare New fare Difference
+HT :473000
+Taxes :96.000YQ
+2.000TN
+18.000RL
+8.000IZ
+3.500RK
+15.000FR
+25.000FR
+TTC:640.500
+HT :506000
+Taxes :96.000YQ
+2.000TN
+18.000RL
+8.000IZ
+3.500RK
+15.000FR
+25.000FR
+TTC:673.500
+HT : 33.000
+Taxes :X2.000TN
+TTC : 35.000
+
+-- 56 of 66 --
+
+ELFARABI FORMATION COURS AMADEUS 2012
+57
+Leçon 34 : LES ZONES IATA :
+(Traffic conferenc:TC)
+Zone1 (TC1) :
+ Amérique de nord, centre, sud et les îles voisines.
+Zone 2 (TC2) :
+ Europe, Afrique, le moyen orient.
+Zone 3 (TC3) :
+ Asie, Australie, les îles pacifique, new Zélande.
+
+-- 57 of 66 --
+
+ELFARABI FORMATION COURS AMADEUS 2012
+58
+CHAP35 : LES INDICATEURS
+GEOGRAPHIQUES :
+(Global Indicateur GI)
+ PAR NYC via AT: Atlantique
+TC2 TC 1
+ TYO LAX via PA : Pacifique
+TC3 TC1
+ TUN PAR via EH : Eastern Hémisphère
+TC2 TC2
+ Stockholm Tokyo via TS : Tran Siberian
+STO TYO
+TC2 TC3
+ New York Sao Paulo via WH : western Hemisphere
+NYC SAO
+• Fare construction : calcul d’un voyage :
+EXP:
+Types of journey:
+ TUN- PAR : OW (one way)
+ TUN-PAR-TUN: RT (round trip)
+ TUN- NCE - - PAR-TUN : (Turn Around Simple Open Jaw )
+ TUN-PAR - - PAR- TOE (Original Simple Open Jaw)
+Pour vérifier les types de circuits et le droit de changer le parcours (rerouting) taper :
+FQDTUNPAR/ATU/D3JAN
+FQN 10* CO (combinability)
+
+-- 58 of 66 --
+
+ELFARABI FORMATION COURS AMADEUS 2012
+59
+EXP :
+TUN PAR TUN : Le client n’a pas le droit de changer son point de retour Frankfurt Tunis car
+ADD-ONS not permitted par contre END-ON-END combination permitted with domestic
+fare. Double open jaw : TUN PAR - - NCE TOE
+Accord Interline : TGAD-AT/TU
+Accord SPA : Special Price Agreement exp: TUN-AF-PAR-TU-TUN le système affiche le tarif le
+plus chère YIF. Car les 2 compagnies n ont pas d accord pour les tarif les moins cher.
+Accord d’endossement/endorsment : exp : TUN-AH-ALG-AH-TUN après émission de billet le
+passager n’a pas le droit de changer sont retour avec TU. ENDOS AH ONLY
+
+-- 59 of 66 --
+
+ELFARABI FORMATION COURS AMADEUS 2012
+60
+Leçon 36: REMBOURSEMENT TOTALE
+SANS PENALITE
+-Affichez le dossier de remboursement :
+RT/AOUINI
+TWD
+TWREF (refund record)
+Ou
+-Tapez le format TRF199-1234567890
+Mise a jours des taxes
+Affichez les taxes
+TRFT
+REFUNDABLE TAXES
+AOUINI/MOHAMED
+199 6732672463
+UNUSED TAXES
+--------------------------------------------------------------------------------------------
+T1 2.000 TN
+T2 18.000 RL
+T3 23.000 QX
+T4 4.000 QR
+T5 11.600 XY
+-POUR SUPPRIMER LE TAXE N 1 TAPER :
+TRFU/TX1
+-Imprimer le remboursement taper :
+TRFP
+
+-- 60 of 66 --
+
+ELFARABI FORMATION COURS AMADEUS 2012
+61
+Leçon 37 : REMBOURSEMENT TOTALE
+AVEC PENALITE
+-Affichez le dossier de remboursement :
+RT/AOUINI
+TWD
+TWREF (refund record)
+Ou
+Tapez le format TRF199-1234567890
+Mise à jour de l hors taxe
+FARE PAID: 500.000
+• CHARGE 50 PERCENT FOR CANCEL/REFUND TAPER LE FORMAT:
+TRFU/CP50 réduire 50%(PERCENTAGE) de prix hors taxe
+• CHARGE TND 50.000 FOR CANCEL/REFUND TAPER LE FORMAT:
+TRFU/CP50A réduire 50 TND (AMOUNT)
+-Mise à jours des taxes
+-Affichez les taxes
+TRFT
+REFUNDABLE TAXES
+AOUINI/MOHAMED
+199 6732672463
+UNUSED TAXES
+------------------------------------------------------------------------------------------------------
+T1 2.000 TN
+T2 18.000 RL
+T3 23.000 QX
+T4 4.000 QR
+T5 11.600 XY
+
+-- 61 of 66 --
+
+ELFARABI FORMATION COURS AMADEUS 2012
+62
+-POUR SUPPRIMER LE TAXE N 1 TAPER
+TRFU/TX1
+-Imprimez le remboursement taper :
+TRFP
+
+-- 62 of 66 --
+
+ELFARABI FORMATION COURS AMADEUS 2012
+63
+Leçon 38 : CALCUL D’UN VOYAGE
+ Construction tarifaire:
+FQDTUNPAR/
+ATU/R,nuc
+FCP
+NUC
+MPM
+TPM
+EMS
+AF IROE
+LCF
+TUN PAR
+416.02
+1106
+922
+M
+416.02
+1.44223
+600.000 en classe
+économique Y
+Fare construction
+point
+Neutral unit of
+construction
+1NUC=1USD
+Maximum permitted
+mileage(distance
+autorisé)
+Ticketed permitted
+mileage(distance réel)
+Excess mileage
+surcharge
+Applicable fare
+IATA rate of exchange
+Local currency Fare
+TPM<MPMEMS=0=M (0 mileage)
+
+-- 63 of 66 --
+
+ELFARABI FORMATION COURS AMADEUS 2012
+64
+TPM>MPMEMS =TPM / MPM = entre 5% à 25 % 5M 10M 15M 20M 25M
+AF= NUC ou AF= NUC * EMS
+LCF= AF * IROE = 416.02 * 1.44223
+Conclusion :
+6juin TUN PAR
+FXP
+ 06JUN 11 TUN TU PAR 416.02 NUC 416.02END ROE 1.442230
+RQ : prix moins chère n’est pas affiché :
+1. Pas de place.
+2. Les conditions non respecté.
+3. Excès de distance.
+4. Il n’y a pas d’accord entre compagnie.
+TUN CAI: 06 JUN 11 TUN AZ X/ROM AZ CAI 10M 1174.56NUC 1174.56END
+ROE1.442230
+ Le prix à augmenter de 10% (10M)
+
+-- 64 of 66 --
+
+ELFARABI FORMATION COURS AMADEUS 2012
+65
+TABLE DES MATIERES :
+Leçon 1 : Présentation du système de réservation AMADEUS……………………………. 4
+Leçon 2 : Constitution d’un dossier passager(PNR)………………………………………………6
+Leçon 3 : Codage, Décodage………………………………………………………………………………..9
+Leçon 4 : Les types de vols…………………………………………………………………………………11
+Leçon 5 : Flight information……………………………………………………………………………….12
+Leçon 6 : Fréquences des vols……………………………………………………………………………13
+Leçon 7 : Temps minimum de correspondance………………………………………………….14
+Leçon 8: Déplacement dans l’écran d’AMADEUS…………………………………………………16
+Leçon 9 : Clôture d’un PNR…………………………………………………………………………………17
+Leçon 10 : Réaffichage d’un PNR………………………………………………………………………….19
+Leçon 11 : Annulation d’un élément de PNR………………………………………………………..20
+Leçon 12: Duplication d’un PNR / Split ou séparation de dossier………………………….21
+Leçon 13 : Rubriques complémentaires………………………………………………………………..23
+Leçon 14 : Cartes fréquent flyer…………………………………………………………………………..25
+Leçon 15 : Attribution du siège…………………………………………………………………………….26
+Leçon 16 : Vente d’un passager « UM »……………………………………………………………….27
+Leçon 17 : Files d’appel………………………………………………………………………………………..29
+Leçon 18 : Historique d’un PNR……………………………………………………………………………30
+Leçon 19 : La servuction……………………………………………………………………………………….31
+Leçon 20 : Le surbooking (vol régulier)…………………………………………………………………32
+Leçon 21 : Liste d’attente………………………………………………………………………………….….33
+Leçon 22 : Tarification automatique……………………………………………………………….…….34
+
+-- 65 of 66 --
+
+ELFARABI FORMATION COURS AMADEUS 2012
+66
+Leçon 23 : Consultation tarifaire……………………………………………………………………36
+Leçon 24 : La note tarifaire…………………………………………………………………………….39
+Leçon 26 : Pénalité…………………………………………………………………………………………40
+Leçon 27 : Les trois éléments complémentaires pour l’émission du billet………41
+Leçon 28 : Billet électronique………………………………………………………………………….43
+Leçon 29 : Revalidation……………………………………………………………………………………45
+Leçon 30 : Annulation d’un billet…………………………………………………………………….47
+Leçon 31 : Les frais de service………………………………………………………………………...49
+Leçon 32 : Etablir un voyage organisé……………………………………………………………..51
+Leçon 33 : Document échange…………………………………………………………………………53
+Leçon 34 : Les zones IATA : (traffic conference: TC)……………………………………….57
+Leçon 35 : Les indicateurs géographiques (Global Indicateur GI)……………………..58
+Leçon 36 : Remboursement totale sans pénalité……………………………………………..60
+Leçon 37 : Remboursement totale avec pénalité……………………………………………..61
+Leçon 38 : Calcul d’un voyage………………………………………………………………………………………..63
+
+-- 66 of 66 --
+

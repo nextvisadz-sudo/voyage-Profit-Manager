@@ -1,0 +1,13 @@
+ATTESTATION DE PAIEMENT BANCAIRE
+Numéro de transaction = e2AabXcdKIs17YBDI5R6
+Mode de paiment = Carte CIB/Edhahabia
+Montant de la transaction :2780
+Nº de l'opération : 162186
+Date et heure de la transaction : 9-16-2025 2:44 PM
+Numéro d'autorisation : 427642
+Numéro (s) de contrat :
+En cas de problème de paiement. veuillez contacter le numéro vert
+de la SATIM 3020
+
+-- 1 of 1 --
+

@@ -1,0 +1,62 @@
+Votre réservation est confirmée .
+Votre Référence Réservation : A1C7B3
+Emis par B2S - B2SEUR
+Billets
+Alger 	PARIS CDG T1
+jeudi 18 sept. 2025
+Vol opéré par TASSILI AIRLINES SF3000
+(0 Stop)
+ALG 8:00
+Alger
+T4
+CDG 11:30
+PARIS CDG T1
+T1 T1
+Economy Classe
+Statut: Confirmed 	eco:H3 MODIF/REMB frais/RESTRICT MAX APPLI
+MR NOUREDDINE BAKHELILI
+ADULT
+15A 	Ticket N° 5152102202229
+Bagage 30 Kg
+PARIS CDG T1 	Alger
+samedi 27 sept. 2025
+Vol opéré par TASSILI AIRLINES SF3001
+(0 Stop)
+CDG 12:50
+PARIS CDG T1
+T1 T1
+ALG 14:20
+Alger
+T4
+Economy Classe
+Statut: Confirmed
+MODIF AVEC PENA
+SANS BAGAGE/RESTRECT MAX APPL/NON REMB
+MR NOUREDDINE BAKHELILI
+ADULT
+15F 	Ticket N° 5152102202230
+Bagage 0 Kg
+Informations de paiement
+Montant 	31203 DA
+Paiement par 	CIB
+Référence 	3194259619
+Date/Heure 	11 sept. 2025 17:27:57
+Référence SATIM 	jY68W3E6tXhF2YBDE6WV
+Code Autorisation 	344381
+ADULT x 1 	31203 DA
+Fare 	FARE 	7850 DA
+Algérie : Timbre Fiscal 	TF 	20 DA
+Algérie:Taxe de tésorerie 	TT 	1500 DA
+Redevance protection droit des passagers international 	V5 	400 DA
+Algérie : Taxe D'aéroport internationale 	XE 	1300 DA
+Supplément carburant 	YQ 	7000 DA
+France : Taxe d'aviation civile 	FR 	1392 DA
+France : Taxe d'aéroport 	FRTI 	1964 DA
+France : Taxe de Solidarité 	IZ 	655 DA
+France:SURPLUS TAXE DE SOLIDARITE 	O4VC 	1522 DA
+France : Frais de service Passager International 	QX 	5100 DA
+SURCHARGE CARBURANT 	YR 	2500 DA
+Total 	31203 DA
+
+-- 1 of 1 --
+

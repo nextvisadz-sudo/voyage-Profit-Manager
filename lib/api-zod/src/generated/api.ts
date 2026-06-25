@@ -41,6 +41,8 @@ export const SearchHotelsQueryParams = zod.object({
   "checkout": zod.coerce.string().optional().describe('Check-out date (YYYY-MM-DD)'),
   "adults": zod.coerce.number().optional().describe('Number of adults'),
   "rooms": zod.coerce.number().optional().describe('Number of rooms'),
+  "children": zod.coerce.number().optional().describe('Total number of children across all rooms'),
+  "infants": zod.coerce.number().optional().describe('Total number of infants across all rooms'),
   "page": zod.coerce.number().optional().describe('Page number'),
   "limit": zod.coerce.number().optional().describe('Results per page')
 })
@@ -53,6 +55,11 @@ export const SearchHotelsResponse = zod.object({
   "address": zod.string().optional().describe('Full address string from provider'),
   "stars": zod.number().optional(),
   "image": zod.string().optional(),
+  "lat": zod.number().optional().describe('Latitude of the hotel'),
+  "long": zod.number().optional().describe('Longitude of the hotel'),
+  "isStopSales": zod.boolean().optional().describe('Whether the hotel has entered Stop Sales \/ is sold out'),
+  "restrictions": zod.array(zod.string()).optional().describe('Special hotel restrictions'),
+  "marketingBadges": zod.array(zod.string()).optional().describe('Special marketing tags or badges'),
   "photos": zod.array(zod.string()).optional().describe('All photo URLs from provider'),
   "description": zod.string().optional(),
   "originalPrice": zod.number().optional().describe('Raw DZD price from provider (no conversion)'),
@@ -65,9 +72,11 @@ export const SearchHotelsResponse = zod.object({
   "mealPlan": zod.string().optional(),
   "nights": zod.number().optional(),
   "rooms": zod.array(zod.object({
+  "roomName": zod.string().optional().describe('Name of the room type (e.g. \"Chambre Standard\")'),
   "boardName": zod.string().describe('Board type name (e.g. \"Logement simple\", \"Petit Déjeuner\", \"Demi pension\")'),
   "originalAmount": zod.number().describe('Raw DZD amount from provider'),
-  "amount": zod.number().describe('DZD amount with commission applied')
+  "amount": zod.number().describe('DZD amount with commission applied'),
+  "rateType": zod.string().optional().describe('Availability rate type (e.g. \"BOOKABLE\", \"ON_REQUEST\")')
 })).optional().describe('Available room options with board types and commission-applied prices')
 })),
   "total": zod.number(),

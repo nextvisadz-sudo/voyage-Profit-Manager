@@ -1,0 +1,33 @@
+Booking Confirmation
+Voucher
+Booking Reference No : 	7A3C85
+Client : 	abdelhakim khettache
+Arrival : 	January 20, 2026
+Departure : 	January 30, 2026
+Vicenza Hotel
+Fevziye street No 3 Sehzadebasi / Fatih, Laleli, İstanbul, Türkiye, 34470
+Fevziye caddesi No 3 Şehzadebaşı /Fatih, Laleli,
+İstanbul, Türkiye, 34470
+Property Contact Number : 	++902125201701
+Number of Rooms: 	1
+Room Type : 	Standard Double Room
+Number of Adults : 	1
+Number of Children : 	0
+Number of Extra Beds : 	0
+Remarks :
+You chose a future price: payment by you in EUR will be due on Monday, January 12, 2026; On that
+date, a EUR amount will be calculated from USD 708.79 and charged to you, subject to these terms
+affecting your price.
+Guest List: abdelhakim khettache
+All special requests are subject to availability upon arrival
+Reference # for Guest : 606388527
+Payment Method : Visa 	Card No : XXXX-XXXX-XXXX-4247
+Cancellation Policy:
+Stay flexible! Cancel for free before January 14, 2026 Any cancellation received within 6 days prior to the arrival date will incur a
+charge of 10% of the booking value. Any cancellation received within 4 days prior to the arrival date will be charged for the entire
+stay. Failure to arrive at your hotel or property will be treated as a No-Show and will incur a charge of 100% of the booking value
+(Hotel policy).
+Benefits Included Breakfast, Free WiFi
+
+-- 1 of 1 --
+

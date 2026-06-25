@@ -1,0 +1,12 @@
+Reçu de paiement
+Votre paiement a été accepté
+Identifiant de transaction: TBovskE4HH3vUMA7VURX
+Numéro de transaction : VOLZ009f4ce3e038
+Code d'autorisation : 343330
+Mode de paiement : Carte CIB / Edahabia
+Type d’opération : Reservation billet d'avion
+Montant de l’opération : 53 116,00 DZD
+Date de l’opération : 2025-05-19 12:32:27
+
+-- 1 of 1 --
+

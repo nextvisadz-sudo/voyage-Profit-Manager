@@ -1,0 +1,45 @@
+# Stage 1: Build the application
+FROM node:20-alpine AS builder
+
+# Install pnpm globally
+RUN npm install -g pnpm
+
+WORKDIR /app
+
+# Copy lockfile and workspace configurations
+COPY pnpm-lock.yaml pnpm-workspace.yaml package.json tsconfig.json tsconfig.base.json ./
+
+# Copy packages' package.json files to cache dependency installation stage
+COPY artifacts/api-server/package.json ./artifacts/api-server/
+COPY artifacts/travel-website/package.json ./artifacts/travel-website/
+COPY artifacts/admin-dashboard/package.json ./artifacts/admin-dashboard/
+COPY artifacts/mockup-sandbox/package.json ./artifacts/mockup-sandbox/
+COPY lib/api-client-react/package.json ./lib/api-client-react/
+COPY lib/api-spec/package.json ./lib/api-spec/
+COPY lib/api-zod/package.json ./lib/api-zod/
+COPY lib/db/package.json ./lib/db/
+
+# Install dependencies (frozen-lockfile checks that lockfile is correct)
+RUN pnpm install --frozen-lockfile
+
+# Copy all source files
+COPY . .
+
+# Build both client packages and backend server bundles
+RUN pnpm run build
+
+# Stage 2: Final lightweight image
+FROM node:20-alpine AS runner
+
+WORKDIR /app
+
+# Copy built application and required production node_modules/files
+COPY --from=builder /app /app
+
+EXPOSE 5000
+
+ENV NODE_ENV=production
+ENV PORT=5000
+
+# Start Express Backend (which serves both backend endpoints and static client SPA)
+CMD ["node", "artifacts/api-server/dist/index.mjs"]

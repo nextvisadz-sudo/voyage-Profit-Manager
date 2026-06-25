@@ -2,6 +2,9 @@ import { Router, type IRouter } from "express";
 import { db, commissionConfigTable, searchStatsTable } from "@workspace/db";
 import { SearchHotelsQueryParams, SearchHotelsResponse } from "@workspace/api-zod";
 import { DESTINATIONS } from "./destinations";
+import { requireAuth } from "../lib/auth-service";
+import { mockCommission, mockStats } from "./commission";
+
 
 const router: IRouter = Router();
 
@@ -23,18 +26,31 @@ function setCache(key: string, data: unknown): void {
 }
 
 async function getCommissionPercent(): Promise<number> {
-  const rows = await db.select().from(commissionConfigTable).limit(1);
-  return rows[0]?.percent ?? 10;
+  if (!db) return mockCommission.percent;
+  try {
+    const rows = await db.select().from(commissionConfigTable).limit(1);
+    return rows[0]?.percent ?? 10;
+  } catch (err) {
+    console.error("Failed to query commission from database:", err);
+    return mockCommission.percent;
+  }
 }
 
 async function getOrCreateStats() {
-  const rows = await db.select().from(searchStatsTable).limit(1);
-  if (rows.length === 0) {
-    const [stats] = await db.insert(searchStatsTable).values({}).returning();
-    return stats;
+  if (!db) return mockStats;
+  try {
+    const rows = await db.select().from(searchStatsTable).limit(1);
+    if (rows.length === 0) {
+      const [stats] = await db.insert(searchStatsTable).values({}).returning();
+      return stats;
+    }
+    return rows[0];
+  } catch (err) {
+    console.error("Failed to get/create stats from database:", err);
+    return mockStats;
   }
-  return rows[0];
 }
+
 
 /** Apply commission on top of raw DZD amount — no currency conversion. */
 function applyCommission(amount: number, percent: number): number {
@@ -63,6 +79,7 @@ interface RawRate {
   boardCode?: number;
   boardName?: string;
   amount?: number;
+  rateType?: string;
 }
 
 interface RawRoom {
@@ -105,7 +122,7 @@ function parseH24Hotel(raw: RawHotel, commissionPercent: number): Record<string,
   const price = applyCommission(originalPrice, commissionPercent);
 
   // Build rooms array from the real API rooms[].rates[].boardName structure
-  const rooms: Array<{ boardName: string; originalAmount: number; amount: number }> = [];
+  const rooms: Array<{ roomName?: string; boardName: string; originalAmount: number; amount: number; rateType?: string }> = [];
   if (Array.isArray(raw.rooms)) {
     for (const room of raw.rooms) {
       if (Array.isArray(room.rates) && room.rates.length > 0) {
@@ -113,30 +130,24 @@ function parseH24Hotel(raw: RawHotel, commissionPercent: number): Record<string,
         for (const rate of room.rates) {
           const rawAmt = rate.amount ?? room.amount ?? 0;
           rooms.push({
+            roomName: room.name ?? "Chambre Standard",
             boardName: rate.boardName ?? "Standard",
             originalAmount: rawAmt,
             amount: applyCommission(rawAmt, commissionPercent),
+            rateType: rate.rateType ?? "BOOKABLE",
           });
         }
       } else if (typeof room.amount === "number") {
         rooms.push({
+          roomName: room.name ?? "Chambre Standard",
           boardName: room.name ?? "Chambre Standard",
           originalAmount: room.amount,
           amount: applyCommission(room.amount, commissionPercent),
+          rateType: "BOOKABLE",
         });
       }
     }
   }
-
-  // Deduplicate by boardName (keep lowest originalAmount per board type)
-  const seen = new Map<string, { boardName: string; originalAmount: number; amount: number }>();
-  for (const r of rooms) {
-    const existing = seen.get(r.boardName);
-    if (!existing || r.originalAmount < existing.originalAmount) {
-      seen.set(r.boardName, r);
-    }
-  }
-  const dedupedRooms = Array.from(seen.values());
 
   // Preserve all photos; first one is the primary image
   const allPhotos: string[] = Array.isArray(raw.photos) ? raw.photos.filter(Boolean) : [];
@@ -165,14 +176,19 @@ function parseH24Hotel(raw: RawHotel, commissionPercent: number): Record<string,
     rating: raw.review?.rating != null ? Number(raw.review.rating) / 20 : undefined,
     reviewCount: raw.review?.count != null ? Number(raw.review.count) : undefined,
     amenities,
-    roomType: dedupedRooms[0]?.boardName ?? "Chambre Standard",
-    mealPlan: dedupedRooms[0]?.boardName ?? "",
+    roomType: rooms[0]?.boardName ?? "Chambre Standard",
+    mealPlan: rooms[0]?.boardName ?? "",
     nights: undefined,
-    rooms: dedupedRooms,
+    rooms: rooms,
+    lat: raw.lat,
+    long: raw.long,
+    isStopSales: !rooms || rooms.length === 0 || raw.minRate === 0,
+    restrictions: raw.themes?.filter(t => t.name.toLowerCase().includes("celib") || t.name.toLowerCase().includes("couple")).map(t => t.name) ?? [],
+    marketingBadges: raw.themes?.slice(0, 2).map(t => t.name) ?? [],
   };
 }
 
-router.get("/hotels/search", async (req, res): Promise<void> => {
+router.get("/hotels/search", requireAuth, async (req, res): Promise<void> => {
   const parsed = SearchHotelsQueryParams.safeParse(req.query);
   if (!parsed.success) {
     res.status(400).json({ error: "Invalid query parameters", message: parsed.error.message });
@@ -210,67 +226,74 @@ router.get("/hotels/search", async (req, res): Promise<void> => {
   }
 
   try {
-    if (!resolvedId) {
-      throw new Error("No destinationId resolved — falling back to mock data");
-    }
+    if (resolvedId) {
+      const paxParams = buildPaxParams(Number(rooms), Number(adults));
+      paxParams.set("destinationId", String(resolvedId));
+      if (checkin) paxParams.set("arrDate", toH24Date(checkin));
+      if (checkout) paxParams.set("depDate", toH24Date(checkout));
 
-    const paxParams = buildPaxParams(Number(rooms), Number(adults));
-    paxParams.set("destinationId", String(resolvedId));
-    if (checkin) paxParams.set("arrDate", toH24Date(checkin));
-    if (checkout) paxParams.set("depDate", toH24Date(checkout));
+      const url = `https://www.h24voyages.com/fr/hotels/api/Search/?${paxParams.toString()}`;
+      const cacheKey = url;
 
-    const url = `https://www.h24voyages.com/fr/hotels/api/Search/?${paxParams.toString()}`;
-    const cacheKey = url;
-
-    const cachedRaw = getCached(cacheKey) as { hotels?: RawHotel[] } | null;
-    if (cachedRaw?.hotels && cachedRaw.hotels.length > 0) {
-      req.log.info({ count: cachedRaw.hotels.length }, "H24Voyages hotels served from cache");
-      hotels = cachedRaw.hotels.map((h) => parseH24Hotel(h, commissionPercent));
-    } else {
-      req.log.info({ url }, "Fetching hotels from H24Voyages");
-
-      const response = await fetch(url, {
-        headers: {
-          "Accept": "application/json, text/plain, */*",
-          "Accept-Language": "fr-FR,fr;q=0.9",
-          "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36",
-          "Referer": "https://www.h24voyages.com/fr/hotels/recherche",
-        },
-        signal: AbortSignal.timeout(12000),
-      });
-
-      if (!response.ok) {
-        req.log.warn({ status: response.status }, "H24Voyages non-200, using mock data");
-        hotels = generateMockHotels(resolvedCity, commissionPercent);
+      const cachedRaw = getCached(cacheKey) as { hotels?: RawHotel[] } | null;
+      if (cachedRaw?.hotels && cachedRaw.hotels.length > 0) {
+        req.log.info({ count: cachedRaw.hotels.length }, "H24Voyages hotels served from cache");
+        hotels = cachedRaw.hotels.map((h) => parseH24Hotel(h, commissionPercent));
       } else {
-        const data = await response.json() as {
-          status?: string;
-          hotels?: RawHotel[];
-          total?: number;
-          nights?: number;
-        };
+        req.log.info({ url }, "Fetching hotels from H24Voyages");
 
-        if (data.status === "error" || !Array.isArray(data.hotels) || data.hotels.length === 0) {
-          req.log.warn({ status: data.status }, "H24Voyages returned no hotels, using mock data");
-          hotels = generateMockHotels(resolvedCity, commissionPercent);
+        const response = await fetch(url, {
+          headers: {
+            "Accept": "application/json, text/plain, */*",
+            "Accept-Language": "fr-FR,fr;q=0.9",
+            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36",
+            "Referer": "https://www.h24voyages.com/fr/hotels/recherche",
+          },
+          signal: AbortSignal.timeout(12000),
+        });
+
+        if (!response.ok) {
+          req.log.warn({ status: response.status }, "H24Voyages non-200, returning empty search");
         } else {
-          req.log.info({ count: data.hotels.length, nights: data.nights }, "H24Voyages hotels fetched");
-          setCache(cacheKey, data);
-          hotels = data.hotels.map((h) => parseH24Hotel(h, commissionPercent));
+          const data = await response.json() as {
+            status?: string;
+            hotels?: RawHotel[];
+            total?: number;
+            nights?: number;
+          };
+
+          if (data.status === "error" || !Array.isArray(data.hotels) || data.hotels.length === 0) {
+            req.log.warn({ status: data.status }, "H24Voyages returned error or no hotels");
+          } else {
+            req.log.info({ count: data.hotels.length, nights: data.nights }, "H24Voyages hotels fetched");
+            setCache(cacheKey, data);
+            hotels = data.hotels.map((h) => parseH24Hotel(h, commissionPercent));
+          }
         }
       }
+    } else {
+      req.log.warn("No destinationId resolved for search query");
     }
   } catch (err) {
-    req.log.warn({ err }, "H24Voyages fetch failed, using mock data");
-    hotels = generateMockHotels(resolvedCity || destination, commissionPercent);
+    req.log.warn({ err }, "H24Voyages fetch failed");
   }
 
-  const stats = await getOrCreateStats();
-  await db.update(searchStatsTable).set({
-    totalSearches: (stats.totalSearches ?? 0) + 1,
-    totalHotelsServed: (stats.totalHotelsServed ?? 0) + hotels.length,
-    lastSearchAt: new Date(),
-  });
+  if (db) {
+    try {
+      const stats = await getOrCreateStats();
+      await db.update(searchStatsTable).set({
+        totalSearches: (stats.totalSearches ?? 0) + 1,
+        totalHotelsServed: (stats.totalHotelsServed ?? 0) + hotels.length,
+        lastSearchAt: new Date(),
+      });
+    } catch (err) {
+      console.error("Failed to update database search stats:", err);
+    }
+  } else {
+    mockStats.totalSearches += 1;
+    mockStats.totalHotelsServed += hotels.length;
+    mockStats.lastSearchAt = new Date();
+  }
 
   const result = SearchHotelsResponse.parse({
     hotels,
@@ -286,124 +309,6 @@ router.get("/hotels/search", async (req, res): Promise<void> => {
   res.json(result);
 });
 
-// ---------------------------------------------------------------------------
-// Mock fallback — DZD prices, rooms array matching real API structure
-// ---------------------------------------------------------------------------
-function generateMockHotels(destination: string, commissionPercent: number) {
-  const dest = destination || "Tunis";
-  const templates = [
-    {
-      name: `Grand Palais ${dest}`, stars: 5, minRate: 48000, rating: 4.8, reviews: 1240,
-      image: "https://images.unsplash.com/photo-1566073771259-6a8506099945?w=800",
-      rooms: [
-        { boardName: "Logement simple", originalAmount: 48000 },
-        { boardName: "Petit Déjeuner", originalAmount: 54000 },
-        { boardName: "Demi pension", originalAmount: 62000 },
-        { boardName: "Pension complète", originalAmount: 74000 },
-      ],
-    },
-    {
-      name: `Hôtel ${dest} Central`, stars: 4, minRate: 27000, rating: 4.5, reviews: 876,
-      image: "https://images.unsplash.com/photo-1582719508461-905c673771fd?w=800",
-      rooms: [
-        { boardName: "Logement simple", originalAmount: 27000 },
-        { boardName: "Petit Déjeuner", originalAmount: 31000 },
-        { boardName: "Demi pension", originalAmount: 38000 },
-      ],
-    },
-    {
-      name: `${dest} Garden Resort`, stars: 5, minRate: 68000, rating: 4.9, reviews: 2100,
-      image: "https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?w=800",
-      rooms: [
-        { boardName: "Logement simple", originalAmount: 68000 },
-        { boardName: "Petit Déjeuner", originalAmount: 75000 },
-        { boardName: "Demi pension", originalAmount: 88000 },
-        { boardName: "All Inclusive", originalAmount: 105000 },
-      ],
-    },
-    {
-      name: `${dest} Boutique Suites`, stars: 4, minRate: 32000, rating: 4.6, reviews: 543,
-      image: "https://images.unsplash.com/photo-1455587734955-081b22074882?w=800",
-      rooms: [
-        { boardName: "Logement simple", originalAmount: 32000 },
-        { boardName: "Petit Déjeuner", originalAmount: 36500 },
-        { boardName: "Demi pension", originalAmount: 44000 },
-      ],
-    },
-    {
-      name: `Premier Hôtel ${dest}`, stars: 3, minRate: 14000, rating: 4.2, reviews: 3200,
-      image: "https://images.unsplash.com/photo-1618773928121-c32242e63f39?w=800",
-      rooms: [
-        { boardName: "Logement simple", originalAmount: 14000 },
-        { boardName: "Petit Déjeuner", originalAmount: 17000 },
-      ],
-    },
-    {
-      name: `${dest} Palace Hotel`, stars: 5, minRate: 85000, rating: 4.7, reviews: 890,
-      image: "https://images.unsplash.com/photo-1578683010236-d716f9a3f461?w=800",
-      rooms: [
-        { boardName: "Logement simple", originalAmount: 85000 },
-        { boardName: "Petit Déjeuner", originalAmount: 93000 },
-        { boardName: "Demi pension", originalAmount: 108000 },
-        { boardName: "Pension complète", originalAmount: 122000 },
-        { boardName: "All Inclusive", originalAmount: 145000 },
-      ],
-    },
-    {
-      name: `${dest} Riviera Spa`, stars: 4, minRate: 30000, rating: 4.6, reviews: 420,
-      image: "https://images.unsplash.com/photo-1571896349842-33c89424de2d?w=800",
-      rooms: [
-        { boardName: "Logement simple", originalAmount: 30000 },
-        { boardName: "Petit Déjeuner", originalAmount: 34000 },
-        { boardName: "Demi pension", originalAmount: 42000 },
-      ],
-    },
-    {
-      name: `Holiday ${dest} Bay`, stars: 3, minRate: 18000, rating: 4.1, reviews: 1800,
-      image: "https://images.unsplash.com/photo-1629140727571-9b5c6f6267b4?w=800",
-      rooms: [
-        { boardName: "Logement simple", originalAmount: 18000 },
-        { boardName: "Petit Déjeuner", originalAmount: 21000 },
-        { boardName: "Demi pension", originalAmount: 27000 },
-      ],
-    },
-    {
-      name: `${dest} Luxury Retreat`, stars: 5, minRate: 58000, rating: 4.8, reviews: 980,
-      image: "https://images.unsplash.com/photo-1549294413-26f195200c16?w=800",
-      rooms: [
-        { boardName: "Logement simple", originalAmount: 58000 },
-        { boardName: "Petit Déjeuner", originalAmount: 65000 },
-        { boardName: "Demi pension", originalAmount: 78000 },
-        { boardName: "All Inclusive", originalAmount: 98000 },
-      ],
-    },
-  ];
 
-  return templates.map((t, i) => {
-    const rooms = t.rooms.map((r) => ({
-      boardName: r.boardName,
-      originalAmount: r.originalAmount,
-      amount: applyCommission(r.originalAmount, commissionPercent),
-    }));
-    return {
-      id: `mock-${i + 1}`,
-      name: t.name,
-      destination: dest,
-      stars: t.stars,
-      image: t.image,
-      description: `${t.name} — ${dest}`,
-      originalPrice: t.minRate,
-      price: applyCommission(t.minRate, commissionPercent),
-      currency: "DZD",
-      rating: t.rating,
-      reviewCount: t.reviews,
-      amenities: [] as string[],
-      roomType: rooms[0].boardName,
-      mealPlan: rooms[0].boardName,
-      nights: undefined,
-      rooms,
-    };
-  });
-}
 
 export default router;

@@ -1,0 +1,217 @@
+Coder et décoder
+Code 	Signification 	Application 	Exemple
+DAN 	decoding airport name 	DAN+ville 	DANPARIS
+DAC 	decoding airport code 	DAC+airport code (trigramme) 	DACCDG
+DC 	decoding un pays 	DC+code pays (bigramme pays) 	DCFR
+DNS 	decoding Name state 	DNS+bigramme pays (affiche tous les états)
+DNS+bigramme pays+bigramme état
+DNSUS
+DNSUSFL
+DNA 	decoding name airline 	DNA+bigramme airline
+DNA+code IATA airline
+DNA+nom airline
+DNA AF
+DNA 057
+DNA AIR FRANCE
+DNE 	decoding name equipment 	DNE+type appareil 	DNE733 (boeing 737-300)
+DD 	décalage horaire 	DD+trigrammeville1/trigrammeville2 	DDLON/PAR
+Navigation
+Code 	Signification 	Application 	Exemple
+MD 	Moove Down 	page suivante
+MN 	Moove Next 	jour suivant
+MY 	Moove yersterday 	jour d’avant
+MU 	Moove Up 	aller en haut
+MB 	Moove Bottom 	aller en bas
+RE 	Repeat 	réécriture de la dernière phrase
+RT 	Retour à la réservation en cours
+ALT+shift 	Affiche la phrase précédente
+XI 	tout effacer
+XE+n°ligne 	effacer une ligne 	XE2
+XE+n°ligne,ligne 	effacer des lignes 	effacer les lignes 2 et 5 	XE2,5
+XE+n°ligne-ligne 	effacer des lignes 	effacer des lignes 2 à 5 	XE2-5
+IG 	Ignorer
+IR 	Ignore and retrieve 	annuler l’effacer
+Affichage
+Code 	Signification 	Application 	Exemple
+DO 	Afficher les informations de vol 	DO+n°de listing
+DO+n°de vol/date
+DO2
+DOAF68925JUN
+GGAIS 	Index général
+GGNEWS 	info nouveautés Amadeus
+GGCOU 	info country 	GGCOU+bigramme pays 	GGCOUFR
+GGAIR 	info compagnie aérienne 	GGAIR+bigramme compagnie 	GGAIRAF
+GGAPT 	info aéroport 	GGAPT+trigramme aéroport 	GGAPTCDG
+Affectation des classes de réservation aux classes de voyage
+Classes de voyage (cabine) = K 	Classes de réservation (classe tarifaire) = C
+Première classe (F) 	P,F
+Classe affaires (C) 	J, W, S, A
+Classe économique (Y) 	Y, B, M, U, K, H, L, Q, T, E, N, R, V, X, G
+Formalités Police et Santé
+TIMATIC 	travel information manual
+www.skyteam.com/en/flights-and-destinations/visa-and-health/
+www.iatatravelcentre.com
+www.diplomatie.gouv.fr/fr/conseils-aux-voyageurs/conseils-par-pays/
+AMADEUS mode cryptique
+1
+
+-- 1 of 3 --
+
+Fréquence des vols TN (Timetable Neutral)
+Code 	Significations
+TN15OCTPARLON 	le 15 octobre entre Paris et Londres 	fréquence des vols entre 2 villes pendant une période de 4 semaines (1
+semaine avant et 3 semaines après la date précisée)
+Information tarifaire FQD (Fare Quote Display)
+Code 	Significations et filtres d’affichage
+FQDPARLON/15OCT*25OCT /AAF,DL /r,at /ix /KY/CV
+PARLON 	15OCT*25OCT 	AAF,DL 	r,at 	ix 	KY 	CV
+Vol Paris
+London
+aller le 15 octobre retour
+le 25 octobre
+sur les compagnies aéri-
+ennes Air france et Delta
+airlines
+prix Taxes
+aéroport
+incluses
+Afficher le
+moins cher
+en premier
+sur la classe
+de voyage
+(cabine) éco
+Sur la classe tari-
+faire V
+Disponibilités de places (AN, AD, AA)
+Code 	Significations et filtres d’affichage
+AN15OCTPARLON1500
+AN 	15OCT 	PARLON 	1500
+Availibility Neutral 	Vol le 15 OCT 	Vol Paris London 	vol vers 15 heures
+AN15OCTPARSYD/O/ XTYO
+AN 	15OCT 	PARLON 	O (lettre) 	XTYO
+Availibility Neutral 	Vol le 15 OCT 	Vol Paris Sydney 	Avec la même cie de
+bout en bout
+Via Tokyo
+AN15OCTPARLON*
+AN 	15OCT 	PARLON 	*
+Availibility Neutral 	Vol le 15 OCT 	Vol Paris London 	Aller/retour dans la
+journée
+AN15OCTPARLON/AAF/KY/CV,X,G
+AN 	15OCT 	PARLON 	AAF 	KY 	CV
+Availibility Neutral 	Vol le 15 OCT 	Vol Paris London 	avec Air France 	sur la classe de
+voyage (cabine) éco
+Sur les classes
+tarifaire V, x et G
+AD15OCTPARLON 	AD (Availibility Departure) : affichage dans ordre de départ de vols
+AA15OCTPARLON 	AA (Availibility Arrival) : affichage dans ordre d’arrivée des vols
+ACLYS 	changer la ville de départ par la ville LYS (Lyon) 	Changer la date : AC17JUN
+AC2 =2jours plus tard - AC-2 = 2 jours avant
+AC//MPL 	changer la ville de destination par la ville MPL (Montpellier)
+Modifications dans un dossier (PNR) :
+Code 	Exemple 	Signfication
+SB 	SBY3 	(Switch Book) Changer la resa de classe tarifaire en Y sur la ligne 3
+SBdate 	SB15APR2 	Changer la date de vol au 15 April en ligne 2
+3/ 	3/ AP 06708798 	Pour changer une ligne ( N°ligne/ texte de remplacement)
+NU 	NU2/1Martin/prenom 	pour changer le prénom (NU+N°ligne/1Nom/prénom
+Suite à un dossier (PNR) : RT, Envoi Email, Image de l‘itinéraire...
+Code 	Exemple
+Recherche du PNR 	RT/NOM 	RT/MARTIN
+RTn°du dossier 	RT56UTFR
+RT/1ere lettre nom 	RT/M
+Envoi email au passager 	IEP-EMLA 	envoi à l’email indiqué dans le PNR
+IEP-EMLA-email 	IEP-EMLA-martin@gmail.com
+TQT = image tarifaire 	TTE = annuler la TST 	TTE/ALL = annuler toute la TST
+RRA = duplication du PNR
+RRN = duplication du PNR et le ratacher au dossier initial 	RRN/2 = pour 2 passagers
+Pour changer
+le NOM =
+appeler la
+compagnie
+2
+
+-- 2 of 3 --
+
+Processus de réservation de vols / PNR
+thème 	code 	exemple 	remarques et options
+1 	Nouvelle page de commande
+Reservation des places
+2 	Disponibilité Aller 	AN 	AN15OCTPARLON 	aller le 15 october Paris London
+3 	Selection tarif 	SS 	SS1V3
+1= nombre de sièges à réserver=nbr de passagers voy-
+ageant ensemble - V=Classe tarifaire - 3=n°de ligne du
+listing
+4 	Disponibilité Retour 	ACR 	ACR25OCT 	date du retour 25 october
+ou 	AN 	AN25OCTLONPAR 	Retour le 25 october London Paris
+5 	Selection tarif 	SS 	SS1V3
+1= nombre de sièges à réserver=nbr de passagers voy-
+ageant ensemble - V=Classe tarifaire - 3=n°de ligne du
+listing
+6 	Nom passager 	NM 	NM1NOM/prenom Mr 	nom et prenom du passager + civilité
+ou 	NM2NOM/prenom/prenom 	2 passagers avec le même nom
+NM1NOM/prenom(CHD/15APR10) Passager enfant de 2 à -de 12ans, avec sa date de nais-
+sance
+NM1NOM/prenom(INF/lea/15APR17) Le bébé (-de 2 ans) est affecté directement à un adulte,
+avec son prénom et date de naissance
+NM1NOM/prenom(INFNOM/lea/15APR17)
+(nom bébé différent de l’adulte) - Le bébé (-de 2 ans) est
+affecté directement à un adulte, avec son nom et prénom
+et date de naissance
+Préciser le statut du passager si nécessaire
+enfant (2à -12ans) 	2/(CHD/15ARR10) 2/ = la ligne du passager à modifier date de naissance de
+l’enfant
+Tarif jeune (12 à -
+25ans) 1/(ID14APR00)FDZZ/P1 1/ = la ligne du passager à modifier date de naissance du
+jeune
+Tarif Senior (+60 ou
++ 65ans) 1/(ID17APR48)FDCD/P1 1/ = la ligne du passager à modifier date de naissance du
+sénior
+7 	Contacts 	AP AP Agence VoyageVoyage - Conseillere
+Marie Martin 06 39 08 00 00
+Coordonnées diverses ou
+Contact de l’agent de voyage et son agence
+8 	APM- 	APM-0607080910/P1 	N°de mobile du passager n°1
+9 	APE- 	APE-emailclient@gmail.com/P1 	Email du passager n°1
+10 Etat de vente 	TKOK TKOK ou TKXL15MAY ou TKTL-
+15MAY/1100
+TKXLdate : date de rappel dans le fil d’appel ou
+TKTLdate/heure : date et heure de rappel dans le fil d’actu
+11 Signature de l’agent RF 	RFABCD 	RF+initiales ou code de l’agent de voyage
+12 Validation 	ER 	ER 	Validation pour réserver les places
+validation du Tarif
+Tarif et
+Transitional Stored
+Ticket
+FXX - 	FXX/RCH - FXX/RIN 	Consultation du tarif adulte - enfant - bébé
+13 	FXP 	FXP 	affichage du tarif
+FQN puis RT puis FXP 	pour afficher les infos du tarif
+Eventuellement choix de la ligne de tarif 	selection avec fleches du clavier
+FXP - FXP/RCH/P2 - FXP/RIN/P1 Forcer le tarif - Forcer le tarif enfant en ligne 2 - forcer le
+tarif bébé en ligne 1
+14 	ER 	ER 	Validation du tarif ! Le tarif est valide jusqu’à 0H00
+Commentaires
+15
+Remarques
+et communication
+RM 	RM Remarques en Interne (visible que par l’agence)
+16 	RIR
+RIR Remarques à destination du passager : Utiliser les smart flow (Formalités police, Restric-
+tions et conditions tarifaires du vol, restrictions bagages, frais d’agence, date limite d’emission du
+billet, ...)
+OS 	OS communication à destination de la compagnie aérienne
+OP(W/C) message à notre attention provenant de la compagnie (W=Warning=info / O=dossier annulé)
+SR 	spécial request
+SSR 	message à notre attention provenant de la compagnie concernant les SR
+17 	ER 	ER 	Validation des commentaires
+Sièges
+ 
+18 	Choix du siège 	SM 	SM 	Affichage du plan avion pour choix des sièges
+ST 	ST/WST ou ST/AST ou ST22A/22B choix siège window ou couloir sans passer par le plan
+avion
+19 	ER 	ER 	Validation
+RF 	RFABCD 	RF+initiales ou code de l’agent de voyage
+Fin de transaction 	ET 	ET 	Avant de finir la transaction, noter le N°de dossier !
+3
+
+-- 3 of 3 --
+

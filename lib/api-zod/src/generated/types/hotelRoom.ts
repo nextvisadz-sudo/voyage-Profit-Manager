@@ -7,10 +7,14 @@
  */
 
 export interface HotelRoom {
+  /** Name of the room type (e.g. "Chambre Standard") */
+  roomName?: string;
   /** Board type name (e.g. "Logement simple", "Petit Déjeuner", "Demi pension") */
   boardName: string;
   /** Raw DZD amount from provider */
   originalAmount: number;
   /** DZD amount with commission applied */
   amount: number;
+  /** Availability rate type (e.g. "BOOKABLE", "ON_REQUEST") */
+  rateType?: string;
 }

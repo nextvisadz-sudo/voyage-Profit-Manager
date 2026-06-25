@@ -191,6 +191,9 @@ components:
     HotelRoom:
       type: object
       properties:
+        roomName:
+          type: string
+          description: Name of the room type (e.g. "Chambre Standard")
         boardName:
           type: string
           description: Board type name (e.g. "Logement simple", "Petit Déjeuner", "Demi pension")
@@ -200,6 +203,9 @@ components:
         amount:
           type: number
           description: DZD amount with commission applied
+        rateType:
+          type: string
+          description: Availability rate type (e.g. "BOOKABLE", "ON_REQUEST")
       required:
         - boardName
         - originalAmount
@@ -221,6 +227,25 @@ components:
           type: number
         image:
           type: string
+        lat:
+          type: number
+          description: Latitude of the hotel
+        long:
+          type: number
+          description: Longitude of the hotel
+        isStopSales:
+          type: boolean
+          description: Whether the hotel has entered Stop Sales / is sold out
+        restrictions:
+          type: array
+          items:
+            type: string
+          description: Special hotel restrictions
+        marketingBadges:
+          type: array
+          items:
+            type: string
+          description: Special marketing tags or badges
         photos:
           type: array
           items:

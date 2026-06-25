@@ -3,12 +3,18 @@ import { useParams, useSearch, useLocation } from "wouter";
 import { useMemo } from "react";
 import { useSearchHotels } from "@workspace/api-client-react";
 import { Button } from "@/components/ui/button";
+import { HotelMap } from "@/components/hotel-map";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Badge } from "@/components/ui/badge";
 import {
   MapPin, Star, ArrowLeft, ChevronLeft, ChevronRight,
-  Utensils, Calendar, Users, Award, ExternalLink, FileText,
+  Utensils, Calendar, Users, Award, ExternalLink, FileText, Loader2,
 } from "lucide-react";
+import { useAuth } from "@/hooks/use-auth";
+import { useToast } from "@/hooks/use-toast";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "@/components/ui/dialog";
+import { Label } from "@/components/ui/label";
+import { Input } from "@/components/ui/input";
 
 const FALLBACK = "https://images.unsplash.com/photo-1566073771259-6a8506099945?w=1200";
 
@@ -19,17 +25,17 @@ function PhotoGallery({ photos, name }: { photos: string[]; name: string }) {
   const next = () => setActive((i) => (i === list.length - 1 ? 0 : i + 1));
 
   return (
-    <div className="relative w-full">
+    <div className="relative w-full max-w-5xl mx-auto px-4 mt-6">
       {/* Main image */}
-      <div className="relative h-[50vh] md:h-[65vh] overflow-hidden rounded-none md:rounded-2xl bg-slate-200">
+      <div className="relative h-[280px] sm:h-[400px] md:h-[480px] overflow-hidden rounded-xl md:rounded-2xl bg-slate-200 shadow-md border border-slate-100">
         <img
           key={active}
           src={list[active]}
           alt={`${name} — photo ${active + 1}`}
-          className="w-full h-full object-cover transition-opacity duration-300"
+          className="w-full h-full object-cover transition-opacity duration-300 rounded-xl md:rounded-2xl"
           onError={(e) => { (e.target as HTMLImageElement).src = FALLBACK; }}
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent pointer-events-none" />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent pointer-events-none rounded-xl md:rounded-2xl" />
 
         {list.length > 1 && (
           <>
@@ -63,7 +69,7 @@ function PhotoGallery({ photos, name }: { photos: string[]; name: string }) {
 
       {/* Thumbnail strip */}
       {list.length > 1 && (
-        <div className="flex gap-2 mt-3 overflow-x-auto pb-1 px-4 md:px-0">
+        <div className="flex gap-2 mt-3 overflow-x-auto pb-1 rounded-lg">
           {list.map((src, i) => (
             <button
               key={i}
@@ -75,7 +81,7 @@ function PhotoGallery({ photos, name }: { photos: string[]; name: string }) {
               <img
                 src={src}
                 alt=""
-                className="w-full h-full object-cover"
+                className="w-full h-full object-cover rounded-md"
                 onError={(e) => { (e.target as HTMLImageElement).src = FALLBACK; }}
               />
             </button>
@@ -90,6 +96,12 @@ export default function HotelDetail() {
   const { id } = useParams();
   const searchString = useSearch();
   const [, setLocation] = useLocation();
+  const { user } = useAuth();
+  const { toast } = useToast();
+
+  const [bookingRoomIdx, setBookingRoomIdx] = useState<number | null>(null);
+  const [passengerNames, setPassengerNames] = useState<string[]>([]);
+  const [isCreatingBooking, setIsCreatingBooking] = useState(false);
 
   const searchParams = useMemo(() => {
     const p = new URLSearchParams(searchString);
@@ -105,10 +117,86 @@ export default function HotelDetail() {
   const hasContext = !!searchParams.destinationId || !!searchParams.destination;
 
   const { data: searchResults, isLoading } = useSearchHotels(searchParams, {
-    query: { enabled: hasContext },
+    query: { enabled: hasContext } as any,
   });
 
   const hotel = searchResults?.hotels?.find((h) => h.id === id);
+
+  const startBooking = (roomIdx: number) => {
+    if (!user) {
+      toast({
+        variant: "destructive",
+        title: "Connexion requise",
+        description: "Veuillez vous connecter pour effectuer une réservation.",
+      });
+      setLocation("/login");
+      return;
+    }
+    const passengerCount = searchParams.adults || 2;
+    setPassengerNames(Array(passengerCount).fill(""));
+    setBookingRoomIdx(roomIdx);
+  };
+
+  const handleCreateBooking = async () => {
+    if (bookingRoomIdx === null || !hotel) return;
+    const selectedRoom = hotel.rooms?.[bookingRoomIdx];
+    if (!selectedRoom) return;
+
+    const emptyNameIdx = passengerNames.findIndex(name => !name.trim());
+    if (emptyNameIdx !== -1) {
+      toast({
+        variant: "destructive",
+        title: "Noms requis",
+        description: `Veuillez renseigner le nom du voyageur ${emptyNameIdx + 1}.`,
+      });
+      return;
+    }
+
+    setIsCreatingBooking(true);
+    try {
+      const response = await fetch("/api/bookings", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          hotelName: hotel.name,
+          destination: hotel.destination,
+          checkin: searchParams.checkin,
+          checkout: searchParams.checkout,
+          nights: nights || 1,
+          adults: searchParams.adults || 2,
+          children: 0,
+          guests: passengerNames.map(name => name.trim()),
+          roomCategory: selectedRoom.roomName || "Chambre Standard",
+          boardType: selectedRoom.boardName,
+          price: selectedRoom.originalAmount,
+          markedUpPrice: selectedRoom.amount
+        })
+      });
+
+      if (!response.ok) {
+        throw new Error("Impossible de créer la réservation.");
+      }
+
+      const data = await response.json();
+      toast({
+        title: "Réservation créée",
+        description: `La réservation ${data.booking.reference} a été enregistrée avec succès.`,
+      });
+      setBookingRoomIdx(null);
+      setLocation(`/reservation/${data.booking.reference}`);
+    } catch (err: any) {
+      console.error(err);
+      toast({
+        variant: "destructive",
+        title: "Erreur",
+        description: err.message || "Une erreur est survenue lors de la réservation.",
+      });
+    } finally {
+      setIsCreatingBooking(false);
+    }
+  };
 
   const nights = useMemo(() => {
     if (!searchParams.checkin || !searchParams.checkout) return undefined;
@@ -158,6 +246,7 @@ export default function HotelDetail() {
 
   const photos = (hotel.photos as string[] | undefined) ?? (hotel.image ? [hotel.image] : []);
   const address = (hotel as any).address as string | undefined;
+  const isStop = hotel.isStopSales || !hotel.rooms || hotel.rooms.length === 0;
 
   // ── Format date helpers ───────────────────────────────────────────────────
   function fmtDate(iso?: string) {
@@ -222,6 +311,38 @@ export default function HotelDetail() {
                   </span>
                 )}
               </div>
+
+              {/* Marketing badges & restrictions */}
+              <div className="flex flex-wrap gap-1.5 mb-4">
+                {isStop && (
+                  <Badge className="bg-[#d63031] hover:bg-[#d63031] text-white font-bold text-xs py-1 px-3 rounded-md">
+                    Stop Sales / Complet
+                  </Badge>
+                )}
+                {hotel.marketingBadges?.map((badge) => (
+                  <Badge key={badge} className="bg-accent hover:bg-accent text-accent-foreground font-bold text-xs py-1 px-3 rounded-md">
+                    {badge}
+                  </Badge>
+                ))}
+                {hotel.restrictions?.map((restriction) => {
+                  const isCelib = /c[eé]lib/i.test(restriction);
+                  if (isCelib) {
+                    return (
+                      <span 
+                        key={restriction} 
+                        style={{ backgroundColor: "#d63031", color: "white", padding: "4px 8px", borderRadius: "4px", fontWeight: "bold", fontSize: "12px", display: "inline-block" }}
+                      >
+                        ⚠ {restriction}
+                      </span>
+                    );
+                  }
+                  return (
+                    <Badge key={restriction} className="bg-orange-600 hover:bg-orange-600 text-white font-bold text-xs py-1 px-3 rounded-md animate-pulse">
+                      ⚠ {restriction}
+                    </Badge>
+                  );
+                })}
+              </div>
               {hotel.amenities && hotel.amenities.length > 0 && (
                 <div className="flex flex-wrap gap-2">
                   {hotel.amenities.map((a: string) => (
@@ -233,82 +354,184 @@ export default function HotelDetail() {
               )}
             </section>
 
-            {/* Description */}
-            {hotel.description && (
-              <section>
-                <h2 className="text-xl font-serif text-slate-800 mb-3">À propos de l'établissement</h2>
-                <p className="text-slate-600 leading-relaxed">{hotel.description}</p>
-              </section>
-            )}
+            {/* Description & Emplacement */}
+            <section className="bg-white rounded-2xl border border-slate-200 shadow-sm p-6 space-y-6">
+              <h2 className="text-xl font-serif text-slate-800 mb-2">Emplacement & Description</h2>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-start">
+                <div className="space-y-5">
+                  <div>
+                    <h3 className="font-semibold text-slate-700 text-sm uppercase tracking-wider mb-2">Situation</h3>
+                    {hotel.description && /c[eé]lib/i.test(hotel.description) ? (
+                      <div className="mb-4">
+                        <span 
+                          style={{ backgroundColor: "#d63031", color: "white", padding: "4px 8px", borderRadius: "4px", fontWeight: "bold", fontSize: "14px", display: "inline-block" }}
+                        >
+                          ⚠ {hotel.description}
+                        </span>
+                      </div>
+                    ) : (
+                      <p className="text-slate-600 text-sm leading-relaxed">
+                        {hotel.description || "Cet établissement de premier choix vous offre un cadre luxueux et raffiné pour un séjour inoubliable."}
+                      </p>
+                    )}
+                  </div>
+                  
+                  <div className="flex items-start gap-2 text-xs text-slate-500 font-medium">
+                    <MapPin className="w-4 h-4 text-primary shrink-0 mt-0.5" />
+                    <span>{address || hotel.destination}</span>
+                  </div>
+                  
+                  <div>
+                    <h3 className="font-semibold text-slate-700 text-sm uppercase tracking-wider mb-3">Points forts</h3>
+                    <div className="grid grid-cols-1 gap-2.5">
+                      <div className="flex items-center gap-2 text-sm text-slate-600">
+                        <span className="text-primary text-base font-bold">✓</span>
+                        <span className="font-medium text-slate-700">Très bien situé ({hotel.destination})</span>
+                      </div>
+                      <div className="flex items-center gap-2 text-sm text-slate-600">
+                        <span className="text-primary text-base font-bold">✓</span>
+                        <span className="font-medium text-slate-700">Propreté étincelante</span>
+                      </div>
+                      <div className="flex items-center gap-2 text-sm text-slate-600">
+                        <span className="text-primary text-base font-bold">✓</span>
+                        <span className="font-medium text-slate-700">Service client d'excellence</span>
+                      </div>
+                      <div className="flex items-center gap-2 text-sm text-slate-600">
+                        <span className="text-primary text-base font-bold">✓</span>
+                        <span className="font-medium text-slate-700">Rapport qualité-prix imbattable</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                
+                <div className="w-full">
+                  <h3 className="font-semibold text-slate-700 text-sm uppercase tracking-wider mb-3">Carte</h3>
+                  <HotelMap lat={hotel.lat} long={hotel.long} hotelName={hotel.name} />
+                </div>
+              </div>
+            </section>
 
-            {/* Rooms / board plans table */}
-            {hotel.rooms && hotel.rooms.length > 0 && (
-              <section>
+            {/* Tarifs & Disponibilités Room Grid */}
+            {(isStop || (hotel.rooms && hotel.rooms.length > 0)) && (
+              <section className="space-y-4">
                 <h2 className="text-xl font-serif text-slate-800 mb-4 flex items-center gap-2">
                   <Utensils className="w-5 h-5 text-primary" />
-                  Formules disponibles
-                  {nights && (
+                  Tarifs & Disponibilités
+                  {nights && !isStop && (
                     <span className="text-sm font-sans font-normal text-slate-400 ml-1">
                       — {nights} nuit{nights > 1 ? "s" : ""}
                     </span>
                   )}
                 </h2>
-                <div className="bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-sm">
-                  <table className="w-full text-sm">
-                    <thead>
-                      <tr className="bg-slate-50 border-b border-slate-200">
-                        <th className="text-left px-5 py-3 font-semibold text-slate-600 text-xs uppercase tracking-wider">
-                          Formule / Pension
-                        </th>
-                        <th className="text-right px-5 py-3 font-semibold text-slate-600 text-xs uppercase tracking-wider">
-                          Prix total
-                        </th>
-                        <th className="hidden sm:table-cell text-right px-5 py-3 font-semibold text-slate-600 text-xs uppercase tracking-wider">
-                          Par nuit
-                        </th>
-                      </tr>
-                    </thead>
-                    <tbody className="divide-y divide-slate-100">
-                      {hotel.rooms.map((room, idx) => (
-                        <tr
-                          key={idx}
-                          className={`hover:bg-slate-50 transition-colors ${idx === 0 ? "bg-primary/3" : ""}`}
-                          data-testid={`room-row-${idx}`}
+                
+                {isStop ? (
+                  <div className="bg-red-50 border border-red-200 rounded-2xl p-6 flex flex-col md:flex-row items-center md:items-start gap-4 shadow-sm">
+                    <div className="w-12 h-12 rounded-full bg-red-100 flex items-center justify-center shrink-0 text-red-600 text-xl font-bold">
+                      ⚠️
+                    </div>
+                    <div className="space-y-1 text-center md:text-left">
+                      <h3 className="font-serif font-bold text-lg text-red-800">Cet établissement est complet</h3>
+                      <p className="text-red-600 text-sm leading-relaxed">
+                        Aucune chambre n'est disponible pour les dates ou la configuration demandée.
+                        Veuillez modifier vos dates de voyage ou sélectionner un autre établissement.
+                      </p>
+                    </div>
+                  </div>
+                ) : (
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    {hotel.rooms?.map((room, idx) => {
+                      let displayName = room.roomName || "Chambre Standard";
+                      // Remove duplicate count prefix like "1 x " if it's already there
+                      const roomsCount = searchParams.rooms ?? 1;
+                      const startsWithCount = /^\d+\s*x\s*/i.test(displayName);
+                      if (startsWithCount) {
+                        displayName = displayName.replace(/^\d+\s*x\s*/i, `${roomsCount} x `);
+                      } else {
+                        displayName = `${roomsCount} x ${displayName}`;
+                      }
+                      
+                      return (
+                        <div 
+                          key={idx} 
+                          className={`group bg-white rounded-2xl border transition-all duration-300 p-6 shadow-sm flex flex-col justify-between hover:shadow-md relative overflow-hidden ${
+                            idx === 0 ? "border-orange-500/50 ring-1 ring-orange-500/10" : "border-slate-200"
+                          }`}
+                          data-testid={`room-card-${idx}`}
                         >
-                          <td className="px-5 py-4">
-                            <div className="flex items-center gap-3">
-                              <span className="text-xl" role="img" aria-label={room.boardName}>
-                                {boardIcon(room.boardName)}
+                          {/* Top-left ribbon for Best Price */}
+                          {idx === 0 && (
+                            <div className="absolute top-0 left-0 bg-[#FF5A00] text-white text-[9px] font-bold px-3 py-1 rounded-br-lg uppercase tracking-wider">
+                              Meilleur Prix
+                            </div>
+                          )}
+
+                          {/* Top-right status badge */}
+                          <div className="absolute top-4 right-4">
+                            {room.rateType === "BOOKABLE" ? (
+                              <span 
+                                style={{ backgroundColor: "#2ed573", color: "white", padding: "4px 8px", borderRadius: "4px", fontWeight: "bold", fontSize: "12px", display: "inline-block" }}
+                              >
+                                Disponible
                               </span>
-                              <div>
-                                <p className="font-semibold text-slate-800">{room.boardName}</p>
-                                {idx === 0 && (
-                                  <p className="text-xs text-primary font-medium mt-0.5">✓ Meilleur prix</p>
-                                )}
+                            ) : (
+                              <span 
+                                style={{ backgroundColor: "#ffa502", color: "white", padding: "4px 8px", borderRadius: "4px", fontWeight: "bold", fontSize: "12px", display: "inline-block" }}
+                              >
+                                Sur Demande
+                              </span>
+                            )}
+                          </div>
+
+                          <div className={`space-y-4 ${idx === 0 ? "pt-4" : ""}`}>
+                            <h3 className="font-serif font-bold text-lg text-slate-800 leading-snug pr-20">
+                              {displayName}
+                            </h3>
+                            
+                            <div className="flex flex-col gap-2 text-xs text-slate-600">
+                              <div className="flex items-center gap-1.5">
+                                <span className="text-slate-400">👥</span>
+                                <span className="font-medium">{searchParams.adults ?? 2} adultes</span>
+                              </div>
+                              <div className="flex items-center gap-1.5">
+                                <span className="text-slate-400">{boardIcon(room.boardName)}</span>
+                                <span className="font-semibold text-slate-700">
+                                  {room.boardName}
+                                </span>
+                              </div>
+                              
+                              <div className="pt-1">
+                                <button className="text-teal-600 hover:underline font-semibold flex items-center gap-1 text-left">
+                                  Frais d'annulation <span className="text-xs">ⓘ</span>
+                                </button>
                               </div>
                             </div>
-                          </td>
-                          <td className="px-5 py-4 text-right">
-                            <p className="text-lg font-bold text-primary">
-                              {room.amount.toLocaleString("fr-DZ")} <span className="text-sm font-semibold">DA</span>
-                            </p>
-                            <p className="text-xs text-slate-400 mt-0.5">taxes incluses</p>
-                          </td>
-                          <td className="hidden sm:table-cell px-5 py-4 text-right text-slate-500">
-                            {nights
-                              ? <>{Math.round(room.amount / nights).toLocaleString("fr-DZ")} <span className="text-xs">DA/nuit</span></>
-                              : "—"
-                            }
-                          </td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
-                <p className="text-xs text-slate-400 mt-2 px-1">
-                  * Prix par chambre, {searchParams.adults ?? 2} adulte{(searchParams.adults ?? 2) > 1 ? "s" : ""}.
-                  Commission incluse dans tous les tarifs.
-                </p>
+                          </div>
+
+                          <div className="border-t border-slate-100 pt-4 mt-6 flex items-baseline justify-between">
+                            <div>
+                              <div className="flex items-baseline gap-1">
+                                <p className="text-2xl font-bold text-slate-900">
+                                  {room.amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ")}
+                                </p>
+                                <span className="text-sm font-semibold text-slate-600">DZD <span className="text-xs text-slate-500 font-bold">∨</span></span>
+                              </div>
+                              <p className="text-[10px] text-slate-400 font-medium">
+                                Prix total {nights ?? 1} nuit{(nights ?? 1) > 1 ? "s" : ""}
+                              </p>
+                            </div>
+                            
+                            <Button 
+                              onClick={() => startBooking(idx)}
+                              className="bg-[#FF5A00] hover:bg-[#E04F00] text-white font-bold text-xs px-6 py-2.5 rounded-xl transition-all shadow-sm"
+                            >
+                              Réservez
+                            </Button>
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                )}
               </section>
             )}
 
@@ -366,7 +589,7 @@ export default function HotelDetail() {
               {/* Hotel badge */}
               <div className="flex items-start gap-3 mb-6 pb-6 border-b border-slate-100">
                 <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center shrink-0">
-                  <span className="text-xl">{hotel.stars >= 5 ? "🏆" : hotel.stars >= 4 ? "⭐" : "🏨"}</span>
+                  <span className="text-xl">{(hotel.stars ?? 0) >= 5 ? "🏆" : (hotel.stars ?? 0) >= 4 ? "⭐" : "🏨"}</span>
                 </div>
                 <div className="min-w-0">
                   <p className="font-serif font-medium text-slate-900 truncate">{hotel.name}</p>
@@ -374,8 +597,15 @@ export default function HotelDetail() {
                 </div>
               </div>
 
+              {isStop && (
+                <div className="mb-6 bg-red-50 border border-red-200 rounded-xl p-4 text-center">
+                  <span className="text-red-700 font-bold text-sm block">🚫 STOP SALES / COMPLET</span>
+                  <span className="text-red-500 text-xs mt-1 block">Cet établissement n'est pas disponible pour la réservation.</span>
+                </div>
+              )}
+
               {/* Best price */}
-              <div className="mb-6">
+              <div className={`mb-6 ${isStop ? "opacity-50" : ""}`}>
                 <p className="text-xs text-slate-400 uppercase tracking-wider font-semibold mb-1">À partir de</p>
                 <div className="flex items-baseline gap-2">
                   <p className="text-3xl font-serif text-primary" data-testid="text-detail-price">
@@ -431,20 +661,31 @@ export default function HotelDetail() {
                   ))}
                 </div>
               )}
-
-              <Button size="lg" className="w-full h-12 bg-accent hover:bg-accent/90 text-accent-foreground font-semibold text-base" data-testid="btn-book-now">
-                Réserver maintenant
-              </Button>
-              <Button
-                size="lg"
-                variant="outline"
-                className="w-full h-11 mt-2 border-primary text-primary hover:bg-primary/5 font-semibold gap-2"
-                onClick={() => setLocation(`/reservation/${id}?${searchString}`)}
-                data-testid="btn-download-voucher"
+              <Button 
+                size="lg" 
+                onClick={() => !isStop && startBooking(0)}
+                className={`w-full h-12 font-semibold text-base transition-all ${
+                  isStop 
+                    ? "bg-slate-200 text-slate-400 cursor-not-allowed hover:bg-slate-200" 
+                    : "bg-accent hover:bg-accent/90 text-accent-foreground"
+                }`}
+                data-testid="btn-book-now"
+                disabled={isStop}
               >
-                <FileText className="w-4 h-4" />
-                Télécharger le bon PDF
+                {isStop ? "Complet" : "Réserver maintenant"}
               </Button>
+              {!isStop && (
+                <Button
+                  size="lg"
+                  variant="outline"
+                  className="w-full h-11 mt-2 border-primary text-primary hover:bg-primary/5 font-semibold gap-2"
+                  onClick={() => setLocation(`/reservation/${id}?${searchString}`)}
+                  data-testid="btn-download-voucher"
+                >
+                  <FileText className="w-4 h-4" />
+                  Télécharger le bon PDF
+                </Button>
+              )}
               <p className="text-center text-xs text-slate-400 mt-3">Aucun frais supplémentaire</p>
 
               {/* View on H24Voyages */}
@@ -462,6 +703,53 @@ export default function HotelDetail() {
 
         </div>
       </div>
+
+      {/* Booking confirmation and guest details modal */}
+      {bookingRoomIdx !== null && hotel && (
+        <Dialog open={bookingRoomIdx !== null} onOpenChange={(open) => !open && setBookingRoomIdx(null)}>
+          <DialogContent className="sm:max-w-lg">
+            <DialogHeader>
+              <DialogTitle className="font-serif text-lg">Détails des Voyageurs</DialogTitle>
+              <DialogDescription>
+                Renseignez le nom de tous les voyageurs pour le bon {hotel.name}.
+              </DialogDescription>
+            </DialogHeader>
+            <div className="space-y-4 my-4">
+              {passengerNames.map((name, i) => (
+                <div key={i} className="space-y-2">
+                  <Label htmlFor={`passenger-${i}`}>Voyageur {i + 1} (Nom Complet)</Label>
+                  <Input
+                    id={`passenger-${i}`}
+                    placeholder="ex. DOUADI ZOUBIR"
+                    value={name}
+                    onChange={(e) => {
+                      const updated = [...passengerNames];
+                      updated[i] = e.target.value;
+                      setPassengerNames(updated);
+                    }}
+                    disabled={isCreatingBooking}
+                  />
+                </div>
+              ))}
+            </div>
+            <DialogFooter>
+              <Button variant="ghost" onClick={() => setBookingRoomIdx(null)} disabled={isCreatingBooking}>
+                Annuler
+              </Button>
+              <Button onClick={handleCreateBooking} disabled={isCreatingBooking} className="gap-2">
+                {isCreatingBooking ? (
+                  <>
+                    <Loader2 className="w-4 h-4 animate-spin" />
+                    Création...
+                  </>
+                ) : (
+                  "Confirmer la réservation"
+                )}
+              </Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
+      )}
     </div>
   );
 }

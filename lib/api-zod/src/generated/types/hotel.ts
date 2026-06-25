@@ -15,6 +15,16 @@ export interface Hotel {
   address?: string;
   stars?: number;
   image?: string;
+  /** Latitude of the hotel */
+  lat?: number;
+  /** Longitude of the hotel */
+  long?: number;
+  /** Whether the hotel has entered Stop Sales / is sold out */
+  isStopSales?: boolean;
+  /** Special hotel restrictions */
+  restrictions?: string[];
+  /** Special marketing tags or badges */
+  marketingBadges?: string[];
   /** All photo URLs from provider */
   photos?: string[];
   description?: string;

@@ -1,0 +1,51 @@
+ENTE CREDITORE 	Cod. Fiscale
+AVVISO DI PAGAMENTO
+DESTINATARO AVVISO	Cod. Fiscale
+Cod. Fiscale Ente Creditore	Codice Avviso	CodiceCBILL
+RATA UNICA entro il
+Euro
+Ente Creditore
+DOVE PAGARE? Lista dei canali di pagamento su www.pagopa.gov.it	QUANTO E QUANDO PAGARE?
+Qui accanto trovi il codice QR e
+il codice interbancario CBILL
+per pagare attraverso il circuito
+bancario e gli altri canali di
+pagamento abilitati.
+BANCHE E ALTRI CANALI
+Ogg etto del pagamento
+Destinatario
+Utilizza la porzione di avviso relativa al canale di pagamento che preferisci.
+PAGA SUL SITO O CON LE APP
+PAGA SUL TERRITORIO	L'importo è aggiornato automaticamente dal sistema e potrebbe
+subire variazioni per eventuali sgravi, note di credito, indennità di
+mora, sanzioni o interessi, ecc. Un operatore, il sito o l’app che userai
+ti potrebbero quindi chiede re una cifra diversa da quella qui indicata.
+Euro
+Puoi pagare con una unica rata.
+entro il
+This tax is due to process the pre-admission application:
+if not paid, the application is not processed.
+81006500607
+Università degli Studi di Cassino e del
+Lazio Meridionale
+SKFHDT07E16Z301D
+AHMED TAQIY EDDINE ASKOUFES
+batna city center street, 84 larbi tbessi, 84
+05000 - ALGERIA
+STATO ESTERO
+15,00 30/06/2026 http://http://www.unicas.it//, della tua Banca o degli
+altri canali di pagamento. Potrai pagare con carte,
+conto corrente CBILL
+in Banca, in Ricevitoria, dal Tabaccaio, al Bancomat,
+al Supermercato. Potrai pagare in contanti, con carte o
+conto corrente
+30/06/2026
+AHMED TAQIY EDDINE ASKOUFES 15,00
+Università degli Studi di Cassino e del Lazio Meridionale
+This tax is due to process the pre-admission
+application: if not paid, the application is not
+processed.
+5D190 300000002090994615 81006500607
+
+-- 1 of 1 --
+

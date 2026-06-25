@@ -1,0 +1,26 @@
+# Render Blueprint specification for Next Visa Travel
+# This file lets you deploy the full-stack database and containerized server with one click on Render.
+services:
+  # Web service to run the Express backend (and serve the static React frontend)
+  - type: web
+    name: next-visa-travel
+    env: docker
+    plan: free # Can be upgraded to 'starter' for production
+    region: oregon # Render server location
+    port: 5000
+    envVars:
+      - key: PORT
+        value: 5000
+      - key: NODE_ENV
+        value: production
+      # Automatically binds the connection string of the database defined below
+      - key: DATABASE_URL
+        fromDatabase:
+          name: next-visa-db
+          property: connectionString
+
+databases:
+  # PostgreSQL database for persistent commission configurations and booking stats
+  - name: next-visa-db
+    plan: free # Render's free PostgreSQL tier
+    region: oregon

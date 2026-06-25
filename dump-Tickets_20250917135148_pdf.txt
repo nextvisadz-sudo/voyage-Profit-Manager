@@ -1,0 +1,36 @@
+Votre réservation est confirmée .
+Votre Référence Réservation : A1CAJ8
+Emis par B2S - B2SEUR
+Billets
+Alger 	PARIS CDG T1
+lundi 22 sept. 2025
+Vol opéré par TASSILI AIRLINES SF3000
+(0 Stop)
+ALG 8:00
+Alger
+T4
+CDG 11:30
+PARIS CDG T1
+T1 T1
+Economy Classe
+Statut: Confirmed 	ECO:Y3 MODIF/REMB/FARE DIFFERENCE APPLIES
+MR HAZEM BAKHELILI
+ADULT
+Ticket N° 5152102205672
+Bagage 30 Kg
+Informations de paiement
+Montant 	29020 DA
+Paiement par 	EDAHABIA
+Référence 	2334474969
+Date/Heure 	17 sept. 2025 14:51:42
+ADULT x 1 	29020 DA
+Fare 	FARE 	18800 DA
+Algérie : Timbre Fiscal 	TF 	20 DA
+Algérie:Taxe de tésorerie 	TT 	1500 DA
+Redevance protection droit des passagers international 	V5 	400 DA
+Algérie : Taxe D'aéroport internationale 	XE 	1300 DA
+Supplément carburant 	YQ 	7000 DA
+Total 	29020 DA
+
+-- 1 of 1 --
+

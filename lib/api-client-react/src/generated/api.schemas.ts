@@ -10,12 +10,16 @@ export interface HealthStatus {
 }
 
 export interface HotelRoom {
+  /** Name of the room type (e.g. "Chambre Standard") */
+  roomName?: string;
   /** Board type name (e.g. "Logement simple", "Petit Déjeuner", "Demi pension") */
   boardName: string;
   /** Raw DZD amount from provider */
   originalAmount: number;
   /** DZD amount with commission applied */
   amount: number;
+  /** Availability rate type (e.g. "BOOKABLE", "ON_REQUEST") */
+  rateType?: string;
 }
 
 export interface Hotel {
@@ -26,6 +30,16 @@ export interface Hotel {
   address?: string;
   stars?: number;
   image?: string;
+  /** Latitude of the hotel */
+  lat?: number;
+  /** Longitude of the hotel */
+  long?: number;
+  /** Whether the hotel has entered Stop Sales / is sold out */
+  isStopSales?: boolean;
+  /** Special hotel restrictions */
+  restrictions?: string[];
+  /** Special marketing tags or badges */
+  marketingBadges?: string[];
   /** All photo URLs from provider */
   photos?: string[];
   description?: string;
@@ -115,6 +129,14 @@ adults?: number;
  * Number of rooms
  */
 rooms?: number;
+/**
+ * Total number of children across all rooms
+ */
+children?: number;
+/**
+ * Total number of infants across all rooms
+ */
+infants?: number;
 /**
  * Page number
  */

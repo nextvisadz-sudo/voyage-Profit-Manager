@@ -1,4 +1,4 @@
-import { useMemo, useRef } from "react";
+import { useMemo, useRef, useState, useEffect } from "react";
 import { useParams, useSearch, useLocation } from "wouter";
 import { useSearchHotels } from "@workspace/api-client-react";
 import { Button } from "@/components/ui/button";
@@ -57,6 +57,33 @@ export default function Reservation() {
   const [, setLocation] = useLocation();
   const refNum = useRef<string | null>(null);
 
+  const isReference = id?.startsWith("NVT-");
+  const [voucher, setVoucher] = useState<any>(null);
+  const [loadingVoucher, setLoadingVoucher] = useState(isReference);
+
+  // Fetch voucher by reference from Express API
+  useEffect(() => {
+    if (isReference) {
+      const fetchVoucher = async () => {
+        try {
+          const response = await fetch("/api/vouchers");
+          if (response.ok) {
+            const data = await response.json();
+            const found = (data.vouchers || []).find((v: any) => v.reference === id);
+            if (found) {
+              setVoucher(found);
+            }
+          }
+        } catch (err) {
+          console.error("Failed to load voucher:", err);
+        } finally {
+          setLoadingVoucher(false);
+        }
+      };
+      fetchVoucher();
+    }
+  }, [id, isReference]);
+
   const searchParams = useMemo(() => {
     const p = new URLSearchParams(searchString);
     const destinationId = p.get("destinationId") ? parseInt(p.get("destinationId")!) : undefined;
@@ -69,32 +96,49 @@ export default function Reservation() {
     return { destinationId, destination, checkin, checkout, adults, rooms, roomIdx };
   }, [searchString]);
 
-  const hasContext = !!searchParams.destinationId || !!searchParams.destination;
+  const hasContext = !isReference && (!!searchParams.destinationId || !!searchParams.destination);
 
-  const { data: searchResults, isLoading } = useSearchHotels(searchParams, {
-    query: { enabled: hasContext },
+  const { data: searchResults, isLoading: searchLoading } = useSearchHotels(searchParams, {
+    query: { enabled: hasContext } as any,
   });
 
   const hotel = searchResults?.hotels?.find((h) => h.id === id);
 
-  if (!refNum.current) {
+  if (!refNum.current && !isReference) {
     refNum.current = genRef(id, searchParams.checkin);
   }
 
   const nights = useMemo(() => {
+    if (isReference && voucher) return voucher.nights;
     if (!searchParams.checkin || !searchParams.checkout) return undefined;
     const a = new Date(searchParams.checkin);
     const b = new Date(searchParams.checkout);
     const diff = Math.round((b.getTime() - a.getTime()) / 86400000);
     return diff > 0 ? diff : undefined;
-  }, [searchParams.checkin, searchParams.checkout]);
+  }, [isReference, voucher, searchParams.checkin, searchParams.checkout]);
 
   const selectedRoom = hotel?.rooms?.[searchParams.roomIdx] ?? hotel?.rooms?.[0];
 
-  const backUrl = `/hotel/${id}?${searchString}`;
+  // Resolve layout variables
+  const resolvedRef = isReference ? id : refNum.current;
+  const resolvedHotelName = isReference ? (voucher?.hotelName || "Hôtel") : (hotel?.name || "Hôtel");
+  const resolvedDestination = isReference ? (voucher?.destination || "Tunis, Tunisie") : (hotel?.destination || "Tunis, Tunisie");
+  const resolvedCheckin = isReference ? voucher?.checkin : searchParams.checkin;
+  const resolvedCheckout = isReference ? voucher?.checkout : searchParams.checkout;
+  const resolvedAdults = isReference ? (voucher?.adults ?? 2) : (searchParams.adults ?? 2);
+  const resolvedGuests = isReference 
+    ? (Array.isArray(voucher?.guests) ? voucher.guests : JSON.parse(voucher?.guests || "[]"))
+    : ["M. Client Principal"];
+  const resolvedRoomCategory = isReference ? voucher?.roomCategory : (selectedRoom?.roomName || "Chambre Standard");
+  const resolvedBoardType = isReference ? voucher?.boardType : selectedRoom?.boardName;
+  const resolvedMarkedUpPrice = isReference ? voucher?.markedUpPrice : selectedRoom?.amount;
+
+  const backUrl = isReference ? "/agent/dashboard" : `/hotel/${id}?${searchString}`;
   const issueDate = new Date().toLocaleDateString("fr-FR", {
     day: "numeric", month: "long", year: "numeric",
   });
+
+  const isLoading = isReference ? loadingVoucher : searchLoading;
 
   if (isLoading) {
     return (
@@ -106,7 +150,7 @@ export default function Reservation() {
     );
   }
 
-  if (!hotel) {
+  if (!isReference && !hotel) {
     return (
       <div className="container mx-auto px-4 py-24 text-center">
         <p className="text-slate-500 mb-6">Réservation introuvable. Veuillez retourner à la recherche.</p>
@@ -115,8 +159,8 @@ export default function Reservation() {
     );
   }
 
-  const photos = (hotel.photos as string[] | undefined) ?? (hotel.image ? [hotel.image] : []);
-  const address = (hotel as any).address as string | undefined;
+  const photos = !isReference && hotel ? ((hotel.photos as string[] | undefined) ?? (hotel.image ? [hotel.image] : [])) : [];
+  const address = !isReference && hotel ? ((hotel as any).address as string | undefined) : resolvedDestination;
 
   return (
     <>
@@ -138,7 +182,7 @@ export default function Reservation() {
           className="text-slate-600 hover:text-slate-900"
         >
           <ArrowLeft className="w-4 h-4 mr-1.5" />
-          Retour à l'hôtel
+          {isReference ? "Retour au dashboard" : "Retour à l'hôtel"}
         </Button>
         <Button
           onClick={() => window.print()}
@@ -169,7 +213,7 @@ export default function Reservation() {
             </div>
             <div className="text-right text-white">
               <p className="text-xs text-primary-foreground/70 uppercase tracking-widest font-semibold">Bon de réservation</p>
-              <p className="text-xl font-mono font-bold mt-0.5">{refNum.current}</p>
+              <p className="text-xl font-mono font-bold mt-0.5">{resolvedRef}</p>
               <p className="text-xs text-primary-foreground/70 mt-0.5">Émis le {issueDate}</p>
             </div>
           </div>
@@ -181,17 +225,17 @@ export default function Reservation() {
           </div>
 
           {/* ── Hotel banner ── */}
-          {photos[0] && (
+          {photos[0] ? (
             <div className="relative h-44 overflow-hidden">
               <img
                 src={photos[0]}
-                alt={hotel.name}
+                alt={resolvedHotelName}
                 className="w-full h-full object-cover"
               />
               <div className="absolute inset-0 bg-gradient-to-r from-black/60 via-black/30 to-transparent" />
               <div className="absolute bottom-4 left-6 text-white">
-                <Stars count={hotel.stars} />
-                <h1 className="text-2xl font-serif font-bold mt-1">{hotel.name}</h1>
+                {hotel && <Stars count={hotel.stars} />}
+                <h1 className="text-2xl font-serif font-bold mt-1">{resolvedHotelName}</h1>
                 {address && (
                   <p className="flex items-center gap-1.5 text-sm text-white/80 mt-1">
                     <MapPin className="w-3.5 h-3.5 shrink-0" />
@@ -199,6 +243,14 @@ export default function Reservation() {
                   </p>
                 )}
               </div>
+            </div>
+          ) : (
+            <div className="bg-slate-900 px-8 py-6 text-white">
+              <h1 className="text-2xl font-serif font-bold">{resolvedHotelName}</h1>
+              <p className="flex items-center gap-1.5 text-sm text-white/80 mt-1">
+                <MapPin className="w-3.5 h-3.5 shrink-0" />
+                {address}
+              </p>
             </div>
           )}
 
@@ -216,12 +268,12 @@ export default function Reservation() {
                   <div className="flex justify-between items-start">
                     <div>
                       <p className="text-[10px] text-slate-400 uppercase font-semibold">Arrivée</p>
-                      <p className="font-bold text-slate-800 text-sm mt-0.5">{fmtDate(searchParams.checkin)}</p>
+                      <p className="font-bold text-slate-800 text-sm mt-0.5">{fmtDate(resolvedCheckin)}</p>
                       <p className="text-xs text-slate-400">Check-in à partir de 14h00</p>
                     </div>
                     <div className="text-right">
                       <p className="text-[10px] text-slate-400 uppercase font-semibold">Départ</p>
-                      <p className="font-bold text-slate-800 text-sm mt-0.5">{fmtDate(searchParams.checkout)}</p>
+                      <p className="font-bold text-slate-800 text-sm mt-0.5">{fmtDate(resolvedCheckout)}</p>
                       <p className="text-xs text-slate-400">Check-out avant 12h00</p>
                     </div>
                   </div>
@@ -242,22 +294,24 @@ export default function Reservation() {
                 <div className="bg-slate-50 rounded-xl p-4 space-y-2 border border-slate-200 h-[calc(100%-1.5rem)]">
                   <div className="flex justify-between text-sm py-1.5 border-b border-slate-200">
                     <span className="text-slate-500">Adultes</span>
-                    <span className="font-semibold text-slate-800">{searchParams.adults ?? 2}</span>
+                    <span className="font-semibold text-slate-800">{resolvedAdults}</span>
                   </div>
                   <div className="flex justify-between text-sm py-1.5 border-b border-slate-200">
-                    <span className="text-slate-500">Chambres</span>
-                    <span className="font-semibold text-slate-800">{searchParams.rooms ?? 1}</span>
+                    <span className="text-slate-500">Destination</span>
+                    <span className="font-semibold text-slate-800 truncate max-w-[150px]">{resolvedDestination.split(",")[0]}</span>
                   </div>
                   <div className="flex justify-between text-sm py-1.5">
-                    <span className="text-slate-500">Destination</span>
-                    <span className="font-semibold text-slate-800">{searchParams.destination ?? "—"}</span>
+                    <span className="text-slate-500 text-xs">Voyageurs</span>
+                    <span className="font-semibold text-slate-800 text-xs truncate max-w-[140px]" title={resolvedGuests.join(", ")}>
+                      {resolvedGuests.join(", ")}
+                    </span>
                   </div>
                 </div>
               </div>
             </div>
 
             {/* ── Selected board plan ── */}
-            {selectedRoom && (
+            {resolvedBoardType && (
               <div>
                 <p className="text-xs text-slate-400 font-semibold uppercase tracking-wider mb-3">
                   Formule réservée
@@ -265,68 +319,28 @@ export default function Reservation() {
                 <div className="border-2 border-primary rounded-xl p-5 bg-primary/4">
                   <div className="flex items-start justify-between">
                     <div className="flex items-center gap-4">
-                      <span className="text-3xl">{boardIcon(selectedRoom.boardName)}</span>
+                      <span className="text-3xl">{boardIcon(resolvedBoardType)}</span>
                       <div>
-                        <p className="font-serif font-bold text-slate-900 text-lg">{selectedRoom.boardName}</p>
+                        <p className="font-serif font-bold text-slate-900 text-lg">{resolvedBoardType}</p>
                         <p className="text-slate-500 text-sm mt-0.5">
-                          {hotel.name} · {searchParams.destination}
+                          {resolvedHotelName} · {resolvedDestination}
                         </p>
+                        <p className="text-slate-400 text-xs mt-0.5">Catégorie: {resolvedRoomCategory}</p>
                       </div>
                     </div>
                     <div className="text-right">
                       <p className="text-2xl font-bold text-primary">
-                        {selectedRoom.amount.toLocaleString("fr-DZ")} DA
+                        {resolvedMarkedUpPrice?.toLocaleString("fr-DZ")} DA
                       </p>
                       <p className="text-xs text-slate-400 mt-0.5">Toutes taxes incluses</p>
-                      {nights && (
+                      {nights && resolvedMarkedUpPrice && (
                         <p className="text-xs text-slate-500 mt-1">
-                          ≈ {Math.round(selectedRoom.amount / nights).toLocaleString("fr-DZ")} DA / nuit
+                          ≈ {Math.round(resolvedMarkedUpPrice / nights).toLocaleString("fr-DZ")} DA / nuit
                         </p>
                       )}
                     </div>
                   </div>
                 </div>
-              </div>
-            )}
-
-            {/* ── All available rooms ── */}
-            {hotel.rooms && hotel.rooms.length > 1 && (
-              <div>
-                <p className="text-xs text-slate-400 font-semibold uppercase tracking-wider mb-3">
-                  Récapitulatif des formules disponibles
-                </p>
-                <table className="w-full text-sm border border-slate-200 rounded-xl overflow-hidden">
-                  <thead>
-                    <tr className="bg-slate-50 border-b border-slate-200 text-xs text-slate-500 uppercase tracking-wider">
-                      <th className="text-left px-4 py-2.5 font-semibold">Formule</th>
-                      <th className="text-right px-4 py-2.5 font-semibold">Prix total</th>
-                      {nights && <th className="text-right px-4 py-2.5 font-semibold">Par nuit</th>}
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-slate-100">
-                    {hotel.rooms.map((room, idx) => (
-                      <tr key={idx} className={idx === searchParams.roomIdx ? "bg-primary/5 font-medium" : ""}>
-                        <td className="px-4 py-3 flex items-center gap-2">
-                          <span>{boardIcon(room.boardName)}</span>
-                          <span className={idx === searchParams.roomIdx ? "text-primary font-semibold" : "text-slate-700"}>
-                            {room.boardName}
-                          </span>
-                          {idx === searchParams.roomIdx && (
-                            <span className="text-[10px] bg-primary text-white px-1.5 py-0.5 rounded-full ml-1">Sélectionné</span>
-                          )}
-                        </td>
-                        <td className="px-4 py-3 text-right font-semibold text-slate-800">
-                          {room.amount.toLocaleString("fr-DZ")} DA
-                        </td>
-                        {nights && (
-                          <td className="px-4 py-3 text-right text-slate-500">
-                            {Math.round(room.amount / nights).toLocaleString("fr-DZ")} DA
-                          </td>
-                        )}
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
               </div>
             )}
 
@@ -336,7 +350,6 @@ export default function Reservation() {
               <ul className="text-xs text-amber-700 space-y-1.5 list-disc list-inside">
                 <li>Ce bon de réservation doit être présenté à l'hôtel lors du check-in.</li>
                 <li>Les tarifs indiqués sont en dinars algériens (DA), toutes taxes et commissions incluses.</li>
-                <li>En cas d'annulation, veuillez contacter votre agence au minimum 48h avant la date d'arrivée.</li>
                 <li>Des pièces d'identité valides seront demandées pour tous les voyageurs à l'arrivée.</li>
                 <li>L'heure de check-in est à partir de 14h00. L'heure de check-out est avant 12h00.</li>
               </ul>
@@ -350,7 +363,7 @@ export default function Reservation() {
                 </div>
                 <div>
                   <p className="text-[10px] text-slate-400 uppercase font-semibold tracking-wider">Téléphone</p>
-                  <p className="text-sm font-medium text-slate-800 mt-0.5">+213 XX XX XX XX</p>
+                  <p className="text-xs font-semibold text-slate-800 mt-0.5">+213675009373</p>
                 </div>
               </div>
               <div className="flex items-start gap-2.5">
@@ -359,7 +372,7 @@ export default function Reservation() {
                 </div>
                 <div>
                   <p className="text-[10px] text-slate-400 uppercase font-semibold tracking-wider">Email</p>
-                  <p className="text-sm font-medium text-slate-800 mt-0.5">contact@nextvisa.dz</p>
+                  <p className="text-xs font-semibold text-slate-800 mt-0.5">nextvisadz@gmail.com</p>
                 </div>
               </div>
               <div className="flex items-start gap-2.5">
@@ -368,7 +381,7 @@ export default function Reservation() {
                 </div>
                 <div>
                   <p className="text-[10px] text-slate-400 uppercase font-semibold tracking-wider">Site web</p>
-                  <p className="text-sm font-medium text-slate-800 mt-0.5">www.nextvisa.dz</p>
+                  <p className="text-xs font-semibold text-slate-800 mt-0.5">nextvisabooking.com</p>
                 </div>
               </div>
             </div>
@@ -377,10 +390,11 @@ export default function Reservation() {
           {/* ── Footer ── */}
           <div className="bg-slate-50 border-t border-slate-200 px-8 py-4 flex items-center justify-between text-xs text-slate-400">
             <p>Next Visa Travel · Agence de voyage agréée · Algérie</p>
-            <p>Réf. {refNum.current} · Émis le {fmtDateShort(new Date().toISOString())}</p>
+            <p>Réf. {resolvedRef} · Émis le {fmtDateShort(new Date().toISOString())}</p>
           </div>
         </div>
       </div>
     </>
   );
 }
+

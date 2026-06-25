@@ -1,0 +1,29 @@
+ATTESTAZIONE DI PAGAMENTO
+Identificativo Univoco del Versamento (IUV): RF31000000000000021296543
+Numero univoco assegnato al pagamento dal PSP (IUR): 6a71066b97964a5581099d314214cc3b
+Data di scadenza: 30/06/2026
+Data di pagamento: 28/04/2026 18:05
+Data applicativa: 29/04/2026
+ENTE CREDITORE DEBITORE
+Università degli Studi di Cassino e del Lazio Meridionale
+Viale dell'Università 40
+03043 Cassino Cassino
+CF 81006500607
+AYOUB BENBIA
+BATNA CITY CENTER 84, STREET LARBI TEBSSI 84
+ALGERIA EE
+CF BNBYBA03R26Z301U
+ATTESTANTE
+Banca Sella S.p.A.
+SELBIT2B
+RIEPILOGO DEL PAGAMENTO
+DESCRIZIONE IMPORTO
+Prenotazione, istanza generica, iscrizione bando Pre-admission International Students - Civil and Environmental Engineering (B)
+(PRE7071) a.a. 2026/2027
+21296528.1-0 Preadmission Pre-admission International Students 15,00 [ Causale versamento: /RFS/RF31000000000000021296543/15.00]
+15,00
+TOTALE 15,00
+0000000000000000000000000000000000000000000000021296528
+
+-- 1 of 1 --
+

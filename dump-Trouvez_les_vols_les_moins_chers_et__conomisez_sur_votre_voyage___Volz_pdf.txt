@@ -1,0 +1,44 @@
+Reference: XUB79U
+Order id: 	TBovskE4HH3vUMA7VURX
+Order number: VOLZ009f4ce3e038
+Response: 	Votre paiement a été accepté
+Approval code: 343330
+Payment mode: carte CIB/Edhahabia
+Date: 	19 May 2025 01:32
+Client: mohamed tahir boussalem
+Phone: +213775191121
+Email: nextvisadz@gmail.com
+En cas de problème de paiement, veuillez
+contacter le numéro vert de la SATIM 3020
+Passagers 	Type 	N° Ticket
+mohamed tahir boussalem 	Adulte 	/
+Tunis (TUN) - Casablanca (CMN)
+Carrier 	Departure 	Arrival 	Flight 	Duration 	Cabin 	Luggage
+BJ
+Tunis (TUN)
+2025-05-31 07:40:00
+Terminal :
+Casablanca (CMN)
+2025-05-31 10:30:00
+Terminal :
+N° vol : 170
+Avion : 320 2h 50m ECONOMY
+class : U 0 KG
+Casablanca (CMN) - Tunis (TUN)
+Carrier 	Departure 	Arrival 	Flight 	Duration 	Cabin 	Luggage
+BJ
+Casablanca (CMN)
+2025-06-20 00:20:00
+Terminal :
+Tunis (TUN)
+2025-06-20 02:50:00
+Terminal :
+N° vol : 171
+Avion : 320 2h 30m ECONOMY
+class : V 0 KG
+Montant : 57 206,00 DZD
+19/05/2025 13:37 	Trouvez les vols les moins chers et économisez sur votre voyage | Volz
+https://volz.app/voucher?orderNumber=VOLZ009f4ce3e038&orderId=TBovskE4HH3vUMA7VURX 	1/1
+
+-- 1 of 1 --
+

@@ -1,0 +1,35 @@
+Reference:
+Status: PENDING
+Order id:
+Order number:
+Response:
+Date:
+Client:
+Phone:
+Email:
+abdelhalim khettache 	Adulte 	/
+AH
+Alger �ALG�
+2026�01�20T19�05�00
+Terminal : 4
+Istanbul �IST�
+2026�01�21T00�40�00
+Terminal :
+N° vol : 3014
+Avion : 73H 3h 35m ECONOMY
+class : L 2 PC
+AH
+Istanbul �IST�
+2026�01�30T05�00�00
+Terminal :
+Alger �ALG�
+2026�01�30T06�30�00
+Terminal : 4
+N° vol : 3019
+Avion : 73H 3h 30m ECONOMY
+class : L 2 PC
+Montant :
+1 sur 1 	10/12/2025, 10:35 AM
+
+-- 1 of 1 --
+

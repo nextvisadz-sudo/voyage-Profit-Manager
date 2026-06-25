@@ -1,0 +1,39 @@
+Votre réservation est confirmée .
+Votre
+Référence
+Réservation
+: A1E1FO
+Emis par B2S -
+B2SEUR
+Billets
+Tamanrasset 	Alger
+lundi 12 janv. 2026
+Vol opéré par TASSILI AIRLINES SF2339
+(0 Stop)
+TMR 15:10
+Tamanrasset
+T1
+ALG 17:40
+Alger
+T1
+Economy Classe
+Statut: Confirmed REMB AUTORISE
+MODIF AUTORISE
+MR AYMEN KEMINE
+ADULT
+16A 	Ticket N° 5152102268517
+Bagage 20 Kg
+Informations de paiement
+Montant 	14820 DA
+Paiement par
+Référence 	5755818852
+Date/Heure 	11 janv. 2026 15:48:55
+ADULT x 1 	13820 DA
+Fare 	FARE 	13800 DA
+Algérie : Timbre Fiscal 	TF 	20 DA
+Redevance Nat protection des droits des passagers 	V5DZ 	100 DA
+Redevance Passager Domestique 	DZ 	500 DA
+Total 	14820 DA
+
+-- 1 of 1 --
+

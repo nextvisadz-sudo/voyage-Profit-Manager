@@ -1,0 +1,29 @@
+ATTESTAZIONE DI PAGAMENTO
+Identificativo Univoco del Versamento (IUV): RF48000000000000021322039
+Numero univoco assegnato al pagamento dal PSP (IUR): 0d1f10adf79644a2a983bdfee4c5e490
+Data di scadenza: 30/06/2026
+Data di pagamento: 30/04/2026 17:32
+Data applicativa: 04/05/2026
+ENTE CREDITORE DEBITORE
+Università degli Studi di Cassino e del Lazio Meridionale
+Viale dell'Università 40
+03043 Cassino Cassino
+CF 81006500607
+GHOFRANE MEKHALLEDI
+BATNA CITY CENTER 84, STREET LARBI TEBSSI 84
+ALGERIA EE
+CF MKHGFR04A70Z301X
+ATTESTANTE
+Banca Sella S.p.A.
+SELBIT2B
+RIEPILOGO DEL PAGAMENTO
+DESCRIZIONE IMPORTO
+Prenotazione, istanza generica, iscrizione bando Pre-admission International Students - Telecommunications Engineering (PRE7090)
+a.a. 2026/2027
+21322024.6-0 Preadmission Pre-admission International Students 15,00 [ Causale versamento: /RFS/RF48000000000000021322039/15.00]
+15,00
+TOTALE 15,00
+0000000000000000000000000000000000000000000000021322024
+
+-- 1 of 1 --
+

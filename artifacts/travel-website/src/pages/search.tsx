@@ -8,6 +8,7 @@ import { Slider } from "@/components/ui/slider";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Star, MapPin, Filter, SlidersHorizontal, Search as SearchIcon, Utensils, X } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
+import { cn } from "@/lib/utils";
 
 const BOARD_OPTIONS = [
   "Demi pension",
@@ -66,6 +67,7 @@ export default function Search() {
   const [selectedBoards, setSelectedBoards] = useState<Set<string>>(new Set());
   const [priceRange, setPriceRange] = useState<[number, number]>([0, 0]);
   const [priceInitialized, setPriceInitialized] = useState(false);
+  const [selectedStars, setSelectedStars] = useState<number | null>(null);
 
   // Initialise price range from data once
   useEffect(() => {
@@ -80,6 +82,7 @@ export default function Search() {
   useEffect(() => {
     setNameFilter("");
     setSelectedBoards(new Set());
+    setSelectedStars(null);
     setPriceInitialized(false);
   }, [queryParams.destinationId]);
 
@@ -120,11 +123,13 @@ export default function Search() {
   const hasActiveFilters =
     nameFilter.trim() !== "" ||
     selectedBoards.size > 0 ||
+    selectedStars !== null ||
     (priceInitialized && (priceRange[0] > priceMin || priceRange[1] < priceMax));
 
   function clearFilters() {
     setNameFilter("");
     setSelectedBoards(new Set());
+    setSelectedStars(null);
     if (searchResults?.hotels?.length) {
       const prices = searchResults.hotels.map((h) => h.price);
       setPriceRange([Math.min(...prices), Math.max(...prices)]);
@@ -137,6 +142,7 @@ export default function Search() {
     return hotels.filter((hotel) => {
       if (nameFilter.trim() && !hotel.name.toLowerCase().includes(nameFilter.toLowerCase())) return false;
       if (priceInitialized && (hotel.price < priceRange[0] || hotel.price > priceRange[1])) return false;
+      if (selectedStars !== null && hotel.stars !== selectedStars) return false;
       if (selectedBoards.size > 0) {
         const hotelBoards = new Set(
           (hotel.rooms ?? []).map((r) =>
@@ -150,7 +156,7 @@ export default function Search() {
       }
       return true;
     });
-  }, [searchResults, nameFilter, priceRange, priceInitialized, selectedBoards]);
+  }, [searchResults, nameFilter, priceRange, priceInitialized, selectedStars, selectedBoards]);
 
   const handleSearch = (params: {
     destinationId: number;
@@ -290,17 +296,43 @@ export default function Search() {
                 <div>
                   <div className="flex items-center justify-between mb-3">
                     <h4 className="font-semibold text-sm text-slate-700">Catégorie</h4>
+                    {selectedStars !== null && (
+                      <button
+                        onClick={() => setSelectedStars(null)}
+                        className="text-xs text-slate-400 hover:text-slate-600 cursor-pointer select-none"
+                      >
+                        Effacer
+                      </button>
+                    )}
                   </div>
                   <div className="flex gap-2">
-                    {[3, 4, 5].map((stars) => (
-                      <div
-                        key={stars}
-                        className="flex items-center gap-1 px-2.5 py-1.5 rounded-lg border border-slate-200 bg-slate-50 text-sm font-medium text-slate-600"
-                      >
-                        <span className="text-yellow-400">{stars}</span>
-                        <Star className="w-3.5 h-3.5 fill-yellow-400 text-yellow-400" />
-                      </div>
-                    ))}
+                    {[3, 4, 5].map((stars) => {
+                      const isActive = selectedStars === stars;
+                      return (
+                        <button
+                          key={stars}
+                          type="button"
+                          onClick={() => setSelectedStars(isActive ? null : stars)}
+                          className={cn(
+                            "flex-1 flex items-center justify-center gap-1 px-2.5 py-2 rounded-lg border text-sm font-semibold transition-all duration-200 cursor-pointer shadow-sm hover:scale-105 select-none",
+                            isActive
+                              ? "bg-primary border-primary text-white"
+                              : "bg-slate-50 border-slate-200 text-slate-600 hover:bg-slate-100 hover:border-slate-300"
+                          )}
+                          data-testid={`filter-stars-${stars}`}
+                        >
+                          <span className={isActive ? "text-white" : "text-slate-800"}>{stars}★</span>
+                          <Star
+                            className={cn(
+                              "w-3.5 h-3.5 transition-all duration-200",
+                              isActive
+                                ? "fill-white text-white scale-110"
+                                : "fill-yellow-400 text-yellow-400"
+                            )}
+                          />
+                        </button>
+                      );
+                    })}
                   </div>
                 </div>
 
@@ -405,78 +437,147 @@ export default function Search() {
                   </div>
                 )}
 
-                {filteredHotels.map((hotel) => (
-                  <div
-                    key={hotel.id}
-                    className="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden hover:shadow-md transition-shadow"
-                    data-testid={`card-hotel-${hotel.id}`}
-                  >
-                    {/* Hotel info row */}
-                    <div className="p-4 flex flex-col sm:flex-row gap-5">
-                      <div className="w-full sm:w-60 h-44 rounded-lg overflow-hidden shrink-0 relative">
-                        <img
-                          src={hotel.image || "https://images.unsplash.com/photo-1566073771259-6a8506099945?w=800"}
-                          alt={hotel.name}
-                          className="w-full h-full object-cover"
-                          onError={(e) => {
-                            (e.target as HTMLImageElement).src =
-                              "https://images.unsplash.com/photo-1566073771259-6a8506099945?w=800";
-                          }}
-                        />
-                        {hotel.rating != null && (
-                          <div className="absolute top-2 right-2 bg-white/90 backdrop-blur px-2 py-1 rounded text-xs font-bold text-slate-800 flex items-center gap-1">
-                            <Star className="w-3 h-3 fill-accent text-accent" />
-                            {typeof hotel.rating === "number" ? (hotel.rating * 20).toFixed(0) : hotel.rating}/20
-                          </div>
-                        )}
-                      </div>
+                {filteredHotels.map((hotel) => {
+                  const isStop = hotel.isStopSales || !hotel.rooms || hotel.rooms.length === 0;
 
-                      <div className="flex-1 flex flex-col justify-between py-1 min-w-0">
-                        <div>
-                          <div className="flex items-center gap-0.5 mb-1">
-                            {Array.from({ length: hotel.stars || 0 }).map((_, i) => (
-                              <Star key={i} className="w-3 h-3 fill-accent text-accent" />
-                            ))}
-                          </div>
-                          <h2 className="text-xl font-serif text-slate-900 mb-1 truncate">{hotel.name}</h2>
-                          <p className="text-sm text-slate-500 flex items-center gap-1 mb-2">
-                            <MapPin className="w-3.5 h-3.5 shrink-0" />
-                            {hotel.destination}
-                          </p>
-                          {hotel.description && (
-                            <p className="text-sm text-slate-500 line-clamp-2 mb-3">{hotel.description}</p>
+                  return (
+                    <div
+                      key={hotel.id}
+                      className={`bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden hover:shadow-md transition-all duration-300 ${
+                        isStop ? "opacity-60 bg-slate-50/50" : ""
+                      }`}
+                      data-testid={`card-hotel-${hotel.id}`}
+                    >
+                      {/* Hotel info row */}
+                      <div className="p-4 flex flex-col sm:flex-row gap-5">
+                        <div className="w-full sm:w-60 h-44 rounded-lg overflow-hidden shrink-0 relative">
+                          <img
+                            src={hotel.image || "https://images.unsplash.com/photo-1566073771259-6a8506099945?w=800"}
+                            alt={hotel.name}
+                            className="w-full h-full object-cover"
+                            onError={(e) => {
+                              (e.target as HTMLImageElement).src =
+                                "https://images.unsplash.com/photo-1566073771259-6a8506099945?w=800";
+                            }}
+                          />
+                          {isStop && (
+                            <div className="absolute inset-0 bg-black/45 flex items-center justify-center">
+                              <span className="bg-[#d63031] text-white font-bold text-xs uppercase tracking-wider py-1 px-3 rounded-md shadow-md animate-pulse">
+                                Complet
+                              </span>
+                            </div>
                           )}
-                          {hotel.amenities && hotel.amenities.length > 0 && (
-                            <div className="flex flex-wrap gap-1.5">
-                              {hotel.amenities.slice(0, 4).map((a) => (
-                                <Badge key={a} variant="secondary" className="bg-slate-100 text-slate-600 font-normal text-xs hover:bg-slate-100">
-                                  {a}
-                                </Badge>
-                              ))}
+                          {!isStop && hotel.rating != null && (
+                            <div className="absolute top-2 right-2 bg-white/90 backdrop-blur px-2 py-1 rounded text-xs font-bold text-slate-800 flex items-center gap-1">
+                              <Star className="w-3 h-3 fill-accent text-accent" />
+                              {typeof hotel.rating === "number" ? (hotel.rating * 20).toFixed(0) : hotel.rating}/20
                             </div>
                           )}
                         </div>
 
-                        <div className="mt-3 flex items-end justify-between border-t border-slate-100 pt-3">
+                        <div className="flex-1 flex flex-col justify-between py-1 min-w-0">
                           <div>
-                            <p className="text-xs text-slate-400 mb-0.5">À partir de</p>
-                            <p className="text-2xl font-serif text-primary" data-testid={`text-price-${hotel.id}`}>
-                              {hotel.price.toLocaleString("fr-DZ")} <span className="text-base font-sans font-semibold">DA</span>
+                            <div className="flex items-center gap-0.5 mb-1">
+                              {Array.from({ length: hotel.stars || 0 }).map((_, i) => (
+                                <Star key={i} className="w-3 h-3 fill-accent text-accent" />
+                              ))}
+                            </div>
+                            <h2 className="text-xl font-serif text-slate-900 mb-1 truncate">{hotel.name}</h2>
+                            <p className="text-sm text-slate-500 flex items-center gap-1 mb-2">
+                              <MapPin className="w-3.5 h-3.5 shrink-0" />
+                              {hotel.destination}
                             </p>
+                            
+                            {/* Stylized orange marketing badges & restrictions */}
+                            <div className="flex flex-wrap gap-1.5 mb-3">
+                              {hotel.isStopSales && (
+                                <Badge className="bg-[#d63031] hover:bg-[#d63031] text-white font-bold text-[9px] uppercase tracking-wider py-0.5 px-2 rounded-md">
+                                  Stop Sales / Complet
+                                </Badge>
+                              )}
+                              {hotel.marketingBadges?.map((badge) => (
+                                <Badge key={badge} className="bg-accent hover:bg-accent text-accent-foreground font-bold text-[9px] py-0.5 px-2 rounded-md">
+                                  {badge}
+                                </Badge>
+                              ))}
+                              {hotel.restrictions?.map((restriction) => {
+                                const isCelib = /c[eé]lib/i.test(restriction);
+                                if (isCelib) {
+                                  return (
+                                    <span 
+                                      key={restriction} 
+                                      style={{ backgroundColor: "#d63031", color: "white", padding: "4px 8px", borderRadius: "4px", fontWeight: "bold", fontSize: "11px", display: "inline-block" }}
+                                    >
+                                      ⚠ {restriction}
+                                    </span>
+                                  );
+                                }
+                                return (
+                                  <Badge key={restriction} className="bg-orange-600 hover:bg-orange-600 text-white font-bold text-[9px] py-0.5 px-2 rounded-md">
+                                    ⚠ {restriction}
+                                  </Badge>
+                                );
+                              })}
+                            </div>
+
+                            {hotel.description && (
+                              /c[eé]lib/i.test(hotel.description) ? (
+                                <div className="mb-3">
+                                  <span 
+                                    style={{ backgroundColor: "#d63031", color: "white", padding: "4px 8px", borderRadius: "4px", fontWeight: "bold", fontSize: "11px", display: "inline-block" }}
+                                  >
+                                    ⚠ {hotel.description}
+                                  </span>
+                                </div>
+                              ) : (
+                                <p className="text-sm text-slate-500 line-clamp-2 mb-3">{hotel.description}</p>
+                              )
+                            )}
+                            {hotel.amenities && hotel.amenities.length > 0 && (
+                              <div className="flex flex-wrap gap-1.5">
+                                {hotel.amenities.slice(0, 4).map((a) => (
+                                  <Badge key={a} variant="secondary" className="bg-slate-100 text-slate-600 font-normal text-xs hover:bg-slate-100">
+                                    {a}
+                                  </Badge>
+                                ))}
+                              </div>
+                            )}
                           </div>
-                          <Button
-                            onClick={() => {
-                              const sp = new URLSearchParams(searchString);
-                              setLocation(`/hotel/${hotel.id}?${sp.toString()}`);
-                            }}
-                            className="px-5"
-                            data-testid={`btn-view-${hotel.id}`}
-                          >
-                            Voir détails
-                          </Button>
+
+                          <div className="mt-3 flex items-end justify-between border-t border-slate-100 pt-3">
+                            <div>
+                              <p className="text-[10px] text-slate-400 uppercase tracking-wider font-semibold mb-0.5">Tarif à partir de</p>
+                              <div className="flex items-baseline gap-1">
+                                <span className="text-2xl font-serif text-primary" data-testid={`text-price-${hotel.id}`}>
+                                  {hotel.price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ")}
+                                </span>
+                                <span className="text-sm font-semibold text-primary">DA</span>
+                                {!isStop && (
+                                  <span className="text-[10px] text-slate-400 font-medium ml-1">
+                                    / nuit / pers. en {hotel.roomType ?? "Chambre Standard"}
+                                  </span>
+                                )}
+                              </div>
+                            </div>
+                            <Button
+                              onClick={() => {
+                                if (isStop) return;
+                                const sp = new URLSearchParams(searchString);
+                                setLocation(`/hotel/${hotel.id}?${sp.toString()}`);
+                              }}
+                              disabled={isStop}
+                              className={`px-5 font-semibold transition-all ${
+                                isStop 
+                                  ? "bg-slate-200 text-slate-400 cursor-not-allowed hover:bg-slate-200" 
+                                  : "bg-accent hover:bg-accent/90 text-accent-foreground"
+                              }`}
+                              data-testid={`btn-view-${hotel.id}`}
+                            >
+                              {isStop ? "Complet" : "Voir détails"}
+                            </Button>
+                          </div>
                         </div>
                       </div>
-                    </div>
 
                     {/* Rooms / board types table */}
                     {hotel.rooms && hotel.rooms.length > 0 && (
@@ -502,7 +603,8 @@ export default function Search() {
                       </div>
                     )}
                   </div>
-                ))}
+                );
+              })}
               </div>
             ) : (
               <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-12 text-center">

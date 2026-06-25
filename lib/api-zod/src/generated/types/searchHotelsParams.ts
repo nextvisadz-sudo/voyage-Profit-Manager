@@ -32,6 +32,14 @@ adults?: number;
  */
 rooms?: number;
 /**
+ * Total number of children across all rooms
+ */
+children?: number;
+/**
+ * Total number of infants across all rooms
+ */
+infants?: number;
+/**
  * Page number
  */
 page?: number;
