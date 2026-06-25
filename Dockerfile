@@ -19,6 +19,9 @@ COPY lib/api-spec/package.json ./lib/api-spec/
 COPY lib/api-zod/package.json ./lib/api-zod/
 COPY lib/db/package.json ./lib/db/
 
+# Configure pnpm to download linux-x64 binaries for Rollup/esbuild
+RUN pnpm config set supportedArchitectures --json '{"os": ["linux"], "cpu": ["x64"]}'
+
 # Install dependencies (frozen-lockfile checks that lockfile is correct)
 RUN pnpm install --frozen-lockfile
 
