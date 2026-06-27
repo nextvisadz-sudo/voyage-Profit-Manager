@@ -7,7 +7,7 @@ import * as z from "zod";
 import { useGetDestinations } from "@workspace/api-client-react";
 
 import { Button } from "@/components/ui/button";
-import { Form, FormControl, FormField, FormItem, FormLabel } from "@/components/ui/form";
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Calendar } from "@/components/ui/calendar";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -254,11 +254,61 @@ export function SearchForm({ initialValues, onSubmit }: SearchFormProps) {
   const form = useForm<SearchFormValues>({
     resolver: zodResolver(searchSchema),
     defaultValues: {
-      destinationId: initialValues?.destinationId || "",
+      destinationId: initialValues?.destinationId || "8",
       checkin: initialValues?.checkin || new Date(Date.now() + 86400000 * 7),
       checkout: initialValues?.checkout || new Date(Date.now() + 86400000 * 14),
     },
   });
+
+  // Watch values for reactive date adjustments
+  const checkinValue = form.watch("checkin");
+  const checkoutValue = form.watch("checkout");
+
+  useEffect(() => {
+    if (checkinValue) {
+      const minCheckout = new Date(checkinValue);
+      minCheckout.setHours(0, 0, 0, 0);
+
+      if (!checkoutValue || checkoutValue <= minCheckout) {
+        const newCheckout = new Date(checkinValue);
+        newCheckout.setDate(checkinValue.getDate() + 1);
+        form.setValue("checkout", newCheckout);
+      }
+    }
+  }, [checkinValue, checkoutValue, form]);
+
+  // Sync state when initialValues change
+  const initialDestId = initialValues?.destinationId;
+  const initialCheckin = initialValues?.checkin;
+  const initialCheckout = initialValues?.checkout;
+  const initialAdults = initialValues?.adults;
+  const initialRooms = initialValues?.rooms;
+  const initialChildren = initialValues?.children;
+  const initialInfants = initialValues?.infants;
+
+  useEffect(() => {
+    form.reset({
+      destinationId: initialDestId || "8",
+      checkin: initialCheckin || new Date(Date.now() + 86400000 * 7),
+      checkout: initialCheckout || new Date(Date.now() + 86400000 * 14),
+    });
+
+    const parsedRooms = parseInt(initialRooms ?? "1");
+    const parsedAdults = parseInt(initialAdults ?? "2");
+    const parsedChildren = parseInt(initialChildren ?? "0");
+    const parsedInfants = parseInt(initialInfants ?? "0");
+
+    const rooms: RoomConfig[] = [];
+    const adultsPerRoom = Math.max(1, Math.round(parsedAdults / Math.max(1, parsedRooms)));
+    for (let i = 0; i < parsedRooms; i++) {
+      rooms.push({
+        adults: adultsPerRoom,
+        children: i === 0 ? parsedChildren : 0,
+        infants: i === 0 ? parsedInfants : 0,
+      });
+    }
+    setRoomsConfig(rooms);
+  }, [initialDestId, initialCheckin, initialCheckout, initialAdults, initialRooms, initialChildren, initialInfants, form]);
 
   const handleSubmit = (data: SearchFormValues) => {
     const dest = destinations.find((d) => String(d.id) === data.destinationId);
@@ -309,6 +359,7 @@ export function SearchForm({ initialValues, onSubmit }: SearchFormProps) {
                     ))}
                   </SelectContent>
                 </Select>
+                <FormMessage />
               </FormItem>
             )}
           />
@@ -338,9 +389,20 @@ export function SearchForm({ initialValues, onSubmit }: SearchFormProps) {
                       </FormControl>
                     </PopoverTrigger>
                     <PopoverContent className="w-auto p-0 rounded-xl shadow-2xl border border-slate-200/80 backdrop-blur" align="start">
-                      <Calendar mode="single" selected={field.value} onSelect={field.onChange} initialFocus />
+                      <Calendar
+                        mode="single"
+                        selected={field.value}
+                        onSelect={field.onChange}
+                        initialFocus
+                        disabled={(date) => {
+                          const today = new Date();
+                          today.setHours(0, 0, 0, 0);
+                          return date < today;
+                        }}
+                      />
                     </PopoverContent>
                   </Popover>
+                  <FormMessage />
                 </FormItem>
               )}
             />
@@ -367,9 +429,21 @@ export function SearchForm({ initialValues, onSubmit }: SearchFormProps) {
                       </FormControl>
                     </PopoverTrigger>
                     <PopoverContent className="w-auto p-0 rounded-xl shadow-2xl border border-slate-200/80 backdrop-blur" align="start">
-                      <Calendar mode="single" selected={field.value} onSelect={field.onChange} initialFocus />
+                      <Calendar
+                        mode="single"
+                        selected={field.value}
+                        onSelect={field.onChange}
+                        initialFocus
+                        disabled={(date) => {
+                          const checkinDate = form.getValues("checkin") || new Date();
+                          const minCheckout = new Date(checkinDate);
+                          minCheckout.setHours(0, 0, 0, 0);
+                          return date <= minCheckout;
+                        }}
+                      />
                     </PopoverContent>
                   </Popover>
+                  <FormMessage />
                 </FormItem>
               )}
             />

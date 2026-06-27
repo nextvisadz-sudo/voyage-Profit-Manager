@@ -74,11 +74,14 @@ export default function Home() {
 
   const handleSearch = (params: any) => {
     const searchParams = new URLSearchParams();
+    if (params.destinationId) searchParams.append("destinationId", params.destinationId.toString());
     if (params.destination) searchParams.append("destination", params.destination);
     if (params.checkin) searchParams.append("checkin", params.checkin);
     if (params.checkout) searchParams.append("checkout", params.checkout);
     if (params.adults) searchParams.append("adults", params.adults.toString());
     if (params.rooms) searchParams.append("rooms", params.rooms.toString());
+    if (params.children !== undefined) searchParams.append("children", params.children.toString());
+    if (params.infants !== undefined) searchParams.append("infants", params.infants.toString());
     
     setLocation(`/search?${searchParams.toString()}`);
   };
