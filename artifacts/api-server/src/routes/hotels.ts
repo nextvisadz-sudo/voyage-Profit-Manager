@@ -122,23 +122,64 @@ function parseH24Hotel(raw: RawHotel, commissionPercent: number): Record<string,
   if (Array.isArray(raw.rooms)) {
     for (const room of raw.rooms) {
       if (Array.isArray(room.rates) && room.rates.length > 0) {
+        // Group rates by boardCode or boardName to get option totals for multiple rooms
+        const groups: Record<string, any[]> = {};
         for (const rate of room.rates) {
-          const rawAmt = rate.amount ?? room.amount ?? 0;
+          const key = rate.boardCode ? String(rate.boardCode) : (rate.boardName || "Standard");
+          if (!groups[key]) {
+            groups[key] = [];
+          }
+          groups[key].push(rate);
+        }
+
+        for (const key of Object.keys(groups)) {
+          const rateGroup = groups[key];
+          const firstRate = rateGroup[0];
+
+          let totalOriginalAmount = 0;
+          let availabilityFlag = "A";
+          let rateTypeFlag = "BOOKABLE";
+
+          for (const rate of rateGroup) {
+            totalOriginalAmount += rate.amount ?? room.amount ?? 0;
+            if (rate.availability === "R") {
+              availabilityFlag = "R";
+            }
+            if (rate.rateType === "ON_REQUEST") {
+              rateTypeFlag = "ON_REQUEST";
+            }
+          }
+
+          const isOnRequest =
+            availabilityFlag === "R" ||
+            rateTypeFlag === "ON_REQUEST" ||
+            firstRate.rateType?.toLowerCase().includes("request") ||
+            firstRate.boardName?.toLowerCase().includes("demande") ||
+            firstRate.boardName?.toLowerCase().includes("request") ||
+            room.name?.toLowerCase().includes("demande") ||
+            room.name?.toLowerCase().includes("request");
+          const resolvedRateType = isOnRequest ? "ON_REQUEST" : "BOOKABLE";
+
           rooms.push({
             roomName: room.name ?? "Chambre Standard",
-            boardName: rate.boardName ?? "Standard",
-            originalAmount: rawAmt,
-            amount: applyCommission(rawAmt, commissionPercent),
-            rateType: rate.rateType ?? "BOOKABLE",
+            boardName: firstRate.boardName ?? "Standard",
+            originalAmount: totalOriginalAmount,
+            amount: applyCommission(totalOriginalAmount, commissionPercent),
+            rateType: resolvedRateType,
           });
         }
       } else if (typeof room.amount === "number") {
+        const isOnRequest =
+          room.name?.toLowerCase().includes("demande") ||
+          room.name?.toLowerCase().includes("request");
+        const resolvedRateType = isOnRequest ? "ON_REQUEST" : "BOOKABLE";
+
         rooms.push({
           roomName: room.name ?? "Chambre Standard",
           boardName: room.name ?? "Chambre Standard",
           originalAmount: room.amount,
           amount: applyCommission(room.amount, commissionPercent),
-          rateType: "BOOKABLE",
+          rateType: resolvedRateType,
         });
       }
     }
@@ -421,20 +462,20 @@ const MOCK_HOTELS_BY_DESTINATION: Record<string, RawHotel[]> = {
 /**
  * Get mock hotels for a given city, apply commission and optional nights-based pricing.
  */
-function getMockHotels(city: string, commissionPercent: number, nights: number): Record<string, unknown>[] {
+function getMockHotels(city: string, commissionPercent: number, nights: number, roomsCount: number): Record<string, unknown>[] {
   const rawList = MOCK_HOTELS_BY_DESTINATION[city] ?? MOCK_HOTELS_BY_DESTINATION["Tunis"] ?? [];
   return rawList.map((raw) => {
-    // Scale price by nights
+    // Scale price by nights AND roomsCount
     const scaledRaw = {
       ...raw,
-      minRate: (raw.minRate ?? 0) * nights,
-      maxRate: (raw.maxRate ?? 0) * nights,
+      minRate: (raw.minRate ?? 0) * nights * roomsCount,
+      maxRate: (raw.maxRate ?? 0) * nights * roomsCount,
       rooms: raw.rooms?.map((room) => ({
         ...room,
-        amount: (room.amount ?? 0) * nights,
+        amount: (room.amount ?? 0) * nights * roomsCount,
         rates: room.rates?.map((rate) => ({
           ...rate,
-          amount: (rate.amount ?? 0) * nights,
+          amount: (rate.amount ?? 0) * nights * roomsCount,
         })),
       })),
     };
@@ -568,7 +609,7 @@ router.get("/hotels/search", requireAuth, async (req, res): Promise<void> => {
   // ---------------------------------------------------------------------------
   if (hotels.length === 0 && resolvedCity) {
     usedMock = true;
-    hotels = getMockHotels(resolvedCity, commissionPercent, nights);
+    hotels = getMockHotels(resolvedCity, commissionPercent, nights, Number(rooms || 1));
     req.log.info({ city: resolvedCity, count: hotels.length }, "Serving mock hotel data as fallback");
   }
 

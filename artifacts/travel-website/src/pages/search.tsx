@@ -593,7 +593,12 @@ export default function Search() {
                               className="bg-white rounded-lg border border-slate-200 px-3 py-2 flex items-center justify-between gap-3"
                               data-testid={`room-${hotel.id}-${idx}`}
                             >
-                              <span className="text-sm text-slate-700 font-medium truncate">{room.boardName}</span>
+                              <span className="text-sm text-slate-700 font-medium truncate flex items-center gap-1.5">
+                                {room.boardName}
+                                {room.rateType !== "BOOKABLE" && (
+                                  <span className="inline-block w-2 h-2 rounded-full bg-orange-500 shrink-0" title="Sur Demande (On Request)" />
+                                )}
+                              </span>
                               <span className="text-sm font-bold text-primary whitespace-nowrap">
                                 {room.amount.toLocaleString("fr-DZ")} DA
                               </span>

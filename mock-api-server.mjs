@@ -48,28 +48,64 @@ function parseH24Hotel(raw, commissionPercent) {
   if (Array.isArray(raw.rooms)) {
     for (const room of raw.rooms) {
       if (Array.isArray(room.rates) && room.rates.length > 0) {
+        // Group rates by boardCode or boardName to get option totals for multiple rooms
+        const groups = {};
         for (const rate of room.rates) {
-          const rawAmt = rate.amount ?? room.amount ?? 0;
-          // FIX: H24's rateType is ALWAYS "BOOKABLE" — the REAL availability is in rate.availability
-          // "A" = Available (confirmed), "R" = on-Request (Sur Demande)
-          const isOnRequest = rate.availability === "R";
+          const key = rate.boardCode ? String(rate.boardCode) : (rate.boardName || "Standard");
+          if (!groups[key]) {
+            groups[key] = [];
+          }
+          groups[key].push(rate);
+        }
+
+        for (const key of Object.keys(groups)) {
+          const rateGroup = groups[key];
+          const firstRate = rateGroup[0];
+
+          let totalOriginalAmount = 0;
+          let availabilityFlag = "A";
+          let rateTypeFlag = "BOOKABLE";
+
+          for (const rate of rateGroup) {
+            totalOriginalAmount += rate.amount ?? room.amount ?? 0;
+            if (rate.availability === "R") {
+              availabilityFlag = "R";
+            }
+            if (rate.rateType === "ON_REQUEST") {
+              rateTypeFlag = "ON_REQUEST";
+            }
+          }
+
+          const isOnRequest =
+            availabilityFlag === "R" ||
+            rateTypeFlag === "ON_REQUEST" ||
+            firstRate.rateType?.toLowerCase().includes("request") ||
+            firstRate.boardName?.toLowerCase().includes("demande") ||
+            firstRate.boardName?.toLowerCase().includes("request") ||
+            room.name?.toLowerCase().includes("demande") ||
+            room.name?.toLowerCase().includes("request");
           const resolvedRateType = isOnRequest ? "ON_REQUEST" : "BOOKABLE";
-          console.log(`[RATE] "${room.name}" | board="${rate.boardName}" | availability=${rate.availability} | allotment=${rate.allotment} | → ${resolvedRateType}`);
+
           rooms.push({
             roomName: room.name ?? "Chambre Standard",
-            boardName: rate.boardName ?? "Standard",
-            originalAmount: rawAmt,
-            amount: applyCommission(rawAmt, commissionPercent),
+            boardName: firstRate.boardName ?? "Standard",
+            originalAmount: totalOriginalAmount,
+            amount: applyCommission(totalOriginalAmount, commissionPercent),
             rateType: resolvedRateType,
           });
         }
       } else if (typeof room.amount === "number") {
+        const isOnRequest =
+          room.name?.toLowerCase().includes("demande") ||
+          room.name?.toLowerCase().includes("request");
+        const resolvedRateType = isOnRequest ? "ON_REQUEST" : "BOOKABLE";
+
         rooms.push({
           roomName: room.name ?? "Chambre Standard",
           boardName: room.name ?? "Chambre Standard",
           originalAmount: room.amount,
           amount: applyCommission(room.amount, commissionPercent),
-          rateType: "BOOKABLE",
+          rateType: resolvedRateType,
         });
       }
     }
