@@ -61,14 +61,44 @@ function toH24Date(iso: string): string {
   return `${d}/${m}/${y}`;
 }
 
-/** Build the adults/children/infant per-room params (adults1=2&children1=0&infant1=0 …). */
-function buildPaxParams(roomCount: number, adultsPerRoom: number): URLSearchParams {
+/** Build the adults/children/infant per-room params (adults1=2&children1=0&infant1=0 …) dynamically distributing guests. */
+function buildPaxParams(
+  roomCount: number,
+  totalAdults: number,
+  totalChildren: number,
+  totalInfants: number,
+  childAgesStr?: string
+): URLSearchParams {
   const p = new URLSearchParams();
   p.set("rooms", String(roomCount));
+
+  const ages = childAgesStr ? childAgesStr.split(",").map(Number).filter((n) => !isNaN(n)) : [];
+
+  const adultsPerRoom = Math.floor(totalAdults / roomCount);
+  const extraAdults = totalAdults % roomCount;
+
+  const childrenPerRoom = Math.floor(totalChildren / roomCount);
+  const extraChildren = totalChildren % roomCount;
+
+  const infantsPerRoom = Math.floor(totalInfants / roomCount);
+  const extraInfants = totalInfants % roomCount;
+
+  let ageIdx = 0;
+
   for (let i = 1; i <= roomCount; i++) {
-    p.set(`adults${i}`, String(adultsPerRoom));
-    p.set(`children${i}`, "0");
-    p.set(`infant${i}`, "0");
+    const roomAdults = adultsPerRoom + (i <= extraAdults ? 1 : 0);
+    const roomChildren = childrenPerRoom + (i <= extraChildren ? 1 : 0);
+    const roomInfants = infantsPerRoom + (i <= extraInfants ? 1 : 0);
+
+    p.set(`adults${i}`, String(roomAdults));
+    p.set(`children${i}`, String(roomChildren));
+    p.set(`infant${i}`, String(roomInfants));
+
+    for (let j = 1; j <= roomChildren; j++) {
+      const age = ages[ageIdx] !== undefined ? ages[ageIdx] : 6;
+      p.set(`age${i}_${j}`, String(age));
+      ageIdx++;
+    }
   }
   return p;
 }
@@ -462,20 +492,20 @@ const MOCK_HOTELS_BY_DESTINATION: Record<string, RawHotel[]> = {
 /**
  * Get mock hotels for a given city, apply commission and optional nights-based pricing.
  */
-function getMockHotels(city: string, commissionPercent: number, nights: number, roomsCount: number): Record<string, unknown>[] {
+function getMockHotels(city: string, commissionPercent: number, nights: number): Record<string, unknown>[] {
   const rawList = MOCK_HOTELS_BY_DESTINATION[city] ?? MOCK_HOTELS_BY_DESTINATION["Tunis"] ?? [];
   return rawList.map((raw) => {
-    // Scale price by nights AND roomsCount
+    // Scale price by nights only, NOT by room count or guest count
     const scaledRaw = {
       ...raw,
-      minRate: (raw.minRate ?? 0) * nights * roomsCount,
-      maxRate: (raw.maxRate ?? 0) * nights * roomsCount,
+      minRate: (raw.minRate ?? 0) * nights,
+      maxRate: (raw.maxRate ?? 0) * nights,
       rooms: raw.rooms?.map((room) => ({
         ...room,
-        amount: (room.amount ?? 0) * nights * roomsCount,
+        amount: (room.amount ?? 0) * nights,
         rates: room.rates?.map((rate) => ({
           ...rate,
-          amount: (rate.amount ?? 0) * nights * roomsCount,
+          amount: (rate.amount ?? 0) * nights,
         })),
       })),
     };
@@ -520,6 +550,9 @@ router.get("/hotels/search", requireAuth, async (req, res): Promise<void> => {
     checkout,
     adults = 2,
     rooms = 1,
+    children = 0,
+    infants = 0,
+    childAges,
   } = parsed.data;
 
   const commissionPercent = await getCommissionPercent();
@@ -558,7 +591,13 @@ router.get("/hotels/search", requireAuth, async (req, res): Promise<void> => {
 
   try {
     if (resolvedId) {
-      const paxParams = buildPaxParams(Number(rooms), Number(adults));
+      const paxParams = buildPaxParams(
+        Number(rooms),
+        Number(adults),
+        Number(children),
+        Number(infants),
+        childAges
+      );
       paxParams.set("destinationId", String(resolvedId));
       if (checkin) paxParams.set("arrDate", toH24Date(checkin));
       if (checkout) paxParams.set("depDate", toH24Date(checkout));
@@ -609,7 +648,7 @@ router.get("/hotels/search", requireAuth, async (req, res): Promise<void> => {
   // ---------------------------------------------------------------------------
   if (hotels.length === 0 && resolvedCity) {
     usedMock = true;
-    hotels = getMockHotels(resolvedCity, commissionPercent, nights, Number(rooms || 1));
+    hotels = getMockHotels(resolvedCity, commissionPercent, nights);
     req.log.info({ city: resolvedCity, count: hotels.length }, "Serving mock hotel data as fallback");
   }
 

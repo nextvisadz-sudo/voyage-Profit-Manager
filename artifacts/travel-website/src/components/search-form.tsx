@@ -28,6 +28,7 @@ interface RoomConfig {
   adults: number;
   children: number;
   infants: number;
+  childAges?: number[];
 }
 
 interface SearchFormProps {
@@ -39,6 +40,7 @@ interface SearchFormProps {
     rooms?: string;
     children?: string;
     infants?: string;
+    childAges?: string;
   };
   onSubmit: (values: {
     destinationId: number;
@@ -49,6 +51,7 @@ interface SearchFormProps {
     rooms: number;
     children: number;
     infants: number;
+    childAges?: string;
   }) => void;
 }
 
@@ -130,7 +133,7 @@ function OccupancyPopover({
   }
 
   function addRoom() {
-    if (roomsConfig.length < 4) onChange([...roomsConfig, { adults: 2, children: 0, infants: 0 }]);
+    if (roomsConfig.length < 4) onChange([...roomsConfig, { adults: 2, children: 0, infants: 0, childAges: [] }]);
   }
 
   function removeRoom(idx: number) {
@@ -190,8 +193,46 @@ function OccupancyPopover({
                   value={room.children}
                   min={0}
                   max={6}
-                  onChange={(v) => updateRoom(idx, "children", v)}
+                  onChange={(v) => {
+                    const currentAges = [...(room.childAges ?? [])];
+                    if (v > currentAges.length) {
+                      while (currentAges.length < v) currentAges.push(6);
+                    } else if (v < currentAges.length) {
+                      currentAges.splice(v);
+                    }
+                    const next = roomsConfig.map((r, i) => i === idx ? { ...r, children: v, childAges: currentAges } : r);
+                    onChange(next);
+                  }}
                 />
+                
+                {room.children > 0 && (
+                  <div className="mt-2.5 pt-2.5 border-t border-dashed border-slate-100 space-y-2">
+                    <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Âge des enfants</p>
+                    <div className="grid grid-cols-2 gap-2">
+                      {Array.from({ length: room.children }).map((_, childIdx) => (
+                        <div key={childIdx} className="flex flex-col gap-0.5">
+                          <label className="text-[9px] font-medium text-slate-500">Enfant {childIdx + 1}</label>
+                          <select
+                            value={room.childAges?.[childIdx] ?? 6}
+                            onChange={(e) => {
+                              const nextAges = [...(room.childAges ?? [])];
+                              nextAges[childIdx] = parseInt(e.target.value);
+                              const next = roomsConfig.map((r, i) => i === idx ? { ...r, childAges: nextAges } : r);
+                              onChange(next);
+                            }}
+                            className="bg-slate-50 border border-slate-200 rounded-md p-1 text-xs font-semibold text-slate-700 focus:outline-none focus:ring-1 focus:ring-primary"
+                          >
+                            {[2, 3, 4, 5, 6, 7, 8, 9, 10, 11].map((age) => (
+                              <option key={age} value={age}>
+                                {age} ans
+                              </option>
+                            ))}
+                          </select>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
                 <div className="border-t border-slate-100" />
                 <Counter
                   label="Bébé(s)"
@@ -237,15 +278,26 @@ export function SearchForm({ initialValues, onSubmit }: SearchFormProps) {
   const initAdults = parseInt(initialValues?.adults ?? "2");
   const initChildren = parseInt(initialValues?.children ?? "0");
   const initInfants = parseInt(initialValues?.infants ?? "0");
+  const initChildAges = initialValues?.childAges || "";
 
   const [roomsConfig, setRoomsConfig] = useState<RoomConfig[]>(() => {
     const rooms: RoomConfig[] = [];
     const adultsPerRoom = Math.max(1, Math.round(initAdults / Math.max(1, initRooms)));
+    const ages = initChildAges ? initChildAges.split(",").map(Number).filter(n => !isNaN(n)) : [];
+    let ageIdx = 0;
+
     for (let i = 0; i < initRooms; i++) {
+      const roomChildren = i === 0 ? initChildren : 0;
+      const roomAges: number[] = [];
+      for (let j = 0; j < roomChildren; j++) {
+        roomAges.push(ages[ageIdx] !== undefined ? ages[ageIdx] : 6);
+        ageIdx++;
+      }
       rooms.push({
         adults: adultsPerRoom,
-        children: i === 0 ? initChildren : 0,
+        children: roomChildren,
         infants: i === 0 ? initInfants : 0,
+        childAges: roomAges,
       });
     }
     return rooms;
@@ -285,6 +337,7 @@ export function SearchForm({ initialValues, onSubmit }: SearchFormProps) {
   const initialRooms = initialValues?.rooms;
   const initialChildren = initialValues?.children;
   const initialInfants = initialValues?.infants;
+  const initialChildAges = initialValues?.childAges;
 
   useEffect(() => {
     form.reset({
@@ -297,24 +350,35 @@ export function SearchForm({ initialValues, onSubmit }: SearchFormProps) {
     const parsedAdults = parseInt(initialAdults ?? "2");
     const parsedChildren = parseInt(initialChildren ?? "0");
     const parsedInfants = parseInt(initialInfants ?? "0");
+    const parsedAges = initialChildAges ? initialChildAges.split(",").map(Number).filter(n => !isNaN(n)) : [];
+    let ageIdx = 0;
 
     const rooms: RoomConfig[] = [];
     const adultsPerRoom = Math.max(1, Math.round(parsedAdults / Math.max(1, parsedRooms)));
     for (let i = 0; i < parsedRooms; i++) {
+      const roomChildren = i === 0 ? parsedChildren : 0;
+      const roomAges: number[] = [];
+      for (let j = 0; j < roomChildren; j++) {
+        roomAges.push(parsedAges[ageIdx] !== undefined ? parsedAges[ageIdx] : 6);
+        ageIdx++;
+      }
       rooms.push({
         adults: adultsPerRoom,
-        children: i === 0 ? parsedChildren : 0,
+        children: roomChildren,
         infants: i === 0 ? parsedInfants : 0,
+        childAges: roomAges,
       });
     }
     setRoomsConfig(rooms);
-  }, [initialDestId, initialCheckin, initialCheckout, initialAdults, initialRooms, initialChildren, initialInfants, form]);
+  }, [initialDestId, initialCheckin, initialCheckout, initialAdults, initialRooms, initialChildren, initialInfants, initialChildAges, form]);
 
   const handleSubmit = (data: SearchFormValues) => {
     const dest = destinations.find((d) => String(d.id) === data.destinationId);
     const totalAdults = roomsConfig.reduce((s, r) => s + r.adults, 0);
     const totalChildren = roomsConfig.reduce((s, r) => s + r.children, 0);
     const totalInfants = roomsConfig.reduce((s, r) => s + r.infants, 0);
+    const childAgesList = roomsConfig.flatMap((r) => r.childAges ?? []);
+
     onSubmit({
       destinationId: Number(data.destinationId),
       destination: dest?.city ?? "",
@@ -324,6 +388,7 @@ export function SearchForm({ initialValues, onSubmit }: SearchFormProps) {
       rooms: roomsConfig.length,
       children: totalChildren,
       infants: totalInfants,
+      childAges: childAgesList.join(","),
     });
   };
 

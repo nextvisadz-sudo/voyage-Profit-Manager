@@ -50,7 +50,8 @@ export default function Search() {
     const rooms = params.get("rooms") ? parseInt(params.get("rooms")!) : undefined;
     const children = params.get("children") ? parseInt(params.get("children")!) : undefined;
     const infants = params.get("infants") ? parseInt(params.get("infants")!) : undefined;
-    return { destinationId, destination, checkin, checkout, adults, rooms, children, infants };
+    const childAges = params.get("childAges") || undefined;
+    return { destinationId, destination, checkin, checkout, adults, rooms, children, infants, childAges };
   }, [searchString]);
 
   const hasSearched = !!queryParams.destinationId || !!queryParams.destination;
@@ -167,6 +168,7 @@ export default function Search() {
     rooms: number;
     children: number;
     infants: number;
+    childAges?: string;
   }) => {
     const sp = new URLSearchParams();
     sp.set("destinationId", String(params.destinationId));
@@ -177,6 +179,7 @@ export default function Search() {
     if (params.rooms) sp.set("rooms", String(params.rooms));
     if (params.children) sp.set("children", String(params.children));
     if (params.infants) sp.set("infants", String(params.infants));
+    if (params.childAges) sp.set("childAges", params.childAges);
     setLocation(`/search?${sp.toString()}`);
   };
 
@@ -198,6 +201,7 @@ export default function Search() {
                 rooms: queryParams.rooms?.toString(),
                 children: queryParams.children?.toString(),
                 infants: queryParams.infants?.toString(),
+                childAges: queryParams.childAges,
               }}
               onSubmit={handleSearch}
             />

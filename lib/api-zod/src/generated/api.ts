@@ -43,6 +43,7 @@ export const SearchHotelsQueryParams = zod.object({
   "rooms": zod.coerce.number().optional().describe('Number of rooms'),
   "children": zod.coerce.number().optional().describe('Total number of children across all rooms'),
   "infants": zod.coerce.number().optional().describe('Total number of infants across all rooms'),
+  "childAges": zod.coerce.string().optional().describe('Comma-separated list of children ages'),
   "page": zod.coerce.number().optional().describe('Page number'),
   "limit": zod.coerce.number().optional().describe('Results per page')
 })

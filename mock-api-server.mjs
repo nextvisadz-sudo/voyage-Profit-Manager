@@ -810,8 +810,11 @@ const server = http.createServer(async (req, res) => {
     const destination = url.searchParams.get("destination") || "Tunis";
     const checkin = url.searchParams.get("checkin");
     const checkout = url.searchParams.get("checkout");
-    const adults = url.searchParams.get("adults") || "2";
-    const rooms = url.searchParams.get("rooms") || "1";
+    const adults = parseInt(url.searchParams.get("adults") || "2");
+    const rooms = parseInt(url.searchParams.get("rooms") || "1");
+    const children = parseInt(url.searchParams.get("children") || "0");
+    const infants = parseInt(url.searchParams.get("infants") || "0");
+    const childAges = url.searchParams.get("childAges") || "";
 
     let resolvedId = destinationId ? parseInt(destinationId) : null;
     let resolvedCity = destination;
@@ -835,10 +838,34 @@ const server = http.createServer(async (req, res) => {
       try {
         const paxParams = new URLSearchParams();
         paxParams.set("rooms", String(rooms));
-        for (let i = 1; i <= Number(rooms); i++) {
-          paxParams.set(`adults${i}`, String(adults));
-          paxParams.set(`children${i}`, "0");
-          paxParams.set(`infant${i}`, "0");
+
+        const ages = childAges ? childAges.split(",").map(Number).filter((n) => !isNaN(n)) : [];
+
+        const adultsPerRoom = Math.floor(adults / rooms);
+        const extraAdults = adults % rooms;
+
+        const childrenPerRoom = Math.floor(children / rooms);
+        const extraChildren = children % rooms;
+
+        const infantsPerRoom = Math.floor(infants / rooms);
+        const extraInfants = infants % rooms;
+
+        let ageIdx = 0;
+
+        for (let i = 1; i <= rooms; i++) {
+          const roomAdults = adultsPerRoom + (i <= extraAdults ? 1 : 0);
+          const roomChildren = childrenPerRoom + (i <= extraChildren ? 1 : 0);
+          const roomInfants = infantsPerRoom + (i <= extraInfants ? 1 : 0);
+
+          paxParams.set(`adults${i}`, String(roomAdults));
+          paxParams.set(`children${i}`, String(roomChildren));
+          paxParams.set(`infant${i}`, String(roomInfants));
+
+          for (let j = 1; j <= roomChildren; j++) {
+            const age = ages[ageIdx] !== undefined ? ages[ageIdx] : 6;
+            paxParams.set(`age${i}_${j}`, String(age));
+            ageIdx++;
+          }
         }
         paxParams.set("destinationId", String(resolvedId));
         

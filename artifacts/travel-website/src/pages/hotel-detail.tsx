@@ -109,9 +109,12 @@ export default function HotelDetail() {
     const destination = p.get("destination") || undefined;
     const checkin = p.get("checkin") || undefined;
     const checkout = p.get("checkout") || undefined;
-    const adults = p.get("adults") ? parseInt(p.get("adults")!) : undefined;
-    const rooms = p.get("rooms") ? parseInt(p.get("rooms")!) : undefined;
-    return { destinationId, destination, checkin, checkout, adults, rooms };
+    const adults = p.get("adults") ? parseInt(p.get("adults")!) : 2;
+    const rooms = p.get("rooms") ? parseInt(p.get("rooms")!) : 1;
+    const children = p.get("children") ? parseInt(p.get("children")!) : 0;
+    const infants = p.get("infants") ? parseInt(p.get("infants")!) : 0;
+    const childAges = p.get("childAges") || "";
+    return { destinationId, destination, checkin, checkout, adults, rooms, children, infants, childAges };
   }, [searchString]);
 
   const hasContext = !!searchParams.destinationId || !!searchParams.destination;
@@ -201,6 +204,36 @@ export default function HotelDetail() {
   const handleUpdateSearchParam = (key: string, value: string) => {
     const sp = new URLSearchParams(searchString);
     sp.set(key, value);
+    setLocation(`/hotel/${id}?${sp.toString()}`);
+  };
+
+  const handleUpdateChildren = (count: number) => {
+    const sp = new URLSearchParams(searchString);
+    sp.set("children", String(count));
+
+    const currentAges = sp.get("childAges") ? sp.get("childAges")!.split(",").map(Number).filter(n => !isNaN(n)) : [];
+    if (count > currentAges.length) {
+      while (currentAges.length < count) currentAges.push(6);
+    } else if (count < currentAges.length) {
+      currentAges.splice(count);
+    }
+
+    if (currentAges.length > 0) {
+      sp.set("childAges", currentAges.join(","));
+    } else {
+      sp.delete("childAges");
+    }
+    setLocation(`/hotel/${id}?${sp.toString()}`);
+  };
+
+  const handleUpdateChildAge = (index: number, age: number) => {
+    const sp = new URLSearchParams(searchString);
+    const currentAges = sp.get("childAges") ? sp.get("childAges")!.split(",").map(Number).filter(n => !isNaN(n)) : [];
+    while (currentAges.length <= index) {
+      currentAges.push(6);
+    }
+    currentAges[index] = age;
+    sp.set("childAges", currentAges.join(","));
     setLocation(`/hotel/${id}?${sp.toString()}`);
   };
 
@@ -551,7 +584,7 @@ export default function HotelDetail() {
                   </div>
                 </div>
                 
-                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-4">
                   {/* Arrivée */}
                   <div className="relative">
                     <div className="absolute left-3 top-1/2 -translate-y-1/2 flex items-center pointer-events-none">
@@ -584,27 +617,6 @@ export default function HotelDetail() {
                     </div>
                   </div>
 
-                  {/* Voyageurs */}
-                  <div className="relative">
-                    <div className="absolute left-3 top-1/2 -translate-y-1/2 flex items-center pointer-events-none">
-                      <Users className="w-5 h-5 text-primary" />
-                    </div>
-                    <div className="pl-10 pr-3 py-1.5 border border-slate-200 rounded-xl bg-slate-50 focus-within:ring-2 focus-within:ring-primary/20 focus-within:border-primary transition-all">
-                      <label className="block text-[9px] text-slate-400 font-bold uppercase tracking-wider">Voyageurs</label>
-                      <select
-                        value={searchParams.adults ?? 2}
-                        onChange={(e) => handleUpdateSearchParam("adults", e.target.value)}
-                        className="w-full bg-transparent border-0 p-0 text-sm font-semibold text-slate-800 focus:outline-none focus:ring-0 mt-0.5 cursor-pointer"
-                      >
-                        {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((n) => (
-                          <option key={n} value={n}>
-                            {n} adulte{n > 1 ? "s" : ""}
-                          </option>
-                        ))}
-                      </select>
-                    </div>
-                  </div>
-
                   {/* Chambres */}
                   <div className="relative">
                     <div className="absolute left-3 top-1/2 -translate-y-1/2 flex items-center pointer-events-none">
@@ -625,7 +637,99 @@ export default function HotelDetail() {
                       </select>
                     </div>
                   </div>
+
+                  {/* Adultes */}
+                  <div className="relative">
+                    <div className="absolute left-3 top-1/2 -translate-y-1/2 flex items-center pointer-events-none">
+                      <Users className="w-5 h-5 text-primary" />
+                    </div>
+                    <div className="pl-10 pr-3 py-1.5 border border-slate-200 rounded-xl bg-slate-50 focus-within:ring-2 focus-within:ring-primary/20 focus-within:border-primary transition-all">
+                      <label className="block text-[9px] text-slate-400 font-bold uppercase tracking-wider">Adultes</label>
+                      <select
+                        value={searchParams.adults ?? 2}
+                        onChange={(e) => handleUpdateSearchParam("adults", e.target.value)}
+                        className="w-full bg-transparent border-0 p-0 text-sm font-semibold text-slate-800 focus:outline-none focus:ring-0 mt-0.5 cursor-pointer"
+                      >
+                        {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((n) => (
+                          <option key={n} value={n}>
+                            {n} adulte{n > 1 ? "s" : ""}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+                  </div>
+
+                  {/* Enfants */}
+                  <div className="relative">
+                    <div className="absolute left-3 top-1/2 -translate-y-1/2 flex items-center pointer-events-none">
+                      <Users className="w-5 h-5 text-primary" />
+                    </div>
+                    <div className="pl-10 pr-3 py-1.5 border border-slate-200 rounded-xl bg-slate-50 focus-within:ring-2 focus-within:ring-primary/20 focus-within:border-primary transition-all">
+                      <label className="block text-[9px] text-slate-400 font-bold uppercase tracking-wider">Enfants</label>
+                      <select
+                        value={searchParams.children ?? 0}
+                        onChange={(e) => handleUpdateChildren(parseInt(e.target.value))}
+                        className="w-full bg-transparent border-0 p-0 text-sm font-semibold text-slate-800 focus:outline-none focus:ring-0 mt-0.5 cursor-pointer"
+                      >
+                        {[0, 1, 2, 3, 4].map((n) => (
+                          <option key={n} value={n}>
+                            {n} enfant{n > 1 ? "s" : ""}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+                  </div>
+
+                  {/* Bébés */}
+                  <div className="relative">
+                    <div className="absolute left-3 top-1/2 -translate-y-1/2 flex items-center pointer-events-none">
+                      <Users className="w-5 h-5 text-primary" />
+                    </div>
+                    <div className="pl-10 pr-3 py-1.5 border border-slate-200 rounded-xl bg-slate-50 focus-within:ring-2 focus-within:ring-primary/20 focus-within:border-primary transition-all">
+                      <label className="block text-[9px] text-slate-400 font-bold uppercase tracking-wider">Bébés</label>
+                      <select
+                        value={searchParams.infants ?? 0}
+                        onChange={(e) => handleUpdateSearchParam("infants", e.target.value)}
+                        className="w-full bg-transparent border-0 p-0 text-sm font-semibold text-slate-800 focus:outline-none focus:ring-0 mt-0.5 cursor-pointer"
+                      >
+                        {[0, 1, 2, 3, 4].map((n) => (
+                          <option key={n} value={n}>
+                            {n} bébé{n > 1 ? "s" : ""}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+                  </div>
                 </div>
+
+                {/* Child age selectors */}
+                {searchParams.children > 0 && (
+                  <div className="mt-4 pt-4 border-t border-dashed border-slate-100">
+                    <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-2">Âge des enfants</p>
+                    <div className="flex flex-wrap gap-4">
+                      {Array.from({ length: searchParams.children }).map((_, childIdx) => {
+                        const ages = searchParams.childAges ? searchParams.childAges.split(",").map(Number).filter(n => !isNaN(n)) : [];
+                        const age = ages[childIdx] ?? 6;
+                        return (
+                          <div key={childIdx} className="flex items-center gap-2 bg-slate-50 border border-slate-200 px-3 py-1.5 rounded-xl">
+                            <label className="text-xs font-semibold text-slate-500">Enfant {childIdx + 1}</label>
+                            <select
+                              value={age}
+                              onChange={(e) => handleUpdateChildAge(childIdx, parseInt(e.target.value))}
+                              className="bg-white border border-slate-200 rounded-lg p-1 text-xs font-bold text-slate-700 focus:outline-none focus:ring-1 focus:ring-primary cursor-pointer"
+                            >
+                              {[2, 3, 4, 5, 6, 7, 8, 9, 10, 11].map((a) => (
+                                <option key={a} value={a}>
+                                  {a} ans
+                                </option>
+                              ))}
+                            </select>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  </div>
+                )}
               </section>
             )}
           </div>
