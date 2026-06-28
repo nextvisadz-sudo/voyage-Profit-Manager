@@ -15,6 +15,7 @@ import { useToast } from "@/hooks/use-toast";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
+import { OccupancyPopover, RoomConfig } from "../components/search-form";
 
 const FALLBACK = "https://images.unsplash.com/photo-1566073771259-6a8506099945?w=1200";
 
@@ -117,6 +118,60 @@ export default function HotelDetail() {
     return { destinationId, destination, checkin, checkout, adults, rooms, children, infants, childAges };
   }, [searchString]);
 
+  const [roomsConfig, setRoomsConfig] = useState<RoomConfig[]>(() => {
+    const initRooms = searchParams.rooms;
+    const initAdults = searchParams.adults;
+    const initChildren = searchParams.children;
+    const initInfants = searchParams.infants;
+    const initAges = searchParams.childAges ? searchParams.childAges.split(",").map(Number).filter(n => !isNaN(n)) : [];
+    let ageIdx = 0;
+
+    const rooms: RoomConfig[] = [];
+    const adultsPerRoom = Math.max(1, Math.round(initAdults / Math.max(1, initRooms)));
+    for (let i = 0; i < initRooms; i++) {
+      const roomChildren = i === 0 ? initChildren : 0;
+      const roomAges: number[] = [];
+      for (let j = 0; j < roomChildren; j++) {
+        roomAges.push(initAges[ageIdx] !== undefined ? initAges[ageIdx] : 6);
+        ageIdx++;
+      }
+      rooms.push({
+        adults: adultsPerRoom,
+        children: roomChildren,
+        infants: i === 0 ? initInfants : 0,
+        childAges: roomAges,
+      });
+    }
+    return rooms;
+  });
+
+  useEffect(() => {
+    const parsedRooms = searchParams.rooms;
+    const parsedAdults = searchParams.adults;
+    const parsedChildren = searchParams.children;
+    const parsedInfants = searchParams.infants;
+    const parsedAges = searchParams.childAges ? searchParams.childAges.split(",").map(Number).filter(n => !isNaN(n)) : [];
+    let ageIdx = 0;
+
+    const rooms: RoomConfig[] = [];
+    const adultsPerRoom = Math.max(1, Math.round(parsedAdults / Math.max(1, parsedRooms)));
+    for (let i = 0; i < parsedRooms; i++) {
+      const roomChildren = i === 0 ? parsedChildren : 0;
+      const roomAges: number[] = [];
+      for (let j = 0; j < roomChildren; j++) {
+        roomAges.push(parsedAges[ageIdx] !== undefined ? parsedAges[ageIdx] : 6);
+        ageIdx++;
+      }
+      rooms.push({
+        adults: adultsPerRoom,
+        children: roomChildren,
+        infants: i === 0 ? parsedInfants : 0,
+        childAges: roomAges,
+      });
+    }
+    setRoomsConfig(rooms);
+  }, [searchParams.rooms, searchParams.adults, searchParams.children, searchParams.infants, searchParams.childAges]);
+
   const hasContext = !!searchParams.destinationId || !!searchParams.destination;
 
   const { data: searchResults, isLoading } = useSearchHotels(searchParams, {
@@ -207,33 +262,26 @@ export default function HotelDetail() {
     setLocation(`/hotel/${id}?${sp.toString()}`);
   };
 
-  const handleUpdateChildren = (count: number) => {
+  const handleOccupancyChange = (nextRooms: RoomConfig[]) => {
+    setRoomsConfig(nextRooms);
+    
     const sp = new URLSearchParams(searchString);
-    sp.set("children", String(count));
+    const totalAdults = nextRooms.reduce((s, r) => s + r.adults, 0);
+    const totalChildren = nextRooms.reduce((s, r) => s + r.children, 0);
+    const totalInfants = nextRooms.reduce((s, r) => s + r.infants, 0);
+    const childAgesList = nextRooms.flatMap((r) => r.childAges ?? []);
 
-    const currentAges = sp.get("childAges") ? sp.get("childAges")!.split(",").map(Number).filter(n => !isNaN(n)) : [];
-    if (count > currentAges.length) {
-      while (currentAges.length < count) currentAges.push(6);
-    } else if (count < currentAges.length) {
-      currentAges.splice(count);
-    }
-
-    if (currentAges.length > 0) {
-      sp.set("childAges", currentAges.join(","));
+    sp.set("rooms", String(nextRooms.length));
+    sp.set("adults", String(totalAdults));
+    sp.set("children", String(totalChildren));
+    sp.set("infants", String(totalInfants));
+    
+    if (childAgesList.length > 0) {
+      sp.set("childAges", childAgesList.join(","));
     } else {
       sp.delete("childAges");
     }
-    setLocation(`/hotel/${id}?${sp.toString()}`);
-  };
 
-  const handleUpdateChildAge = (index: number, age: number) => {
-    const sp = new URLSearchParams(searchString);
-    const currentAges = sp.get("childAges") ? sp.get("childAges")!.split(",").map(Number).filter(n => !isNaN(n)) : [];
-    while (currentAges.length <= index) {
-      currentAges.push(6);
-    }
-    currentAges[index] = age;
-    sp.set("childAges", currentAges.join(","));
     setLocation(`/hotel/${id}?${sp.toString()}`);
   };
 
@@ -584,7 +632,7 @@ export default function HotelDetail() {
                   </div>
                 </div>
                 
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-4">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                   {/* Arrivée */}
                   <div className="relative">
                     <div className="absolute left-3 top-1/2 -translate-y-1/2 flex items-center pointer-events-none">
@@ -617,119 +665,14 @@ export default function HotelDetail() {
                     </div>
                   </div>
 
-                  {/* Chambres */}
+                  {/* Voyageurs et Chambres */}
                   <div className="relative">
-                    <div className="absolute left-3 top-1/2 -translate-y-1/2 flex items-center pointer-events-none">
-                      <Award className="w-5 h-5 text-primary" />
-                    </div>
-                    <div className="pl-10 pr-3 py-1.5 border border-slate-200 rounded-xl bg-slate-50 focus-within:ring-2 focus-within:ring-primary/20 focus-within:border-primary transition-all">
-                      <label className="block text-[9px] text-slate-400 font-bold uppercase tracking-wider">Chambres</label>
-                      <select
-                        value={searchParams.rooms ?? 1}
-                        onChange={(e) => handleUpdateSearchParam("rooms", e.target.value)}
-                        className="w-full bg-transparent border-0 p-0 text-sm font-semibold text-slate-800 focus:outline-none focus:ring-0 mt-0.5 cursor-pointer"
-                      >
-                        {[1, 2, 3, 4, 5, 6].map((n) => (
-                          <option key={n} value={n}>
-                            {n} chambre{n > 1 ? "s" : ""}
-                          </option>
-                        ))}
-                      </select>
-                    </div>
-                  </div>
-
-                  {/* Adultes */}
-                  <div className="relative">
-                    <div className="absolute left-3 top-1/2 -translate-y-1/2 flex items-center pointer-events-none">
-                      <Users className="w-5 h-5 text-primary" />
-                    </div>
-                    <div className="pl-10 pr-3 py-1.5 border border-slate-200 rounded-xl bg-slate-50 focus-within:ring-2 focus-within:ring-primary/20 focus-within:border-primary transition-all">
-                      <label className="block text-[9px] text-slate-400 font-bold uppercase tracking-wider">Adultes</label>
-                      <select
-                        value={searchParams.adults ?? 2}
-                        onChange={(e) => handleUpdateSearchParam("adults", e.target.value)}
-                        className="w-full bg-transparent border-0 p-0 text-sm font-semibold text-slate-800 focus:outline-none focus:ring-0 mt-0.5 cursor-pointer"
-                      >
-                        {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((n) => (
-                          <option key={n} value={n}>
-                            {n} adulte{n > 1 ? "s" : ""}
-                          </option>
-                        ))}
-                      </select>
-                    </div>
-                  </div>
-
-                  {/* Enfants */}
-                  <div className="relative">
-                    <div className="absolute left-3 top-1/2 -translate-y-1/2 flex items-center pointer-events-none">
-                      <Users className="w-5 h-5 text-primary" />
-                    </div>
-                    <div className="pl-10 pr-3 py-1.5 border border-slate-200 rounded-xl bg-slate-50 focus-within:ring-2 focus-within:ring-primary/20 focus-within:border-primary transition-all">
-                      <label className="block text-[9px] text-slate-400 font-bold uppercase tracking-wider">Enfants</label>
-                      <select
-                        value={searchParams.children ?? 0}
-                        onChange={(e) => handleUpdateChildren(parseInt(e.target.value))}
-                        className="w-full bg-transparent border-0 p-0 text-sm font-semibold text-slate-800 focus:outline-none focus:ring-0 mt-0.5 cursor-pointer"
-                      >
-                        {[0, 1, 2, 3, 4].map((n) => (
-                          <option key={n} value={n}>
-                            {n} enfant{n > 1 ? "s" : ""}
-                          </option>
-                        ))}
-                      </select>
-                    </div>
-                  </div>
-
-                  {/* Bébés */}
-                  <div className="relative">
-                    <div className="absolute left-3 top-1/2 -translate-y-1/2 flex items-center pointer-events-none">
-                      <Users className="w-5 h-5 text-primary" />
-                    </div>
-                    <div className="pl-10 pr-3 py-1.5 border border-slate-200 rounded-xl bg-slate-50 focus-within:ring-2 focus-within:ring-primary/20 focus-within:border-primary transition-all">
-                      <label className="block text-[9px] text-slate-400 font-bold uppercase tracking-wider">Bébés</label>
-                      <select
-                        value={searchParams.infants ?? 0}
-                        onChange={(e) => handleUpdateSearchParam("infants", e.target.value)}
-                        className="w-full bg-transparent border-0 p-0 text-sm font-semibold text-slate-800 focus:outline-none focus:ring-0 mt-0.5 cursor-pointer"
-                      >
-                        {[0, 1, 2, 3, 4].map((n) => (
-                          <option key={n} value={n}>
-                            {n} bébé{n > 1 ? "s" : ""}
-                          </option>
-                        ))}
-                      </select>
+                    <div className="pl-3 pr-3 py-1.5 border border-slate-200 rounded-xl bg-slate-50 focus-within:ring-2 focus-within:ring-primary/20 focus-within:border-primary transition-all flex flex-col justify-center min-h-[48px]">
+                      <label className="block text-[9px] text-slate-400 font-bold uppercase tracking-wider mb-0.5">Chambres et occupation</label>
+                      <OccupancyPopover roomsConfig={roomsConfig} onChange={handleOccupancyChange} />
                     </div>
                   </div>
                 </div>
-
-                {/* Child age selectors */}
-                {searchParams.children > 0 && (
-                  <div className="mt-4 pt-4 border-t border-dashed border-slate-100">
-                    <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-2">Âge des enfants</p>
-                    <div className="flex flex-wrap gap-4">
-                      {Array.from({ length: searchParams.children }).map((_, childIdx) => {
-                        const ages = searchParams.childAges ? searchParams.childAges.split(",").map(Number).filter(n => !isNaN(n)) : [];
-                        const age = ages[childIdx] ?? 6;
-                        return (
-                          <div key={childIdx} className="flex items-center gap-2 bg-slate-50 border border-slate-200 px-3 py-1.5 rounded-xl">
-                            <label className="text-xs font-semibold text-slate-500">Enfant {childIdx + 1}</label>
-                            <select
-                              value={age}
-                              onChange={(e) => handleUpdateChildAge(childIdx, parseInt(e.target.value))}
-                              className="bg-white border border-slate-200 rounded-lg p-1 text-xs font-bold text-slate-700 focus:outline-none focus:ring-1 focus:ring-primary cursor-pointer"
-                            >
-                              {[2, 3, 4, 5, 6, 7, 8, 9, 10, 11].map((a) => (
-                                <option key={a} value={a}>
-                                  {a} ans
-                                </option>
-                              ))}
-                            </select>
-                          </div>
-                        );
-                      })}
-                    </div>
-                  </div>
-                )}
               </section>
             )}
           </div>

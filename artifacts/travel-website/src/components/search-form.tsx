@@ -24,7 +24,7 @@ const searchSchema = z.object({
 
 type SearchFormValues = z.infer<typeof searchSchema>;
 
-interface RoomConfig {
+export interface RoomConfig {
   adults: number;
   children: number;
   infants: number;
@@ -99,7 +99,7 @@ function Counter({
   );
 }
 
-function OccupancyPopover({
+export function OccupancyPopover({
   roomsConfig,
   onChange,
 }: {
