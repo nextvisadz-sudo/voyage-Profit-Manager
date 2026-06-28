@@ -145,9 +145,6 @@ interface RawHotel {
 }
 
 function parseH24Hotel(raw: RawHotel, commissionPercent: number): Record<string, unknown> {
-  const originalPrice = raw.minRate ?? 0;
-  const price = applyCommission(originalPrice, commissionPercent);
-
   const rooms: Array<{ roomName?: string; boardName: string; originalAmount: number; amount: number; rateType?: string }> = [];
   if (Array.isArray(raw.rooms)) {
     for (const room of raw.rooms) {
@@ -213,6 +210,16 @@ function parseH24Hotel(raw: RawHotel, commissionPercent: number): Record<string,
         });
       }
     }
+  }
+
+  let originalPrice = raw.minRate ?? 0;
+  let price = applyCommission(originalPrice, commissionPercent);
+
+  if (rooms.length > 0) {
+    const roomOriginalAmounts = rooms.map((r) => r.originalAmount);
+    const roomAmounts = rooms.map((r) => r.amount);
+    originalPrice = Math.min(...roomOriginalAmounts);
+    price = Math.min(...roomAmounts);
   }
 
   const allPhotos: string[] = Array.isArray(raw.photos) ? raw.photos.filter(Boolean) : [];

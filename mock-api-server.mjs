@@ -41,9 +41,6 @@ function applyCommission(amount, percent) {
 }
 
 function parseH24Hotel(raw, commissionPercent) {
-  const originalPrice = raw.minRate ?? 0;
-  const price = applyCommission(originalPrice, commissionPercent);
-
   const rooms = [];
   if (Array.isArray(raw.rooms)) {
     for (const room of raw.rooms) {
@@ -109,6 +106,16 @@ function parseH24Hotel(raw, commissionPercent) {
         });
       }
     }
+  }
+
+  let originalPrice = raw.minRate ?? 0;
+  let price = applyCommission(originalPrice, commissionPercent);
+
+  if (rooms.length > 0) {
+    const roomOriginalAmounts = rooms.map((r) => r.originalAmount);
+    const roomAmounts = rooms.map((r) => r.amount);
+    originalPrice = Math.min(...roomOriginalAmounts);
+    price = Math.min(...roomAmounts);
   }
 
   const allPhotos = Array.isArray(raw.photos) ? raw.photos.filter(Boolean) : [];
