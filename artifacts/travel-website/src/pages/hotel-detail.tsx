@@ -1,6 +1,5 @@
-import { useState } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { useParams, useSearch, useLocation } from "wouter";
-import { useMemo } from "react";
 import { useSearchHotels } from "@workspace/api-client-react";
 import { Button } from "@/components/ui/button";
 import { HotelMap } from "@/components/hotel-map";
