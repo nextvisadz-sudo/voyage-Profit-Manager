@@ -499,20 +499,20 @@ const MOCK_HOTELS_BY_DESTINATION: Record<string, RawHotel[]> = {
 /**
  * Get mock hotels for a given city, apply commission and optional nights-based pricing.
  */
-function getMockHotels(city: string, commissionPercent: number, nights: number): Record<string, unknown>[] {
+function getMockHotels(city: string, commissionPercent: number, nights: number, roomsCount: number): Record<string, unknown>[] {
   const rawList = MOCK_HOTELS_BY_DESTINATION[city] ?? MOCK_HOTELS_BY_DESTINATION["Tunis"] ?? [];
   return rawList.map((raw) => {
-    // Scale price by nights only, NOT by room count or guest count
+    // Scale price by nights and roomsCount
     const scaledRaw = {
       ...raw,
-      minRate: (raw.minRate ?? 0) * nights,
-      maxRate: (raw.maxRate ?? 0) * nights,
+      minRate: (raw.minRate ?? 0) * nights * roomsCount,
+      maxRate: (raw.maxRate ?? 0) * nights * roomsCount,
       rooms: raw.rooms?.map((room) => ({
         ...room,
-        amount: (room.amount ?? 0) * nights,
+        amount: (room.amount ?? 0) * nights * roomsCount,
         rates: room.rates?.map((rate) => ({
           ...rate,
-          amount: (rate.amount ?? 0) * nights,
+          amount: (rate.amount ?? 0) * nights * roomsCount,
         })),
       })),
     };
@@ -655,7 +655,7 @@ router.get("/hotels/search", requireAuth, async (req, res): Promise<void> => {
   // ---------------------------------------------------------------------------
   if (hotels.length === 0 && resolvedCity) {
     usedMock = true;
-    hotels = getMockHotels(resolvedCity, commissionPercent, nights);
+    hotels = getMockHotels(resolvedCity, commissionPercent, nights, Number(rooms || 1));
     req.log.info({ city: resolvedCity, count: hotels.length }, "Serving mock hotel data as fallback");
   }
 
